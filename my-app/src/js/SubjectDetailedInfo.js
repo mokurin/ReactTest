@@ -85,7 +85,7 @@ export const homeworkButtons = () => {
             </button>
             <div className={`${styles.doloadHomeworks}`}>
                 <img src={icon_download} alt="" />
-                下载所有作业
+                <a href="#">下载所有作业</a>
             </div>
         </div>
     </>);

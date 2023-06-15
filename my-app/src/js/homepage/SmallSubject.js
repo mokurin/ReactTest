@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from '../../css/Main.module.css'
 import FilingModal from '../homepage/FilingModal'
+import bootStrap from 'bootstrap/dist/js/bootstrap'
 
 // 归档排序的课程显示组件
 export default function SmallSubject(props) {
@@ -30,19 +31,22 @@ export default function SmallSubject(props) {
                         <ul className={`dropdown-menu`}>
                             <li className={`dropdown-item`}
                                 type="button"
-                                data-bs-toggle="modal"
-                                data-bs-target="#restoreSubject">
+                                // data-bs-toggle="modal"
+                                // data-bs-target="#restoreSubject"
                                 onClick={() => {
-
+                                    const modal = new bootStrap.Modal('#restoreSubject');
+                                    modal.show();
                                 }}
+                            >
                                 恢复
                             </li>
                             <li className={`dropdown-item`}
                                 type="button"
-                                data-bs-toggle="modal"
-                                data-bs-target="#deleteArchiveSubject"
+                                // data-bs-toggle="modal"
+                                // data-bs-target="#deleteArchiveSubject"
                                 onClick={() => {
-                                    
+                                    const modal = new bootStrap.Modal('#deleteArchiveSubject');
+                                    modal.show();
                                 }}
                             >
                                 删除

@@ -16,4 +16,6 @@ export let noArchivedSubjects = [
 //更新数据
 export function updateNoArchivedSubjects(data) {
     noArchivedSubjects = data;
+    //更新后端
+    
 }

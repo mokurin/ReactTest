@@ -1,39 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from '../../css/Main.module.css'
 import FilingModal from './FilingModal'
-import { archivedSubjects } from '../subject/ArchivedSubjects'
-
-
-// 删除课程
-function removeSubject(ele) {
-    //前端
-    let aimSubject = ele.target.parentNode.parentNode.parentNode.parentNode.parentNode;
-    let btn = document.querySelector(".removeSubject")
-    function removeSub() {
-        aimSubject.remove();
-        this.removeEventListener("click", removeSub);
-    }
-    btn.addEventListener("click", removeSub)
-
-    //后端
-
-}
-
-//归档元素
-function archiveCourse(ele, status) {
-    let aimSubject = ele.target.parentNode.parentNode.parentNode.parentNode.parentNode;
-    let btn = document.querySelector(".archiveSelf")
-    function HideSub() {
-        archivedSubjects.push(aimSubject)
-        aimSubject.remove()
-        this.removeEventListener("click", HideSub);
-    }
-    btn.addEventListener("click", HideSub)
-}
+import { noArchivedSubjects, updateNoArchivedSubjects } from '../subject/NoArchivedSubjects'
 
 
 //课程组件
 function Subject(props) {
+    const [index] = useState(Number(props.id.substring(7)));
+
+    // 删除课程
+    function removeSubject() {
+        let subs = noArchivedSubjects;
+        let data = [];
+
+        for (let i = 0; i < subs.length; i++) {
+            if (i !== index)
+                data.push(subs[i]);
+        }
+
+        updateNoArchivedSubjects(data);
+        props.setNoArchivedSub(data)
+    }
+
+    //归档自己
+    function archive() {
+        
+    }
+
+    //归档全部
+    function archiveAll() {
+        
+    }
+
     return (
         <>
             <div className={`${styles.subject} shadow`}>
@@ -63,28 +61,25 @@ function Subject(props) {
                             </div>
                             <ul className={`dropdown-menu`}>
                                 <li className={`dropdown-item`}
+                                    id={'edi-' + props.id}
                                     type="button"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#editSubject">
+                                    data-bs-target={"#editSubject" + props.id}>
                                     编辑
                                 </li>
                                 <li className={`dropdown-item`}
+                                    id={'del-' + props.id}
                                     type="button"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#deleteSubject"
-                                    onClick={
-                                        removeSubject
-                                    }
+                                    data-bs-target={"#deleteSubject" + props.id}
                                 >
                                     删除
                                 </li >
                                 <li className={`dropdown-item`}
+                                    id={'arc-' + props.id}
                                     type="button"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#filingSubject"
-                                    onClick={
-                                        archiveCourse
-                                    }
+                                    data-bs-target={"#filingSubject" + props.id}
                                 >
                                     归档
                                 </li>
@@ -92,15 +87,24 @@ function Subject(props) {
                             {/* 对应操作的模态框显示 */}
                             <FilingModal data={{
                                 title: "要删除此课程吗？",
-                                id: "deleteSubject",
-                            }} />
+                                id: "deleteSubject" + props.id,
+                            }}
+                                command={{
+                                    del: removeSubject
+                                }}
+                            />
                             <FilingModal data={{
                                 title: "要归档此课程吗？",
-                                id: "filingSubject"
-                            }} />
+                                id: "filingSubject" + props.id
+                            }}
+                                command={{
+                                    arc: archive,
+                                    arcAll: archiveAll
+                                }}
+                            />
                             <FilingModal data={{
                                 title: "课程编辑",
-                                id: "editSubject"
+                                id: "editSubject" + props.id
                             }} />
                         </span>
 

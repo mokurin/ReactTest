@@ -8,4 +8,6 @@ export let archivedSubjects = [
 //更新数据
 export function updateArchivedSubjects(data) {
     archivedSubjects = data;
+    //更新后端
+    
 }

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 // css
 import styles from '../css/Main.module.css'
 // 组件引用
 import SubjectAction from './homepage/SubjectAction';
-import SubjectSortedBar from './homepage/SubjectSortedBar'
-import SmallSubject from './homepage/SmallSubject'
+import SubjectItems from './homepage/SubItems/SubjectItems'
+import SubjectSortedBarItems from './homepage/SubItems/SubjectSortedBarItems'
+import SmallSubjectItems from './homepage/SubItems/SmallSubjectItems'
 
 // 图标
 import logo from '../img/logo.png'
@@ -15,7 +16,6 @@ import bell from '../img/bell.svg'
 import Plus from '../img/plus-lg.svg'
 import Msg from '../img/envelope.svg'
 import help from '../img/question-circle.svg'
-import Subject from './homepage/Subject'
 import Sort from '../img/sort-down-alt.svg'
 import fileCtrl from '../img/files-alt.svg'
 
@@ -24,61 +24,34 @@ import { noArchivedSubjects } from './subject/NoArchivedSubjects'
 import { archivedSubjects, updateArchivedSubjects } from './subject//ArchivedSubjects'
 
 
-//获取归档课程的组件列表
-const getSubjectItems = () => {
-    let subjectItems = noArchivedSubjects.map(
-        (sub, index) => {
-            return <Subject data={sub} key={index} id={`label${index}`} />;
-        }
-    )
-    return subjectItems;
-}
-
-//获取排序课程的组件列表
-const getListItems = () => {
-    let listItems = noArchivedSubjects.map(
-        (sub, index) => {
-            return <SubjectSortedBar subjectName={sub.name} key={index} id={`label${index}`} />;
-        }
-    )
-    return listItems;
-}
-
-//获取归档课程的组件列表
-const getArchivedSubjects = () => {
-    console.log(1);
-    let archivedSubjectsItems = archivedSubjects.map(
-        (sub, index) => {
-            return <SmallSubject subject={sub} key={index} id={`small-subject${index}`} />;
-        }
-    )
-    return archivedSubjectsItems;
-}
 
 function Main(props) {
-    //排序元素
-    const [listItems, setListItems] = useState(getListItems());
-    //课程元素
-    const [subjectItems, setSubjectItems] = useState(getSubjectItems());
-    //归档课程
-    const [archivedItems, setArchivedItems] = useState(getArchivedSubjects());
+    const [noArchivedSub, setNoArchivedSub] = useState(noArchivedSubjects);
+    const [archivedSub, setArchivedSub] = useState(archivedSubjects);
+    // //排序元素
+    // const [listItems, setListItems] = useState(getListItems());
+    // //课程元素
+    // const [subjectItems, setSubjectItems] = useState(getSubjectItems());
+    // //归档课程
+    // const [archivedItems, setArchivedItems] = useState(getArchivedSubjects());
 
-    // 会按当前的 课程排序 渲染到课程排序的模态框中
-    function addSortedContent() {
-        setListItems(getListItems());
-    }
+    // // 会按当前的 课程排序 渲染到课程排序的模态框中
+    // function addSortedContent() {
+    //     setListItems(getListItems());
+    // }
 
-    // 会按当前的 归档课程 渲染到课程排序的模态框中
-    function addArchivedSubjects() {
-        setArchivedItems(getArchivedSubjects());
-    }
+    // // 会按当前的 归档课程 渲染到课程排序的模态框中
+    // function addArchivedSubjects() {
+    //     setArchivedItems(getArchivedSubjects());
+    // }
 
-    //把课程放入表中
-    function addSubjects(data) {
-        if (data !== null)
-            updateArchivedSubjects(data);
-        setSubjectItems(getSubjectItems());
-    }
+    // //把课程放入表中
+    // function addSubjects(data) {
+    //     if (data !== null)
+    //         updateArchivedSubjects(data);
+    //     setSubjectItems(getSubjectItems());
+    // }
+
 
     return (
         <>
@@ -122,8 +95,10 @@ function Main(props) {
                             data-bs-toggle="modal"
                             data-bs-target="#subjectSorted"
                             onClick={() => {
-                                addSortedContent();
-                                addArchivedSubjects();
+                                setNoArchivedSub(noArchivedSubjects);
+                                setArchivedSub(archivedSubjects);
+                                // addSortedContent();
+                                // addArchivedSubjects();
                             }}
                         >
                             <img src={Sort} alt="" />
@@ -134,8 +109,10 @@ function Main(props) {
                             data-bs-target="#subjectManage"
                             data-bs-toggle="modal"
                             onClick={() => {
-                                addSortedContent();
-                                addArchivedSubjects();
+                                setNoArchivedSub(noArchivedSubjects);
+                                setArchivedSub(archivedSubjects);
+                                // addSortedContent();
+                                // addArchivedSubjects();
                             }}
                         >
                             <img src={fileCtrl} alt="" />
@@ -143,8 +120,8 @@ function Main(props) {
                         </div>
 
                         {/* 课程排序 和 归档管理 的模态框 */}
-                        <SubjectAction addArchivedSubjects={addArchivedSubjects} archivedItems={archivedItems}
-                            addSubjects={addSubjects} listItems={listItems} />
+                        <SubjectAction setNoArchivedSub={setNoArchivedSub} setArchivedSub={setArchivedSub}
+                            noArchivedSub={noArchivedSub} archivedSub={archivedSub} />
 
                         <div className={`btn  btn-primary ${styles.contentNavRightBtn}`}>+创建/加入课程</div>
                     </div>
@@ -153,7 +130,9 @@ function Main(props) {
                 {/* 课程框 */}
                 <div className={styles.subjects}>
                     {/* 所有课程 */}
-                    {subjectItems}
+                    {/* {subjectItems} */}
+                    <SubjectItems setNoArchivedSub={setNoArchivedSub}
+                        noArchivedSub={noArchivedSub} />
 
                     {/* 创建课程 */}
                     <div className={`${styles.addSubject} shadow`}>

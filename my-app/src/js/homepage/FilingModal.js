@@ -4,6 +4,7 @@ import React from 'react';
 // 课程操作对应的模态框
 const buttonStyles = ["btn-outline-secondary", "btn-outline-primary", "btn-primary"]
 
+//按钮小组件
 const Button = (props) => {
     if (props.msg === "确认删除") {
         return (
@@ -12,6 +13,9 @@ const Button = (props) => {
                     type="button"
                     className={`btn ${props.buttonStyle} removeSubject`}
                     data-bs-dismiss="modal"
+                    onClick={() => {
+                        props.command.del()
+                    }}
                 >
                     {props.msg}
                 </button>
@@ -105,18 +109,17 @@ function FilingModal(props) {
                         {props.data.id === "filingSubject" && BodyContent()}
                         {props.data.id === "editSubject" && BodyEdit()}
                         <div className="modal-footer">
-                            {Button("取消", buttonStyles[0])}
                             {/* 删除 */}
-                            {props.data.id === "deleteSubject" && <Button msg='确认删除' buttonStyle={buttonStyles[2]} />}
+                            {props.data.id.includes("deleteSubject") && <Button command={props.command} msg='确认删除' buttonStyle={buttonStyles[2]} />}
                             {/* 归档 */}
-                            {props.data.id === "filingSubject" && <Button msg='归档自己' buttonStyle={buttonStyles[1]} />}
-                            {props.data.id === "filingSubject" && <Button msg='归档全部' buttonStyle={buttonStyles[2]} />}
+                            {props.data.id.includes("filingSubject") && <Button msg='归档自己' buttonStyle={buttonStyles[1]} />}
+                            {props.data.id.includes("filingSubject") && <Button msg='归档全部' buttonStyle={buttonStyles[2]} />}
                             {/* 编辑 */}
-                            {props.data.id === "editSubject" && <Button msg='确认编辑' buttonStyle={buttonStyles[2]} />}
+                            {props.data.id.includes("editSubject") && <Button msg='确认编辑' buttonStyle={buttonStyles[2]} />}
                             {/* 恢复 */}
-                            {props.data.id === "restoreSubject" && <Button msg='确认恢复' buttonStyle={buttonStyles[2]} />}
+                            {props.data.id.includes("restoreSubject") && <Button msg='确认恢复' buttonStyle={buttonStyles[2]} />}
                             {/* 删除 */}
-                            {props.data.id === "deleteArchiveSubject" && <Button msg='确认删除' buttonStyle={buttonStyles[2]} />}
+                            {props.data.id.includes("deleteArchiveSubject") && <Button msg='确认删除' buttonStyle={buttonStyles[2]} />}
                         </div>
                     </div>
                 </div>

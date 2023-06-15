@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from '../../css/Main.module.css'
-import { noArchivedSubjects } from '../subject/NoArchivedSubjects'
+import { noArchivedSubjects, updateNoArchivedSubjects } from '../subject/NoArchivedSubjects'
+//组件
+import SubjectSortedBarItems from '../homepage/SubItems/SubjectSortedBarItems'
+import SmallSubjectItems from '../homepage/SubItems/SmallSubjectItems'
 
 // 课程排序 和 归档管理 模态框（相互切换）
 function SubjectAction(props) {
-    const [listItems] = useState(props.listItems);
-    const [archivedItems] = useState(props.archivedItems);
+    const { setNoArchivedSub, noArchivedSub, archivedSub, setArchivedSub } = props
+    // const [noArchivedSub, setNoArchivedSub] = useState(props.noArchivedSub);
+    // const [archivedSub, setArchivedSub] = useState(props.archivedSub);
 
+    //确认排序
     const sortedOK = () => {
         let subs = document.getElementById('sortedTable').childNodes;
-        let subsSorted = [];//排序后的列表
-        // 所有课程
-        let subjects = noArchivedSubjects;
+        let subsSorted = [];// 排序后的列表
+        let subjects = noArchivedSubjects;// 所有课程
 
         for (let i = 0; i < subs.length; i++) {
             let index = Number(subs[i].id.substring(5));
@@ -19,7 +23,8 @@ function SubjectAction(props) {
         }
 
         //更新拍好后的顺序
-        props.addSubjects(subsSorted);
+        updateNoArchivedSubjects(subsSorted);
+        props.setNoArchivedSub(subsSorted);
     }
 
     return (
@@ -55,7 +60,9 @@ function SubjectAction(props) {
                         <div className="modal-body">
                             <div className={`${styles.myModalBodySorted} shadow rounded`} id='sortedTable'>
                                 {/* 排序内容显示 */}
-                                {listItems}
+                                {/* {listItems} */}
+                                <SubjectSortedBarItems setNoArchivedSub={setNoArchivedSub}
+                                    noArchivedSub={noArchivedSub} />
                             </div>
                         </div>
                         {/* 确认排序按钮 */}
@@ -101,7 +108,9 @@ function SubjectAction(props) {
                         <div className="modal-body">
                             <div className={`${styles.myModalBodyManage} shadow rounded`}>
                                 {/* 已归档的课程显示 */}
-                                {archivedItems}
+                                {/* {archivedItems} */}
+                                <SmallSubjectItems setArchivedSub={setArchivedSub}
+                                    archivedSub={archivedSub} />
                             </div>
                         </div>
                     </div>
