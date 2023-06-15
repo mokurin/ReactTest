@@ -1,0 +1,85 @@
+body{
+    background-color: #f8f9fa;
+}
+
+.Form {
+    border: 1px solid #0d6efd;
+    padding-left: 25px;
+    padding-right: 25px;
+    border-radius: 20px;
+    margin-top: 80px;
+    background-color: white;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: auto;
+}
+
+.idBtn {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 5px;
+    margin-bottom: 12px;
+}
+
+.header {
+    font-weight: 600;
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.buttonsHeader {
+    font-size: 24px;
+}
+.codeCtrl{
+    display: flex;
+}
+/* 验证码部分 */
+.verCode{
+    margin-right: 20px;
+    width: 180px;
+}
+.sendCode{
+    text-align: left;
+    border: 1px solid #0d6efd;
+    width: 200px;
+    height: 38px;
+}
+/*  */
+.signup{
+    width: 350px;
+    text-align: center;
+}
+.otherCtrl{
+    text-align: right;
+}
+/* 身份选择 */
+.idCtrl{
+    width: 168px;
+    display: flex;
+}
+.idCtrl > img{
+    width: 28px;
+    margin-right: 20px;
+}
+
+.toLogin{
+    color: #4285f4;
+}
+
+.tip{
+    color: red;
+    position: relative;
+    left: 10px;
+    top: -10px;
+}
+
+.displayNone{
+    display: none;
+}
+
+a{
+    text-decoration: none;
+}

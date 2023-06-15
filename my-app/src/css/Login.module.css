@@ -1,0 +1,54 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.Form {
+    padding-left: 25px;
+    padding-right: 25px;
+    border-radius: 20px;
+    background-color: white;
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    transform: translateX(-50%);
+    width: 450px;
+    height: 350px;
+    border: 1px solid #0d6efd;
+
+}
+
+.header {
+    font-weight: 600;
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* 自动登录 忘记密码 */
+.LoginCtrl {
+    color: #a2a5a8;
+    display: flex;
+    justify-content: space-between;
+}
+
+.forgetPwd {
+    text-align: right;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+.otherCtrl {
+    text-align: right;
+}
+
+.login {
+    margin-top: 20px;
+    width: 400px;
+    text-align: center;
+}
+
+.toSignup {
+    color: #4285f4;
+}

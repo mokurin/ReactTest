@@ -1,0 +1,331 @@
+/* 导航栏 */
+.navigation {
+    min-width: 900px;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.left,
+.right {
+    height: 60px;
+    display: flex;
+}
+
+.left>div,
+.right>div {
+    padding: 0 12px;
+    height: inherit;
+    line-height: 60px;
+}
+
+.select:hover {
+    border-bottom: 3px solid #4285f4;
+}
+
+
+/* 导航栏 Left */
+.logo {
+    padding-bottom: 5px;
+    box-sizing: border-box;
+    width: 98px
+}
+
+/* 导航栏 right */
+.profile {
+    box-sizing: border-box;
+    border-radius: 50%;
+    width: 42px;
+}
+
+.checkForPlagiarism {
+    width: 24px;
+}
+
+/* 课程 内容 展示*/
+.content {
+    min-width: 900px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-top: 90px;
+}
+
+/* 课程 内容 展示导航栏 */
+.contentNav {
+    font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+    min-width: 900px;
+}
+
+.contentNavLeft,
+.contentNavRight {
+    height: 30px;
+    display: flex;
+    box-sizing: border-box;
+    /* border: 1px solid salmon; */
+}
+
+.contentNavLeft {
+    margin-left: 35px;
+}
+
+.contentNavRightBtn {
+    width: auto;
+    margin: 0 13px;
+}
+
+.contentNavLeft>div,
+.contentNavRight>div:nth-child(1),
+.contentNavRight>div:nth-child(2) {
+    line-height: 30px;
+}
+
+.contentNavRight>div:nth-child(1):hover,
+.contentNavRight>div:nth-child(2):hover {
+    border-bottom: 2px solid #4285f4;
+}
+
+.contentNavRight>div {
+    padding: 0 16px;
+}
+
+.divider {
+    margin-top: 3px;
+    border-top: 1.5px solid rgba(0, 0, 0, 0.3);
+    width: 100%;
+    height: 0;
+}
+
+/* 单个课程信息的样式 */
+.subjects {
+    min-width: 900px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: stretch;
+    height: auto;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    padding-bottom: 20px;
+    width: 100%;
+}
+
+.subject {
+    border-radius: 5px;
+    margin: 15px 20px;
+    box-sizing: border-box;
+    flex: 0 0 250px;
+    width: 250px;
+    height: 230px;
+}
+
+.subjectTop {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    box-sizing: border-box;
+    height: 150px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding-left: 25px;
+    margin-bottom: 50px;
+}
+
+.subjectTime {
+    padding-top: 20px;
+}
+
+.subjectName {
+    padding-top: 6px;
+    font-size: 24px;
+    padding-right: 50px;
+}
+
+.subjectClass {
+    font-size: 13px;
+}
+
+.subjectBottom {
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    height: 100px;
+    width: 100%;
+    padding: 0 8px;
+}
+
+.subjectCode {
+    padding-top: 12px;
+}
+
+
+.subjectBottomAction {
+    display: flex;
+    padding: 0 10px;
+}
+
+.dropdownHead {
+    margin-left: 10px;
+    text-align: center;
+}
+
+#dropdown-menu {
+    width: 20px;
+}
+
+/* 添加课程（非按钮） */
+.addSubject {
+    margin: 15px 12px;
+    box-sizing: border-box;
+    flex: 0 0 250px;
+    width: 250px;
+    height: 230px;
+    border-radius: 1px solid black;
+}
+
+.addSubjectTop {
+    width: 100%;
+    height: 150px;
+    background-color: aliceblue;
+}
+
+.addSubjectBottom {
+    text-align: center;
+    width: 100%;
+    height: 100px;
+    padding-top: 16px;
+}
+
+/* 侧边栏 */
+.sidebar {
+    position: fixed;
+    right: 10px;
+    top: 320px;
+}
+
+.sidebar>img {
+    margin: 3px 0;
+    display: block;
+    width: 25px;
+}
+
+
+/* 课程排序 和 归档管理 的 模态框样式 */
+/* Header */
+.modalHeight {
+    height: 480px;
+}
+
+.SubjectActionHeader {
+    box-sizing: border-box;
+    height: 38px;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+}
+
+.subjectSorted {
+    font-size: 20px;
+    line-height: 38px;
+    height: 100%;
+    box-sizing: border-box;
+    margin-right: 10px;
+}
+
+.subjectManage {
+    font-size: 20px;
+    line-height: 38px;
+    height: 100%;
+    box-sizing: border-box;
+    margin-left: 10px;
+}
+
+.subjectSorted:hover,
+.subjectManage:hover {
+    border-bottom: 3px solid #4285f4;
+}
+
+.SubjectActionHeader>button {
+    position: absolute;
+    top: 3px;
+    right: 0;
+}
+
+/* 内容 */
+
+/* 归档 */
+.myModalBodyManage {
+    padding: 0 0;
+    box-sizing: border-box;
+    height: auto;
+    align-items: stretch;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.smallSubject {
+    border-radius: 10px;
+    align-items: stretch;
+    box-sizing: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    margin: 12px 11px;
+    flex: 0 0 200px;
+    height: 155px;
+}
+
+.smallSubjectTop {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: cornflowerblue;
+    box-sizing: border-box;
+    height: 75%;
+    width: 100%;
+    padding: 5px;
+}
+
+.subjectBottomTeacher{
+    padding: 5px;
+}
+
+.subName{
+    font-size: 17px;
+}
+
+.teacherName{
+    font-size: 15px;
+}
+
+
+
+/* 排序 */
+.myModalBodySorted {
+    box-sizing: border-box;
+    /* height: auto; */
+    height: 1300px;
+    align-items: stretch;
+}
+
+.draggableSubject {
+    box-sizing: border-box;
+    height: 50px;
+    line-height: 50px;
+    font-size: 22px;
+    border-bottom: 2.5px solid rgba(0, 0, 0, 0.3);
+    display: flex
+}
+
+.smallSubjectTitle {
+    margin-left: 30px;
+    margin-right: 25px;
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.smallSubjectDot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: #328ee9;
+    margin-top: 16px;
+    margin-left: 10px;
+}
