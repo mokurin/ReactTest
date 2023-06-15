@@ -46,6 +46,7 @@ const getListItems = () => {
 
 //获取归档课程的组件列表
 const getArchivedSubjects = () => {
+    console.log(1);
     let archivedSubjectsItems = archivedSubjects.map(
         (sub, index) => {
             return <SmallSubject subject={sub} key={index} id={`small-subject${index}`} />;
