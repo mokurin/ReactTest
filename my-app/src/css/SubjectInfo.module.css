@@ -1,0 +1,203 @@
+.subjectInfoPage {
+    min-width: 1000px;
+    height: auto;
+    padding-bottom: 12px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    caret-color: transparent;
+}
+
+/* 头部 */
+.subjectInfoPageHeader {
+    color: white;
+    height: 200px;
+    background-color: #4b92d9;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* 左半部分 */
+.subjectInfoPageHeaderLeft {
+    padding-left: 20px;
+    padding-top: 20px;
+    width: 600px;
+}
+
+.headerleftTitle {
+    width: 450px;
+    display: flex;
+    height: 70px;
+    margin-bottom: 5px;
+    line-height: 70px;
+}
+
+.subjectInfoChangeName {
+    margin-top: 20px;
+    width: 20px;
+}
+
+.headerleftActions {
+    margin-top: 25px;
+    box-sizing: border-box;
+    display: flex;
+}
+
+.infoButton {
+    background-color: rgba(256, 256, 256, 0.15);
+    padding: 2px 8px;
+    margin: 0 8px;
+}
+
+.infoButton>img {
+    margin-bottom: 5px;
+}
+
+/* 右半部分 */
+.subjectInfoPageHeaderRight {
+    margin-right: 50px;
+    width: 350px;
+    padding-top: 75px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.interationToolNums {
+    text-align: center;
+}
+
+/* 导航栏 */
+.navActions {
+    height: 70px;
+    background-color: #d6dcdf;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    box-sizing: border-box;
+    display: flex;
+    padding-left: 50px;
+    margin-bottom: 25px;
+}
+
+.navButton {
+    line-height: 65px;
+    font-size: 24px;
+    width: 110px;
+    text-align: center;
+}
+
+.navButton:hover {
+    border-bottom: 4px solid #328eeb;
+}
+
+/* 提交作业及其他 */
+.homeworkActions {
+    height: 50px;
+    display: flex;
+    color: #0d6efd;
+    padding: 0 25px;
+    justify-content: space-between;
+    /* border: 1px solid black; */
+}
+
+.homeworkPublished {
+    height: 40px;
+}
+
+.doloadHomeworks {
+    line-height: 50px;
+}
+
+.doloadHomeworks>img {
+    margin-bottom: 5px;
+}
+
+/* 作业 */
+.homeworkTable {
+    border-radius: 10px;
+    padding: 0 5px;
+    padding-top: 15px;
+    padding-bottom: 10px;
+
+}
+
+.homeworkInfo {
+    border-radius: 8px;
+    color: #80858a;
+}
+
+.homeworkInfoHeader {
+    padding-top: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.homeworkInfoHeaderLeft {
+    display: flex;
+    padding-left: 25px;
+}
+
+.homeworkType {
+    width: fit-content;
+    height: fit-content;
+    padding: 5px 12px;
+    margin-right: 15px;
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.homeworkCreatedTime {
+    line-height: 40px;
+}
+
+.homeworkInfoHeaderRight {
+    font-size: 20px;
+    text-align: center;
+    padding-right: 25px;
+}
+
+.homeworkMainInfo {
+    display: flex;
+    justify-content: space-between;
+}
+
+.homeworkMainInfoLeft {
+    width: 650px;
+    padding-left: 25px;
+}
+
+.homeworkName {
+    margin-bottom: 10px;
+}
+
+.homeworkInfoDesc {
+    font-size: 15px;
+}
+
+.homeworkMainInfoRight {
+    display: flex;
+    padding-right: 25px;
+}
+
+.homeworkSubmissionInfo {
+    margin: 0 15px;
+    margin-top: 5px;
+    display: flex;
+    width: 300px;
+    justify-content: space-between;
+}
+
+.homeworkSubmitted {
+    padding-top: 25px;
+}
+
+.homeworkAnnex {
+    height: 100px;
+    margin: 10px 25px;
+    border: 1px solid black;
+}
+
+.homeworkDeadline {
+    padding: 5px 0;
+    height: fit-content;
+    margin: 0 25px;
+    margin-top: 20px;
+}

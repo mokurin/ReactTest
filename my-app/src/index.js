@@ -7,6 +7,7 @@ import Forget from './js/Forget';
 import Signup from './js/Signup';
 import Login from './js/Login'
 import Main from './js/Main'
+import SubjectDetailedInfo from './js/SubjectDetailedInfo';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap'
 import Connect from './js/Connect'
@@ -21,6 +22,7 @@ ReactDOM.createRoot(document.getElementById("root")).render((
       <Route path="/Forget" element={<Forget />} />
       <Route path='/Signup' element={<Signup />} />
       <Route path='/Main' element={<Main />} />
+      <Route path='/subjectinfo' element={<SubjectDetailedInfo info={{ subjectName: "" }} />} />
     </Routes>
   </BrowserRouter >
 ));
