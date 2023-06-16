@@ -10,6 +10,7 @@ import Main from './js/Main'
 import SubjectDetailedInfo from './js/SubjectDetailedInfo';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap'
+import IndividualSubjectCheck from './js/IndividualSubjectCheck';
 import Connect from './js/Connect'
 
 
@@ -23,6 +24,7 @@ ReactDOM.createRoot(document.getElementById("root")).render((
       <Route path='/Signup' element={<Signup />} />
       <Route path='/Main' element={<Main />} />
       <Route path='/subjectinfo' element={<SubjectDetailedInfo info={{ subjectName: "" }} />} />
+      <Route path='/IndividualSubjectCheck' element={<IndividualSubjectCheck data={{ subjectName: "" }} />} />
     </Routes>
   </BrowserRouter >
 ));
