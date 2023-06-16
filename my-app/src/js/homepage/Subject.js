@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import styles from '../../css/Main.module.css'
 import FilingModal from './FilingModal'
+//课程信息
 import { noArchivedSubjects, updateNoArchivedSubjects } from '../subject/NoArchivedSubjects'
+import { archivedSubjects, updateArchivedSubjects } from '../subject/ArchivedSubjects'
 
 
 //课程组件
@@ -24,17 +26,31 @@ function Subject(props) {
 
     //归档自己
     function archive() {
-        
+        //获取未归档课程
+        let subs = noArchivedSubjects;
+        //获取归档的课程
+        let data = archivedSubjects;
+
+        //添加新归档课程
+        data[data.length] = subs[index]
+
+        //更新归档课程
+        updateArchivedSubjects(data)
+        props.setArchivedSub(data)
+
+        //删除未归档课程
+        removeSubject();
     }
 
     //归档全部
     function archiveAll() {
-        
+        //归档个人
+        archive();
     }
 
     return (
         <>
-            <div className={`${styles.subject} shadow`}>
+            <div className={`${styles.subject} ${styles.no_select} shadow`}>
                 {/* 课程信息 */}
                 <div className={styles.subjectTop}>
                     <div className={styles.subjectTime}>课程时间{props.data.createdTime}</div>
@@ -49,7 +65,6 @@ function Subject(props) {
                     </div>
                     {/* 操作 */}
                     <div className={styles.subjectBottomAction}>
-                        <span>置顶</span>
                         <span className={`dropup dropup-center`}>
                             <div
                                 className={`${styles.dropdownHead}`}
@@ -89,9 +104,7 @@ function Subject(props) {
                                 title: "要删除此课程吗？",
                                 id: "deleteSubject" + props.id,
                             }}
-                                command={{
-                                    del: removeSubject
-                                }}
+                                command={removeSubject}
                             />
                             <FilingModal data={{
                                 title: "要归档此课程吗？",

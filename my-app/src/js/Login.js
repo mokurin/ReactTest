@@ -1,31 +1,28 @@
 import React, { useState } from 'react';
 import styles from '../css/Login.module.css'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Send } from './Connect'
 import bootstrap from 'bootstrap/dist/js/bootstrap';
 
-
-window.onload = () => {
-    const user_Account = JSON.parse(localStorage.getItem('user_Account'));
-    if (user_Account !== undefined && user_Account !== null)
-        if (user_Account.isAutoLogin) {
-            //跳转主页
-            loadHomePage(user_Account.user_data);
-        } else {
-            //自动填充账号密码
-            document.querySelector('#email').value = user_Account.email;
-            document.querySelector('#pwd').value = user_Account.passwd;
-        }
-}
-
-const loadHomePage = (user_data) => {
-
-}
 
 export default function Login(props) {
     const [data, setDate] = useState({});
     const [msg, setMsg] = useState('');
     const [isAutoLogin, setIsAutoLogin] = useState(false);
+    const navigate = useNavigate();
+
+    window.onload = () => {
+        const user_Account = JSON.parse(localStorage.getItem('user_Account'));
+        if (user_Account !== undefined && user_Account !== null)
+            if (user_Account.isAutoLogin) {
+                //跳转主页
+                navigate('/Main', { state: user_Account.data });
+            } else {
+                //自动填充账号密码
+                document.querySelector('#email').value = user_Account.email;
+                document.querySelector('#pwd').value = user_Account.passwd;
+            }
+    }
 
     //登录函数
     const login = (e) => {
@@ -46,7 +43,7 @@ export default function Login(props) {
                 }
                 localStorage.setItem('user_Account', JSON.stringify(user_Account));
                 //跳转主页
-                loadHomePage(msg.user_data)
+                navigate('/Main', { state: user_Account.data });
             } else {//登录失败
                 new Promise((resolve, reject) => {
                     setMsg(msg.err_code);

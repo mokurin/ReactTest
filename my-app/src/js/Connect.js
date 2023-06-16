@@ -10,7 +10,7 @@ window.onload = () => {
         //接收到消息
         socket.onmessage = (jsonString) => {
             const msg = JSON.parse(jsonString);
-            if (msg["type"] === "csc") {
+            if (msg["type"] === "csc") {//向服务器请求后的返回
                 task_queue.pop(msg);
             } else { // 服务器主动发送的数据
                 actions[msg["action"]](msg);

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './css/App.css';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Routes, Route, Link, useParams, Outlet } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Forget from './js/Forget';
 import Signup from './js/Signup';
 import Login from './js/Login'
@@ -17,8 +17,7 @@ import Connect from './js/Connect'
 ReactDOM.createRoot(document.getElementById("root")).render((
   <BrowserRouter>
     <Routes>
-
-      {/* <Route index element={<Page />} /> */}
+      <Route index element={<Navigate to={'/Login'} replace={true} />} />
       <Route path='/Login' element={<Login />} />
       <Route path="/Forget" element={<Forget />} />
       <Route path='/Signup' element={<Signup />} />

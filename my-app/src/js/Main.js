@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router';
 // css
 import styles from '../css/Main.module.css'
 // 组件引用
 import SubjectAction from './homepage/SubjectAction';
 import SubjectItems from './homepage/SubItems/SubjectItems'
-import SubjectSortedBarItems from './homepage/SubItems/SubjectSortedBarItems'
-import SmallSubjectItems from './homepage/SubItems/SmallSubjectItems'
 
 // 图标
 import logo from '../img/logo.png'
 import ProfilePicture from '../img/profile.png'
-import CheckForPlagiarism from '../img/search.svg'
 import addPerson from '../img/person-fill-add.svg'
 import bell from '../img/bell.svg'
 import Plus from '../img/plus-lg.svg'
@@ -21,37 +19,15 @@ import fileCtrl from '../img/files-alt.svg'
 
 //课程信息引用
 import { noArchivedSubjects } from './subject/NoArchivedSubjects'
-import { archivedSubjects, updateArchivedSubjects } from './subject//ArchivedSubjects'
+import { archivedSubjects } from './subject/ArchivedSubjects'
 
 
 
 function Main(props) {
     const [noArchivedSub, setNoArchivedSub] = useState(noArchivedSubjects);
     const [archivedSub, setArchivedSub] = useState(archivedSubjects);
-    // //排序元素
-    // const [listItems, setListItems] = useState(getListItems());
-    // //课程元素
-    // const [subjectItems, setSubjectItems] = useState(getSubjectItems());
-    // //归档课程
-    // const [archivedItems, setArchivedItems] = useState(getArchivedSubjects());
-
-    // // 会按当前的 课程排序 渲染到课程排序的模态框中
-    // function addSortedContent() {
-    //     setListItems(getListItems());
-    // }
-
-    // // 会按当前的 归档课程 渲染到课程排序的模态框中
-    // function addArchivedSubjects() {
-    //     setArchivedItems(getArchivedSubjects());
-    // }
-
-    // //把课程放入表中
-    // function addSubjects(data) {
-    //     if (data !== null)
-    //         updateArchivedSubjects(data);
-    //     setSubjectItems(getSubjectItems());
-    // }
-
+    const location = useLocation();
+    console.log(location.state);
 
     return (
         <>
@@ -61,16 +37,9 @@ function Main(props) {
                     <div>
                         <img src={logo} alt="" className={styles.logo} />
                     </div>
-                    <div className={`${styles.select}`}>课堂</div>
-                    <div className={`${styles.select}`}>备课区</div>
-                    <div className={`${styles.select}`}>精品专区</div>
-                    <div className={`${styles.select}`}>我的精品</div>
+                    <div className={`${styles.select} ${styles.selected}`}>课堂</div>
                 </div>
                 <div className={`${styles.right}`}>
-                    <div className={`${styles.select}`}>
-                        <img src={CheckForPlagiarism} alt="" className={styles.checkForPlagiarism} />
-                        论文查重
-                    </div>
                     <div className={`${styles.select}`}>
                         <img src={addPerson} alt="" />
                         邀请教师
@@ -97,8 +66,6 @@ function Main(props) {
                             onClick={() => {
                                 setNoArchivedSub(noArchivedSubjects);
                                 setArchivedSub(archivedSubjects);
-                                // addSortedContent();
-                                // addArchivedSubjects();
                             }}
                         >
                             <img src={Sort} alt="" />
@@ -111,8 +78,6 @@ function Main(props) {
                             onClick={() => {
                                 setNoArchivedSub(noArchivedSubjects);
                                 setArchivedSub(archivedSubjects);
-                                // addSortedContent();
-                                // addArchivedSubjects();
                             }}
                         >
                             <img src={fileCtrl} alt="" />
@@ -131,11 +96,11 @@ function Main(props) {
                 <div className={styles.subjects}>
                     {/* 所有课程 */}
                     {/* {subjectItems} */}
-                    <SubjectItems setNoArchivedSub={setNoArchivedSub}
-                        noArchivedSub={noArchivedSub} />
+                    <SubjectItems setNoArchivedSub={setNoArchivedSub} noArchivedSub={noArchivedSub}
+                        archivedSub={archivedSub} setArchivedSub={setArchivedSub} />
 
                     {/* 创建课程 */}
-                    <div className={`${styles.addSubject} shadow`}>
+                    <div className={`${styles.subject} ${styles.no_select} shadow`}>
                         <div className={styles.addSubjectTop}>
 
                         </div>
