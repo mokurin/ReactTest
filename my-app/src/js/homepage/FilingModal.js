@@ -122,7 +122,7 @@ function FilingModal(props) {
                         {props.data.id.includes("filingSubject") && BodyContent()}
                         {props.data.id.includes("editSubject") && BodyEdit()}
                         <div className="modal-footer">
-                            {/* 删除 */}
+                            {/*未归档课程 删除 */}
                             {props.data.id.includes("deleteSubject") && <Button command={props.command} msg='确认删除' buttonStyle={buttonStyles[2]} />}
                             {/* 归档 */}
                             {props.data.id.includes("filingSubject") && <Button command={props.command} msg='归档自己' buttonStyle={buttonStyles[1]} />}
@@ -131,7 +131,7 @@ function FilingModal(props) {
                             {props.data.id.includes("editSubject") && <Button msg='确认编辑' buttonStyle={buttonStyles[2]} />}
                             {/* 恢复 */}
                             {props.data.id.includes("restoreSubject") && <Button command={props.command} msg='确认恢复' buttonStyle={buttonStyles[2]} />}
-                            {/* 删除 */}
+                            {/*归档课程 删除 */}
                             {props.data.id.includes("deleteArchiveSubject") && <Button command={props.command} msg='确认删除' buttonStyle={buttonStyles[2]} />}
                         </div>
                     </div>

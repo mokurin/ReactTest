@@ -114,6 +114,10 @@
     border-right: 1px solid #d6dcdf;
 }
 
+.subjectMemberStudents {
+    box-sizing: border-box;
+}
+
 .SubjectMemberInfoActions>div {
     text-align: center;
     height: 50px;
@@ -126,6 +130,7 @@
     background-color: #2c58ab;
 }
 
+/* 信息显示 */
 .SubjectMemberInfoTable {
     box-sizing: border-box;
     width: 750px;
@@ -147,15 +152,10 @@
 .subjectMembersDeleted {
     height: 25px;
     line-height: 20px;
-    background-color: #dddddd;
     font-size: 12px;
     margin-top: 6px;
-    border-radius: 3px;
+    margin-left: 30px;
     padding: 2px 8px;
-}
-
-.subjectMembersDeleted:hover {
-    background-color: #cac2c2;
 }
 
 .SubjectMemberInfo {
@@ -171,13 +171,37 @@
     line-height: 45px;
 }
 
-.SubjectMemberInfo>div>div:nth-child(3),
-.SubjectMemberInfo>div>div:nth-child(4),
-.SubjectMemberInfo>div>div:nth-child(5) {
-    width: 75px;
+.individualMember {
+    box-sizing: border-box;
+}
+
+.SubjectAllMembers {
+    box-sizing: border-box;
+}
+
+/* 学号 */
+.SubjectMemberInfo>div>div:nth-child(3) {
+    width: 150px;
     font-size: 15px;
     padding: 0 8px;
     margin: 0 10px;
+}
+
+/* 姓名 */
+.SubjectMemberInfo>div>div:nth-child(4) {
+    width: 90px;
+    font-size: 15px;
+    padding: 0 18px;
+    margin-left: 10px;
+}
+
+
+/* 邮箱 */
+.SubjectMemberInfo>div>div:nth-child(5) {
+    width: 150px;
+    font-size: 14px;
+    padding: 0 8px;
+    margin: 0 5px;
 }
 
 .SubjectMemberInfo>div>img {
