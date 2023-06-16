@@ -60,7 +60,6 @@ function SubjectAction(props) {
                         <div className="modal-body">
                             <div className={`${styles.myModalBodySorted} shadow rounded`} id='sortedTable'>
                                 {/* 排序内容显示 */}
-                                {/* {listItems} */}
                                 <SubjectSortedBarItems setNoArchivedSub={setNoArchivedSub}
                                     noArchivedSub={noArchivedSub} />
                             </div>
@@ -108,9 +107,10 @@ function SubjectAction(props) {
                         <div className="modal-body">
                             <div className={`${styles.myModalBodyManage} shadow rounded`}>
                                 {/* 已归档的课程显示 */}
-                                {/* {archivedItems} */}
                                 <SmallSubjectItems setArchivedSub={setArchivedSub}
-                                    archivedSub={archivedSub} />
+                                    archivedSub={archivedSub}
+                                    setNoArchivedSub={setNoArchivedSub}
+                                />
                             </div>
                         </div>
                     </div>

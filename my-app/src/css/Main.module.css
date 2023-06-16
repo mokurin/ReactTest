@@ -23,6 +23,10 @@
     border-bottom: 3px solid #4285f4;
 }
 
+.selected {
+    border-bottom: 3px solid #4285f4;
+}
+
 
 /* 导航栏 Left */
 .logo {
@@ -111,12 +115,20 @@
 }
 
 .subject {
-    border-radius: 5px;
+    border-radius: 10px;
     margin: 15px 20px;
     box-sizing: border-box;
     flex: 0 0 250px;
     width: 250px;
     height: 230px;
+    cursor: pointer;
+    transition: all 0.1s linear 0s !important;
+    top: 0;
+}
+
+.subject:hover {
+    position: relative;
+    top: -3px ;
 }
 
 .subjectTop {
@@ -173,14 +185,6 @@
 }
 
 /* 添加课程（非按钮） */
-.addSubject {
-    margin: 15px 12px;
-    box-sizing: border-box;
-    flex: 0 0 250px;
-    width: 250px;
-    height: 230px;
-    border-radius: 1px solid black;
-}
 
 .addSubjectTop {
     width: 100%;
@@ -283,15 +287,15 @@
     padding: 5px;
 }
 
-.subjectBottomTeacher{
+.subjectBottomTeacher {
     padding: 5px;
 }
 
-.subName{
+.subName {
     font-size: 17px;
 }
 
-.teacherName{
+.teacherName {
     font-size: 15px;
 }
 
@@ -328,4 +332,12 @@
     background-color: #328ee9;
     margin-top: 16px;
     margin-left: 10px;
+}
+
+/* 文字不可选择复制 */
+.no_select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
