@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useLocation } from 'react-router';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 // css
 import styles from '../css/Main.module.css'
 // 组件引用
@@ -18,18 +18,56 @@ import Sort from '../img/sort-down-alt.svg'
 import fileCtrl from '../img/files-alt.svg'
 
 //课程信息引用
-import { noArchivedSubjects } from './subject/NoArchivedSubjects'
-import { archivedSubjects } from './subject/ArchivedSubjects'
+import { noArchivedSubjects, updateNoArchivedSubjects } from './subject/NoArchivedSubjects'
+import { archivedSubjects, updateArchivedSubjects } from './subject/ArchivedSubjects'
+import subjectInfo, { getAllSubs } from './subject/SubjectInfo'
 
 
 
 function Main(props) {
     const [noArchivedSub, setNoArchivedSub] = useState(noArchivedSubjects);
     const [archivedSub, setArchivedSub] = useState(archivedSubjects);
-    const location = useLocation();
-    console.log(location.state);
+    const navigate = useNavigate();
+    const user_Account = JSON.parse(localStorage.getItem('user_Account'));
+
+    //处理页面加载
+    useEffect(() => {
+        if (user_Account !== null && user_Account !== undefined) {
+            updateNoArchivedSubjects([{
+                createdTime: "第一学期",
+                name: "软件工程软件工程软件工程软件工程软件工程",
+                class: "121230204",
+                code: "AAA",
+                teacher: "xxx"
+            },
+            subjectInfo("第二学期", "应用数学应用数学应用数学应用数学应用数学", "121230202", "BBB", "vvv"),
+            subjectInfo("第一学期", "爱德华拉到哈罗德了", "121230202", "CCC", "vvv")]);
+
+            updateArchivedSubjects([subjectInfo("第二学期", "离散数学离散数学离散数学离散数学离散数学离散数学离散数学", "121230202", "DDD", "sss")])
+
+            new Promise((resolve, reject) => {
+                //请求所有课程数据
+                if (getAllSubs(user_Account))
+                    resolve();
+                else reject();
+            }).then(() => {
+                //请求成功则加载内容
+                setNoArchivedSub(noArchivedSubjects);
+                setArchivedSub(archivedSubjects);
+            }).catch(() => {
+                //请求失败则加载到登录页面
+                navigate('/Login');
+            })
+        } else {
+            //未登录则加载到登录页面
+            navigate('/Login');
+        }
+    }, [])
+
+
 
     return (
+        (user_Account !== null) &&
         <>
             {/* 导航栏 */}
             <div className={`${styles.navigation} bg-body-tertiary container fixed-top shadow-lg rounded`}>

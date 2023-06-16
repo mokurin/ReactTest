@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from '../css/Forget.module.css'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Connect from './Connect'
 
 // 定义一个函数来检查表单的有效性
 function check(e, flag) {
@@ -26,23 +27,22 @@ function onSubmit(e, data) {
         case 1:
             // 发送验证码到邮箱
             return new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    // 执行成功
-                    resolve(true)
-                }, 200)
+                resolve(true);
             })
         case 2:
             // 验证验证码是否正确
             console.log('验证' + data.code + '验证码是否正确');
-            // return true;s
-            break;
+            return new Promise((resolve, reject) => {
+                resolve(true);
+            });
         case 3:
             // 设置新密码
             console.log('设置新密码');
-            // return true;
-            break;
+            return new Promise((resolve, reject) => {
+                resolve(true);
+            });
         default:
-        // return false;
+            return false;
     }
 };
 
@@ -50,7 +50,6 @@ function onSubmit(e, data) {
 const Step1 = (props) => {
     const validateEmail = e => {
         if (!/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(e.target.value)) {
-            console.log('ok');
             e.target.setCustomValidity("邮箱格式不正确");
         } else {
             //没有错误。清除任何错误消息
@@ -82,7 +81,6 @@ const Step1 = (props) => {
 }
 
 const Step2 = (props) => {
-    console.log(props);
     return (
         <form className={`${styles.Form} shadow-lg row`} id='needs-validation' >
             <div className={`${styles.header} mt-1`}>安全验证</div>
@@ -90,11 +88,8 @@ const Step2 = (props) => {
             <div className="col-md-4">
                 <label htmlFor="validationCustom01" className="form-label">请输入验证码</label>
                 <input type="text" className="form-control" id="validationCustom01" required />
-                <div className="valid-feedback">
-                    验证码正确
-                </div>
                 <div className="invalid-feedback">
-                    验证码有误
+                    验证码未填写或有误
                 </div>
             </div>
             <div className="col-12">
@@ -108,22 +103,32 @@ const Step2 = (props) => {
 }
 
 const Step3 = (props) => {
+    const [data, setDate] = useState({});
+
+    function handleClick() {
+        const pwd = document.getElementById('validationCustom01').value;
+        const checkPwd = document.getElementById('validationCustom02').value;
+        setDate({
+            pwd: pwd,
+            checkPwd: checkPwd
+        })
+
+        document.querySelector('#validationCustom02').setAttribute('pattern', '^' + pwd + '$')
+    }
+
     return (
         <form className={`${styles.Form} shadow-lg row`} id='needs-validation'>
             <div className={`${styles.header} mt-1`}>设置新密码</div>
             <div className="col-md-4">
                 <label htmlFor="validationCustom01" className="form-label">请输入密码</label>
-                <input type="password" className="form-control" id="validationCustom01" required />
-                <div className="valid-feedback">
-                    密码有效
-                </div>
+                <input onKeyUp={handleClick} type="password" className="form-control" id="validationCustom01" required />
                 <div className="invalid-feedback">
-                    密码无效
+                    未输入密码
                 </div>
             </div>
             <div className="col-md-4">
                 <label htmlFor="validationCustom02" className="form-label">请再次输入密码确认</label>
-                <input type="password" className="form-control" id="validationCustom02" required />
+                <input onKeyUp={handleClick} type="password" className="form-control" id="validationCustom02" required />
                 <div className="invalid-feedback">
                     密码不一致
                 </div>
@@ -138,72 +143,75 @@ const Step3 = (props) => {
     );
 }
 
-class Forget extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            step: 1
-        }
-        this.handleData.bind(this)
-        this.handleClick.bind(this)
+function Forget(props) {
+    const [step, setStep] = useState(1);
+    const [data, setDate] = useState();
+    const navigate = useNavigate();
+
+    //更改步数
+    const handleStep = () => {
+        setStep(step + 1);
     }
 
-    handleClick = () => {
-        this.setState(prevState => ({
-            step: prevState.step + 1
-        }));
+    //更改信息
+    const handleData = (data) => {
+        setDate(data);
     }
 
-    handleData = (data) => {
-        this.setState({ data });
-        console.log(this.state);
-    }
-
-    render() {
-        let button;
-        if (this.state.step === 1) {
-            button = (<button type='click' className={`btn btn-lg btn-primary ${styles.nextButton}`}
-                onClick={(e) => {
-                    let data = {
-                        step: 1,
-                        email: document.querySelector('#validationCustom01').value
+    let button;
+    if (step === 1) {
+        button = (<button type='click' className={`btn btn-lg btn-primary ${styles.nextButton}`}
+            onClick={(e) => {
+                let data = {
+                    step: 1,
+                    email: document.querySelector('#validationCustom01').value
+                }
+                onSubmit(e, data).then((result) => {
+                    if (check(e, result)) {
+                        handleData(data);
+                        handleStep();
                     }
-                    onSubmit(e, data).then((result) => {
-                        if (check(e, result)) {
-                            this.handleData(data);
-                            this.handleClick();
-                        }
-                    })
-                }}> 下一步</button >)
-        } else if (this.state.step === 2) {
-            button = (<button type='click' className={`btn btn-lg btn-primary ${styles.nextButton}`}
-                onClick={(e) => {
-                    let data = {
-                        step: 2,
-                        code: document.querySelector('#validationCustom01').value
+                })
+            }}> 下一步</button >)
+    } else if (step === 2) {
+        button = (<button type='click' className={`btn btn-lg btn-primary ${styles.nextButton}`}
+            onClick={(e) => {
+                let dat = {
+                    step: 2,
+                    email: data.email,
+                    code: document.querySelector('#validationCustom01').value
+                }
+                onSubmit(e, dat).then((result) => {
+                    if (check(e, result))
+                        handleStep()
+                })
+            }}>完成验证</button>)
+    } else if (step === 3) {
+        button = (<button type='click' className={`btn btn-lg btn-primary ${styles.nextButton}`}
+            onClick={(e) => {
+                let dat = {
+                    step: 3,
+                    newPwd: document.querySelector('#validationCustom01').value,
+                    checkPwd: document.querySelector('#validationCustom02').value
+                }
+                onSubmit(e, dat).then((result) => {
+                    if (check(e, result)) {
+                        //跳转至登录页
+                        navigate('/Login', {
+                            state: {
+                                email: data.email
+                            }
+                        })
                     }
-                    if (check(e, data))
-                        this.handleClick()
-                }}>完成验证</button>)
-        } else if (this.state.step === 3) {
-            button = (<button type='click' className={`btn btn-lg btn-primary ${styles.nextButton}`}
-                onClick={(e) => {
-                    let data = {
-                        step: 3,
-                        newPwd: document.querySelector('#validationCustom01').value,
-                        checkPwd: document.querySelector('#validationCustom03').value
-                    }
-                    if (check(e, data))
-                        this.handleClick()
-                }}>完成验证</button>)
-        }
-
-        return (
-            (this.state.step === 1 && <Step1 button={button} />) ||
-            (this.state.step === 2 && <Step2 button={button} data={this.state.data} />) ||
-            (this.state.step === 3 && <Step3 button={button} />)
-        )
+                })
+            }}>确认密码</button>)
     }
+
+    return (
+        (step === 1 && <Step1 button={button} />) ||
+        (step === 2 && <Step2 button={button} data={data} />) ||
+        (step === 3 && <Step3 button={button} />)
+    )
 }
 
 export default Forget;

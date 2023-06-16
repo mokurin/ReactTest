@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../css/Login.module.css'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Send } from './Connect'
 import bootstrap from 'bootstrap/dist/js/bootstrap';
 
@@ -10,19 +10,28 @@ export default function Login(props) {
     const [msg, setMsg] = useState('');
     const [isAutoLogin, setIsAutoLogin] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
 
-    window.onload = () => {
-        const user_Account = JSON.parse(localStorage.getItem('user_Account'));
-        if (user_Account !== undefined && user_Account !== null)
-            if (user_Account.isAutoLogin) {
-                //跳转主页
-                navigate('/Main', { state: user_Account.data });
-            } else {
-                //自动填充账号密码
-                document.querySelector('#email').value = user_Account.email;
-                document.querySelector('#pwd').value = user_Account.passwd;
-            }
-    }
+    //加载内容
+    useEffect(() => {
+        const s = location.state;
+        if (s !== null) {
+            if (s.email === null || s.email === undefined) {
+                const user_Account = JSON.parse(localStorage.getItem('user_Account'));
+                if (user_Account !== undefined && user_Account !== null)
+                    if (user_Account.isAutoLogin) {
+                        //跳转主页
+                        navigate('/Main');
+                    } else {
+                        //自动填充账号密码
+                        document.querySelector('#email').value = user_Account.email;
+                        document.querySelector('#pwd').value = user_Account.passwd;
+                    }
+            } else//填充账号
+                document.querySelector('#email').value = s.email;
+        }
+    }, [])
+
 
     //登录函数
     const login = (e) => {
@@ -39,7 +48,7 @@ export default function Login(props) {
                     email: data.email,
                     passwd: data.passwd,
                     isAutoLogin: isAutoLogin,
-                    data: msg.data
+                    data: msg.user_data
                 }
                 localStorage.setItem('user_Account', JSON.stringify(user_Account));
                 //跳转主页
@@ -47,10 +56,10 @@ export default function Login(props) {
             } else {//登录失败
                 new Promise((resolve, reject) => {
                     setMsg(msg.err_code);
-                    resolve()
+                    resolve();
                 }).then(() => {
                     const modal = new bootstrap.Modal('#exampleModal');
-                    modal.show()
+                    modal.show();
                 })
             }
         })

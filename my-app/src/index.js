@@ -28,17 +28,4 @@ ReactDOM.createRoot(document.getElementById("root")).render((
   </BrowserRouter >
 ));
 
-
-// import Test from './js/Test'
-// //Test
-// ReactDOM.createRoot(document.getElementById("root")).render((
-//   <BrowserRouter>
-//     <Routes>
-//       <Route path="/Test" element={<Test />} />
-//     </Routes>
-//   </BrowserRouter >
-// ));
-
-
-
 reportWebVitals();

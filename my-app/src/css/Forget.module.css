@@ -13,7 +13,7 @@
     top: 20%;
     transform: translateX(-50%);
     width: 450px;
-    height: 350px;
+    min-height: 350px;
     border: 1px solid #0d6efd;
 }
 
