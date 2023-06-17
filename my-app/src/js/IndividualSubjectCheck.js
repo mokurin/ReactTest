@@ -42,7 +42,7 @@ export const SubjectCheckNav = (props) => {
             <div className={`${styles.subjectCheckNavBack}`}>
                 <img src={icon_back} alt="" />
                 <div className={`${styles.IndividualSubjectCheckName} text-truncate`}>
-                    课程名课程名课程名课程名课程名
+                    课程名课程名课程名课程名课程名{props.subjectName}
                 </div>
             </div>
             <div className={`${styles.IndividualSubjectCheckActions}`}>
@@ -51,7 +51,7 @@ export const SubjectCheckNav = (props) => {
                         props.setStatus(true)
                     }
                     }>
-                    成员
+                    {props.action}
                 </div>
             </div>
             <div className={`${styles.individualProfile}`}>
@@ -242,7 +242,7 @@ export default function IndividualSubjectCheck(props) {
 
     return (<>
         <div className={`${styles.subjectCheckPage}`}>
-            <SubjectCheckNav setStatus={setStatus} />
+            <SubjectCheckNav setStatus={setStatus} action="成员" />
             <SubjectInfoMain status={statusInfo} />
         </div>
     </>)

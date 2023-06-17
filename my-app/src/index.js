@@ -10,7 +10,13 @@ import Main from './js/Main'
 import SubjectDetailedInfo from './js/SubjectDetailedInfo';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap'
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import 'mdbreact/dist/css/mdb.css';
+import { MDBFileUpload } from 'mdbreact';
+
 import IndividualSubjectCheck from './js/IndividualSubjectCheck';
+import SubmitHomework from './js/SubmitHomework';
+
 import Connect from './js/Connect'
 
 
@@ -24,6 +30,7 @@ ReactDOM.createRoot(document.getElementById("root")).render((
       <Route path='/Main' element={<Main />} />
       <Route path='/SubjectInfo' element={<SubjectDetailedInfo info={{ subjectName: "" }} />} />
       <Route path='/IndividualSubjectCheck' element={<IndividualSubjectCheck data={{ subjectName: "" }} />} />
+      <Route path='/summithomework' element={<SubmitHomework />} />
     </Routes>
   </BrowserRouter >
 ));
