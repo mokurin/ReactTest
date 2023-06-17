@@ -10,6 +10,7 @@
     display: flex;
     justify-content: space-between;
     caret-color: transparent;
+    z-index: 1000;
 }
 
 /* 左边 */
@@ -77,12 +78,13 @@
 
 /* 主体内容 */
 .SubjectCheckMainMembers {
-    width: 800px;
+    width: 1000px;
     margin: 0 auto;
-    margin-top: 100px;
+    margin-top: 160px;
     padding-bottom: 10px;
     border: 1px solid #d6dcdf;
     border-radius: 12px;
+    transform: scale(1.2);
 }
 
 /* 搜索框 */

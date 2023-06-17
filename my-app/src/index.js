@@ -22,7 +22,7 @@ ReactDOM.createRoot(document.getElementById("root")).render((
       <Route path="/Forget" element={<Forget />} />
       <Route path='/Signup' element={<Signup />} />
       <Route path='/Main' element={<Main />} />
-      <Route path='/subjectinfo' element={<SubjectDetailedInfo info={{ subjectName: "" }} />} />
+      <Route path='/SubjectInfo' element={<SubjectDetailedInfo info={{ subjectName: "" }} />} />
       <Route path='/IndividualSubjectCheck' element={<IndividualSubjectCheck data={{ subjectName: "" }} />} />
     </Routes>
   </BrowserRouter >

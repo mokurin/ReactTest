@@ -3,7 +3,7 @@ import styles from '../../css/Main.module.css'
 import FilingModal from './FilingModal'
 //课程信息
 import { noArchivedSubjects, updateNoArchivedSubjects } from '../subject/NoArchivedSubjects'
-import { archivedSubjects, updateArchivedSubjects } from '../subject/ArchivedSubjects'
+import { archivedSubjects, updateArchivedSubjects, requestArchiveAll } from '../subject/ArchivedSubjects'
 
 
 //课程组件
@@ -44,8 +44,16 @@ function Subject(props) {
 
     //归档全部
     function archiveAll() {
+        //获取未归档课程
+        let subs = noArchivedSubjects;
+        requestArchiveAll(subs[index]);
         //归档个人
         archive();
+    }
+
+    //编辑课程
+    function editSubject() {
+       
     }
 
     return (

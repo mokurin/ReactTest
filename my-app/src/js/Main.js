@@ -32,42 +32,41 @@ function Main(props) {
 
     //处理页面加载
     useEffect(() => {
-        if (user_Account !== null && user_Account !== undefined) {
-            updateNoArchivedSubjects([{
-                createdTime: "第一学期",
-                name: "软件工程软件工程软件工程软件工程软件工程",
-                class: "121230204",
-                code: "AAA",
-                teacher: "xxx"
-            },
-            subjectInfo("第二学期", "应用数学应用数学应用数学应用数学应用数学", "121230202", "BBB", "vvv"),
-            subjectInfo("第一学期", "爱德华拉到哈罗德了", "121230202", "CCC", "vvv")]);
+        // if (user_Account !== null && user_Account !== undefined) {
+        updateNoArchivedSubjects([{
+            createdTime: "第一学期",
+            name: "软件工程软件工程软件工程软件工程软件工程",
+            class: "121230204",
+            code: "AAA",
+            teacher: "xxx"
+        },
+        subjectInfo("第二学期", "应用数学应用数学应用数学应用数学应用数学", "121230202", "BBB", "vvv"),
+        subjectInfo("第一学期", "爱德华拉到哈罗德了", "121230202", "CCC", "vvv")]);
 
-            updateArchivedSubjects([subjectInfo("第二学期", "离散数学离散数学离散数学离散数学离散数学离散数学离散数学", "121230202", "DDD", "sss")])
+        updateArchivedSubjects([subjectInfo("第二学期", "离散数学离散数学离散数学离散数学离散数学离散数学离散数学", "121230202", "DDD", "sss")])
 
-            new Promise((resolve, reject) => {
-                //请求所有课程数据
-                if (getAllSubs(user_Account))
-                    resolve();
-                else reject();
-            }).then(() => {
-                //请求成功则加载内容
-                setNoArchivedSub(noArchivedSubjects);
-                setArchivedSub(archivedSubjects);
-            }).catch(() => {
-                //请求失败则加载到登录页面
-                navigate('/Login');
-            })
-        } else {
-            //未登录则加载到登录页面
-            navigate('/Login');
-        }
+        // new Promise((resolve, reject) => {
+        //     //请求所有课程数据
+        //     if (getAllSubs(user_Account))
+        //         resolve();
+        //     else reject();
+        // }).then(() => {
+        //     //请求成功则加载内容
+        setNoArchivedSub(noArchivedSubjects);
+        setArchivedSub(archivedSubjects);
+        // }).catch(() => {
+        //     //请求失败则加载到登录页面
+        //     navigate('/Login');
+        // })
+        // } else {
+        //     //未登录则加载到登录页面
+        //     navigate('/Login');
+        // }
     }, [])
 
 
 
     return (
-        (user_Account !== null) &&
         <>
             {/* 导航栏 */}
             <div className={`${styles.navigation} bg-body-tertiary container fixed-top shadow-lg rounded`}>

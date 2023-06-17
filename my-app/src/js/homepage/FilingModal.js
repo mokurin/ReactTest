@@ -89,9 +89,37 @@ const BodyContent = () => {
 //课程编辑
 const BodyEdit = () => {
     return (
-        <>
-            课程编辑
-        </>
+        <form class="mt-1 mb-4 row g-3 needs-validation container justify-content-center" novalidate>
+            <div class="col-md-9">
+                <label for="validationCustom01" class="form-label">学期</label>
+                <input type="text" class="form-control" id="validationCustom01" value="Mark" required />
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="col-md-9">
+                <label for="validationCustom02" class="form-label">课程名</label>
+                <input type="text" class="form-control" id="validationCustom02" value="Otto" required />
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            
+            <div class="col-md-9">
+                <label for="validationCustom03" class="form-label">班级</label>
+                <input type="text" class="form-control" id="validationCustom03" required />
+                <div class="invalid-feedback">
+                    Please provide a valid city.
+                </div>
+            </div>
+            <div class="col-md-9">
+                <label for="validationCustom04" class="form-label">课程代码</label>
+                <input type="text" class="form-control" id="validationCustom04" required />
+                <div class="invalid-feedback">
+                    Please provide a valid city.
+                </div>
+            </div>
+        </form>
     );
 }
 
@@ -119,8 +147,8 @@ function FilingModal(props) {
                                 aria-label="Close"
                             />
                         </div>
-                        {props.data.id.includes("filingSubject") && BodyContent()}
-                        {props.data.id.includes("editSubject") && BodyEdit()}
+                        {props.data.id.includes("filingSubject") && <BodyContent />}
+                        {props.data.id.includes("editSubject") && <BodyEdit />}
                         <div className="modal-footer">
                             {/*未归档课程 删除 */}
                             {props.data.id.includes("deleteSubject") && <Button command={props.command} msg='确认删除' buttonStyle={buttonStyles[2]} />}

@@ -35,7 +35,7 @@ function createdStuInfo(stuNum, name, eMail) {
     }
 }
 
-
+//导航栏
 export const SubjectCheckNav = (props) => {
     return (<>
         <div className={`${styles.subjectCheckNav} shadow-lg`}>
@@ -48,18 +48,11 @@ export const SubjectCheckNav = (props) => {
             <div className={`${styles.IndividualSubjectCheckActions}`}>
                 <div className={`${styles.IndividualSubjectMembers}`}
                     onClick={() => {
-                        console.log(1);
                         props.setStatus(true)
                     }
                     }>
                     成员
                 </div>
-                <div className={`${styles.IndividualSubjectGrades}`}
-                    onClick={() => {
-                        console.log(2);
-                        props.setStatus(false)
-                    }
-                    }>成绩</div>
             </div>
             <div className={`${styles.individualProfile}`}>
                 <img src={bell} alt="" />
@@ -165,6 +158,13 @@ export const SubjectCheckMainMembers = (props) => {
                                 <SubjectMemberInfo info={createdStuInfo("12123020401", "宏涛", "Yomiger@163.com")} />
                                 <SubjectMemberInfo info={createdStuInfo("12123020402", "许", "Yomiger@163.com")} />
                                 <SubjectMemberInfo info={createdStuInfo("12123020402", "许111", "Yomiger@163.com")} />
+                                <SubjectMemberInfo info={createdStuInfo("12123020402", "2222许", "Yomiger@163.com")} />
+                                <SubjectMemberInfo info={createdStuInfo("12123020402", "2222许", "Yomiger@163.com")} />
+                                <SubjectMemberInfo info={createdStuInfo("12123020402", "2222许", "Yomiger@163.com")} />
+                                <SubjectMemberInfo info={createdStuInfo("12123020402", "2222许", "Yomiger@163.com")} />
+                                <SubjectMemberInfo info={createdStuInfo("12123020402", "2222许", "Yomiger@163.com")} />
+                                <SubjectMemberInfo info={createdStuInfo("12123020402", "2222许", "Yomiger@163.com")} />
+                                <SubjectMemberInfo info={createdStuInfo("12123020402", "2222许", "Yomiger@163.com")} />
                                 <SubjectMemberInfo info={createdStuInfo("12123020402", "2222许", "Yomiger@163.com")} />
                             </>
                             :

@@ -201,5 +201,12 @@ export default function SubjectDetailedInfo(props) {
                 {homeworkInfo()}
             </div>
         </div>
+        <div>
+            <span id='aaaaaa'>hello world</span>
+            <button onClick={() => {
+                const a = document.getElementById('aaaaaa');
+                console.log(a.innerHTML);
+            }}></button>
+        </div>
     </>);
 }
