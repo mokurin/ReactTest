@@ -1,0 +1,40 @@
+.postHomework {
+    box-sizing: border-box;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-bottom: 12px;
+}
+
+.homeworkSettings {
+    display: flex;
+    justify-content: space-between;
+}
+
+.homeworkSettings>div>label {
+    width: 100px;
+}
+
+.homeworkSettings>div {
+    text-align: center;
+    width: 350px;
+    display: flex;
+    align-items: center;
+}
+
+textarea {
+    height: 100px;
+    max-height: 100px;
+    resize: none;
+}
+
+input[type="date"] {
+    appearance: none;
+}
+
+
+.postHomeworkButtons {
+    margin-top: 8px;
+    display: flex;
+    box-sizing: border-box;
+    justify-content: space-between;
+}

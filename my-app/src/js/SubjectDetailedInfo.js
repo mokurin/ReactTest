@@ -9,6 +9,9 @@ import icon_data from '../img/bar-chart-line-fill.svg'
 import icon_grade from '../img/journal-text.svg'
 import icon_download from '../img/download.svg'
 
+// 组件引用
+import PostHomework from './PostHomework';
+
 
 //班级下面的 操作栏
 export const infoButton = (name, data) => {
@@ -198,15 +201,9 @@ export default function SubjectDetailedInfo(props) {
             </div>
             {homeworkButtons()}
             <div className={`${styles.homeworkTable} shadow`}>
+                <PostHomework />
                 {homeworkInfo()}
             </div>
-        </div>
-        <div>
-            <span id='aaaaaa'>hello world</span>
-            <button onClick={() => {
-                const a = document.getElementById('aaaaaa');
-                console.log(a.innerHTML);
-            }}></button>
         </div>
     </>);
 }
