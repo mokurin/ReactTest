@@ -167,8 +167,6 @@ const StuManaged = (props) => {
                 <SubjectMemberInfo info={createdStuInfo("12123020406", "许宏涛", "Yomiger@163.com")} />
                 <SubjectMemberInfo info={createdStuInfo("12123020401", "宏涛", "Yomiger@163.com")} />
                 <SubjectMemberInfo info={createdStuInfo("12123020402", "许", "Yomiger@163.com")} />
-                <SubjectTeacherInfo info={createdStuInfo("12123020402", "老师1", "Yomiger@163.com")} />
-                <SubjectTeacherInfo info={createdStuInfo("12123020402", "老师2", "Yomiger@163.com")} />
             </div>
         </div>
     </>)
@@ -247,24 +245,17 @@ export const SubjectTeacherInfo = (props) => {
         // 后端部分
     }
     return (<>
-        <div className={`${styles.SubjectMemberInfo} shadow-sm`}>
+        <div className={`${styles.teacherMemberInfo} shadow-sm`}>
             <div>
-                <div className={`form-check mt-2`}>
-                    <input className={`form-check-input ${styles.individualMember}`} type="checkbox" value="" id="individualMember"
-                        onClick={(e) => {
-                            checkNumsOfChecked(e)
-                        }}
-                    />
-                </div>
                 <img src={ProfilePicture} alt="" />
                 <div className={`text-truncate`}>
-                    姓名
+                    姓名姓名姓
                 </div >
                 <div className={`text-truncate`}>
-                    邮箱
+                    邮箱邮箱邮箱邮箱邮箱邮箱邮箱邮箱邮箱邮箱邮箱
                 </div>
                 <div className={`text-truncate`}>
-                    管理员/助教
+                    管理员/助教管理员
                 </div>
             </div>
             <button className={`btn btn-outline-secondary btn-sm ${styles.deleteThisMember}`} id='techerDeleted'

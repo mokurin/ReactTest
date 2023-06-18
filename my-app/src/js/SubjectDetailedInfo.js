@@ -32,6 +32,7 @@ export default function SubjectDetailedInfo(props) {
         deadline: new Date(),
         maxGrade: 200
     }];
+    
     const interactions = [[1, 2, 3], [2, 3, 4]];
 
 
