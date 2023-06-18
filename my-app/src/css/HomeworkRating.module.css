@@ -1,0 +1,110 @@
+.homeworkDetailed {
+    margin-top: 85px;
+    padding: 12px 0;
+    min-width: 1200px;
+    box-sizing: border-box;
+    border: 1.5px solid rgba(0, 0, 0, 0.3);
+}
+
+.homeworkDetailedTitle {
+    margin: 0 30px;
+}
+
+.homeworkDetailedTitle>div:nth-child(2) {
+    width: fit-content;
+    height: fit-content;
+    padding: 5px 12px;
+    background-color: #f2f2f2;
+}
+
+
+.homeworkName {
+    margin-bottom: 10px;
+}
+
+/* 筛选框 */
+.filteringTools {
+    margin: 10px 25px;
+}
+
+.filteredBar {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    border: 1.5px solid rgba(0, 0, 0, 0.3);
+
+}
+
+.filteredBar>div:nth-child(2),
+.filteredBar>div:nth-child(3),
+.filteredBar>div:nth-child(4),
+.filteredBar>div:nth-child(5) {
+    width: 200px;
+    margin: 0 20px;
+}
+
+.filteredBar>div:nth-child(1) {
+    border-right: 1.5px solid rgba(0, 0, 0, 0.3);
+    background-color: #f2f2f2;
+    text-align: center;
+    width: 120px;
+    height: fit-content;
+    padding: 5px 0;
+}
+
+/* 作业状况显示 */
+.homeworkMembersTable {
+    margin: 0 25px;
+    margin-top: 25px;
+    box-sizing: border-box;
+}
+
+.homeworkMembersTable>div:nth-child(1) {
+    border: 1.5px solid rgba(0, 0, 0, 0.3);
+    background-color: #f2f2f2;
+    height: 70px;
+    box-sizing: border-box;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    margin: 0 0;
+}
+
+.homeworkMembersTable>div:nth-child(1)>label {
+    margin-left: 15px;
+}
+
+/* 单条作业 */
+.homeworkMemberInfo {
+    margin: 0 0;
+    box-sizing: border-box;
+    height: 65px;
+    border: 1.5px solid rgba(0, 0, 0, 0.3);
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.homeworkMemberInfo>div {
+    width: 1000px;
+    min-width: 800px;
+    display: flex;
+    align-items: center;
+}
+
+.homeworkMemberInfo>div>div:nth-child(2) {
+    width: 200px;
+    text-align: center;
+}
+
+.homeworkMemberInfo>div>div:nth-child(3) {
+    width: 150px;
+    text-align: center;
+}
+
+.homeworkMemberInfo>div>div:nth-child(4) {
+    width: 300px;
+    text-align: center;
+}
