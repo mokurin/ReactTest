@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 // css引用
 import styles from '../css/PostHomework.module.css'
 
-import { Upload, message, Button } from 'antd';
+import { Upload } from 'antd';
 import { Send } from './Connect'
 import { useLocation } from 'react-router';
+import { getTime } from './Util'
 
 
 //发布作业组件
@@ -112,7 +113,7 @@ export default function PostHomework(props) {
     }
 
     return (
-        <div id='homeworkEditor' className={`${styles.postHomework} shadow-sm`}>
+        <div id='homeworkEditor' className={`${styles.postHomework} shadow`}>
             <div>
                 <input value={homeworkDetails.homeworkName} onChange={handleChange}
                     id='homeworkName' type="text" className={`form-control`} placeholder='作业名称' />
@@ -124,7 +125,7 @@ export default function PostHomework(props) {
                     <div>
                         <label htmlFor="deadline">截止日期:</label>
                         <input value={homeworkDetails.deadline} onChange={handleChange}
-                            id='deadline' type="datetime-local" min={getNow()} className='form-control' />
+                            id='deadline' type="datetime-local" min={getTime(new Date())} className='form-control' />
                     </div>
                     <div>
                         <label htmlFor="maxGrade">满分值: </label>
@@ -148,13 +149,3 @@ export default function PostHomework(props) {
     )
 }
 
-//获取当前时间
-function getNow() {
-    const date = new Date();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + (date.getDate())).slice(-2);
-    const year = date.getFullYear();
-    const hour = ("0" + (date.getHours())).slice(-2);
-    const min = ("0" + (date.getMinutes())).slice(-2);
-    return year + "-" + month + "-" + day + " " + hour + ":" + min;
-}

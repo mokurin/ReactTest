@@ -11,10 +11,10 @@ export default function Login(props) {
     const [isAutoLogin, setIsAutoLogin] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
+    const s = location.state;
 
     //加载内容
     useEffect(() => {
-        const s = location.state;
         if (s !== null) {
             if (s.email === null || s.email === undefined) {
                 const user_Account = JSON.parse(localStorage.getItem('user_Account'));

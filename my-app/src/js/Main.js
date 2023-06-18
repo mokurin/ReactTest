@@ -83,7 +83,7 @@ function Main(props) {
                     </div>
                     <div>
                         <img src={bell} alt="" />
-                        <span id='haveMsg' class="position-relative translate-middle badge border border-light rounded-circle bg-danger p-1"><span></span></span>
+                        <span id='haveMsg' className="position-relative translate-middle badge border border-light rounded-circle bg-danger p-1"><span></span></span>
                     </div>
                     <div className="">
                         <img src={ProfilePicture} alt="" className={styles.profile} />

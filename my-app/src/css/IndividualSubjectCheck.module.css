@@ -53,9 +53,6 @@
     text-align: center;
     font-size: 24px;
     font-weight: 500;
-}
-
-.IndividualSubjectCheckActions>div:hover {
     border-bottom: 4px solid #355fae;
 }
 

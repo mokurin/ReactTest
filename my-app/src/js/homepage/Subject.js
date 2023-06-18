@@ -94,13 +94,22 @@ function Subject(props) {
         }));
     };
 
-    function handleNav() {
-        // navigate('/')
+    //单击课程
+    function handleNav(e) {
+        const parentNode = document.getElementById('subOption' + index);
+        if (!parentNode.contains(e.target)) {
+            //跳转课程详情页
+            navigate('/SubjectInfo', {
+                state: {
+                    subData: subData
+                }
+            })
+        }
     }
 
     return (
         <>
-            <div className={`${styles.subject} ${styles.no_select} shadow`}>
+            <div onClick={handleNav} className={`${styles.subject} ${styles.no_select} shadow`}>
                 {/* 课程信息 */}
                 <div className={styles.subjectTop}>
                     <div className={styles.subjectTime}>课程时间{props.data.createdTime}</div>
@@ -114,7 +123,7 @@ function Subject(props) {
                         负责人：{props.data.teacher}
                     </div>
                     {/* 操作 */}
-                    <div className={styles.subjectBottomAction}>
+                    <div id={'subOption' + index} className={styles.subjectBottomAction}>
                         <span className={`dropup dropup-center`}>
                             <div
                                 className={`${styles.dropdownHead}`}
