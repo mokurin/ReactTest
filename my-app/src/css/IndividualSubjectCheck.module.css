@@ -141,10 +141,10 @@
 
 .SubjectMemberInfoTableNav {
     display: flex;
-    height: 40px;
+    align-items: center;
+    height: 45px;
     border-bottom: 1px solid #d6dcdf;
 }
-
 .SubjectMemberInfoTableNav>div:first-child {
     padding-top: 8px;
     margin-left: 20px;
@@ -158,6 +158,14 @@
     margin-top: 6px;
     margin-left: 30px;
     padding: 2px 8px;
+    transition: 0.5s;
+    border: 2px solid #a6c;
+    color: #a6c;
+}
+
+.subjectMembersDeleted:hover {
+    background-color: #a6c;
+    color: white;
 }
 
 .SubjectMemberInfo {
@@ -179,6 +187,13 @@
 
 .SubjectAllMembers {
     box-sizing: border-box;
+}
+
+/* 老师显示部分 */
+.SubjectAllTeachers {
+    box-sizing: border-box;
+    width: 750px;
+    padding-bottom: 10px;
 }
 
 /* 学号 */

@@ -16,15 +16,44 @@ import icon_search from '../img/search_info.svg'
 let deletedMember = []
 //监听人数
 function checkNumsOfChecked(e) {
-    let nums = 0;
-    let membersChecked = document.getElementsByClassName(styles.individualMember)
-    for (let i = 0; i < membersChecked.length; i++) {
-        if (membersChecked[i].checked)
-            nums += 1;
-    }
-    document.getElementById("allMembers").checked = (nums == membersChecked.length)
-    document.getElementById("homeworkNumsOfChecked").innerHTML = nums
+    // let nums = 0;
+    // let membersChecked = document.getElementsByClassName(styles.individualMember)
+    // for (let i = 0; i < membersChecked.length; i++) {
+    //     if (membersChecked[i].checked)
+    //         nums += 1;
+    // }
+    // document.getElementById("allMembers").checked = (nums == membersChecked.length)
+    // document.getElementById("homeworkNumsOfChecked").innerHTML = nums
 }
+// 全选按钮
+function checkedAll() {
+    // let allMembers = document.getElementById("allMembers");
+    // let membersChecked = document.getElementsByClassName(styles.individualMember)
+    // for (let i = 0; i < membersChecked.length; i++) {
+    //     membersChecked[i].checked = allMembers.checked;
+    // }
+    // document.getElementById("homeworkNumsOfChecked").innerHTML = allMembers.checked ? membersChecked.length : 0;
+}
+// 批量删除
+function deletedMembers(e) {
+    // let membersChecked = document.getElementsByClassName(styles.individualMember)
+
+    // for (let i = membersChecked.length - 1; i >= 0; i--) {
+    //     if (membersChecked[i].checked) {
+    //         let info = membersChecked[i].parentNode.parentNode.parentNode
+    //         // 删除的学生数据
+    //         deletedMember.push(info)
+
+    //         info.remove()
+    //     }
+    // }
+
+    // document.getElementById("homeworkNumsOfChecked").innerHTML = 0;
+    // document.getElementById("allMembers").checked = false;
+    //后端
+}
+
+
 
 //学生信息构建方法
 function createdStuInfo(stuNum, name, eMail) {
@@ -76,34 +105,6 @@ export const SubjectInfoMain = (props) => {
 export const SubjectCheckMainMembers = (props) => {
     // 老师成员和学生成员切换
     const [status, setStatus] = useState(true);
-    // 全选按钮
-    function checkedAll() {
-        let allMembers = document.getElementById("allMembers");
-        let membersChecked = document.getElementsByClassName(styles.individualMember)
-        for (let i = 0; i < membersChecked.length; i++) {
-            membersChecked[i].checked = allMembers.checked;
-        }
-        document.getElementById("homeworkNumsOfChecked").innerHTML = allMembers.checked ? membersChecked.length : 0;
-        console.log(document.getElementsByClassName(styles.SubjectAllMembers)[0].childNodes.length);
-    }
-    // 批量删除
-    function deletedMembers(e) {
-        let membersChecked = document.getElementsByClassName(styles.individualMember)
-
-        for (let i = membersChecked.length - 1; i >= 0; i--) {
-            if (membersChecked[i].checked) {
-                let info = membersChecked[i].parentNode.parentNode.parentNode
-                // 删除的学生数据
-                deletedMember.push(info)
-
-                info.remove()
-            }
-        }
-
-        document.getElementById("homeworkNumsOfChecked").innerHTML = 0;
-        document.getElementById("allMembers").checked = false;
-        //后端
-    }
 
     return (<>
         <div className={`${styles.SubjectCheckMainMembers} shadow`}>
@@ -126,63 +127,67 @@ export const SubjectCheckMainMembers = (props) => {
                         }}
                     >全部学生 ()</div>
                 </div>
-                <div className={`${styles.SubjectMemberInfoTable}`}>
-                    <div className={`${styles.SubjectMemberInfoTableNav}`}>
-                        <div className="form-check">
-                            <input className="form-check-input" type="checkbox" value="" id="allMembers"
-                                onClick={() => {
-                                    checkedAll();
-                                }}
-                            />
-                            <label className="form-check-label" htmlFor="allMembers">
-                                本页全选 已选多少人 (
-                                <span id={`homeworkNumsOfChecked`}>0</span>
-                                )
-                            </label>
-                        </div>
-                        <div className={`${styles.subjectMembersDeleted} btn-outline-secondary`}
-                            // data-bs-toggle="modal"
-                            // data-bs-target="#deleteSubject"
-                            onClick={(e) => {
-                                deletedMembers(e)
-                            }}
-                        >
-                            删除成员
-                        </div>
-                        {/* <FilingModal data={{ id: "deleteSubject", title: "是否确认删除这些信息?" }} /> */}
-                    </div>
-                    <div className={`${styles.SubjectAllMembers}`}>
-                        {status ?
-                            <>
-                                <SubjectMemberInfo info={createdStuInfo("12123020406", "许宏涛", "Yomiger@163.com")} />
-                                <SubjectMemberInfo info={createdStuInfo("12123020401", "宏涛", "Yomiger@163.com")} />
-                                <SubjectMemberInfo info={createdStuInfo("12123020402", "许", "Yomiger@163.com")} />
-                                <SubjectMemberInfo info={createdStuInfo("12123020402", "许111", "Yomiger@163.com")} />
-                                <SubjectMemberInfo info={createdStuInfo("12123020402", "2222许", "Yomiger@163.com")} />
-                                <SubjectMemberInfo info={createdStuInfo("12123020402", "2222许", "Yomiger@163.com")} />
-                                <SubjectMemberInfo info={createdStuInfo("12123020402", "2222许", "Yomiger@163.com")} />
-                                <SubjectMemberInfo info={createdStuInfo("12123020402", "2222许", "Yomiger@163.com")} />
-                                <SubjectMemberInfo info={createdStuInfo("12123020402", "2222许", "Yomiger@163.com")} />
-                                <SubjectMemberInfo info={createdStuInfo("12123020402", "2222许", "Yomiger@163.com")} />
-                                <SubjectMemberInfo info={createdStuInfo("12123020402", "2222许", "Yomiger@163.com")} />
-                                <SubjectMemberInfo info={createdStuInfo("12123020402", "2222许", "Yomiger@163.com")} />
-                            </>
-                            :
-                            <>
-                                <SubjectMemberInfo info={createdStuInfo("12123020406", "老师1", "Yomiger@163.com")} />
-                                <SubjectMemberInfo info={createdStuInfo("12123020401", "老师2", "Yomiger@163.com")} />
-                            </>
-                        }
-                    </div>
-                </div>
+                {status ? <StuManaged /> : <TeacherManaged />}
             </div>
         </div>
     </>);
 }
+//学生管理区域
+const StuManaged = (props) => {
+    return (<>
+        <div className={`${styles.SubjectMemberInfoTable}`}>
+            <div className={`${styles.SubjectMemberInfoTableNav}`}>
+                <div className="form-check">
+                    <input className="form-check-input" type="checkbox" value="" id="allMembers"
+                        onClick={() => {
+                            checkedAll();
+                        }}
+                    />
+                    <label className="form-check-label" htmlFor="allMembers">
+                        本页全选 已选多少人 (
+                        <span id={`homeworkNumsOfChecked`}>0</span>
+                        )
+                    </label>
+                </div>
+                <div className={`${styles.subjectMembersDeleted} shadow`}
+                    onClick={(e) => {
+                        deletedMembers(e)
+                    }}
+                >
+                    删除成员
+                </div>
+                {/* <FilingModal data={{ id: "deleteSubject", title: "是否确认删除这些信息?" }} /> */}
+            </div>
+            <div className={`${styles.SubjectAllMembers}`}>
+                <SubjectMemberInfo info={createdStuInfo("12123020406", "许宏涛", "Yomiger@163.com")} />
+                <SubjectMemberInfo info={createdStuInfo("12123020401", "宏涛", "Yomiger@163.com")} />
+                <SubjectMemberInfo info={createdStuInfo("12123020402", "许", "Yomiger@163.com")} />
+                <SubjectTeacherInfo info={createdStuInfo("12123020402", "老师1", "Yomiger@163.com")} />
+                <SubjectTeacherInfo info={createdStuInfo("12123020402", "老师2", "Yomiger@163.com")} />
+            </div>
+        </div>
+    </>)
+}
+// 老师显示区域
+const TeacherManaged = (props) => {
+    return (<>
+        <div className={`${styles.SubjectAllTeachers}`}>
+            <div className={`${styles.SubjectMemberInfoTableNav}`}>
+                <button className={`btn btn-outline-secondary btn-sm`}>
+                    添加 助教/老师
+                </button>
+                {/* <FilingModal data={{ id: "deleteSubject", title: "是否确认删除这些信息?" }} /> */}
+            </div>
+            <SubjectTeacherInfo />
+            <SubjectTeacherInfo />
+            <SubjectTeacherInfo />
+            <SubjectTeacherInfo />
+        </div>
+    </>)
+}
 
-//单条成员信息
+//单条学生成员信息
 export const SubjectMemberInfo = (props) => {
-
     //删除按钮事件
     function deleteSelf(e) {
         let deletedEle = e.target.parentNode
@@ -223,6 +228,50 @@ export const SubjectMemberInfo = (props) => {
         </div>
     </>)
 }
+
+//单条老师成员信息
+export const SubjectTeacherInfo = (props) => {
+
+    //删除按钮事件
+    function deleteSelf(e) {
+        let deletedEle = e.target.parentNode
+        //删除存放和删除
+        deletedMember.push(deletedEle)
+        deletedEle.remove()
+        checkNumsOfChecked()
+        // 后端部分
+    }
+    return (<>
+        <div className={`${styles.SubjectMemberInfo} shadow-sm`}>
+            <div>
+                <div className={`form-check mt-2`}>
+                    <input className={`form-check-input ${styles.individualMember}`} type="checkbox" value="" id="individualMember"
+                        onClick={(e) => {
+                            checkNumsOfChecked(e)
+                        }}
+                    />
+                </div>
+                <img src={ProfilePicture} alt="" />
+                <div className={`text-truncate`}>
+                    姓名
+                </div >
+                <div className={`text-truncate`}>
+                    邮箱
+                </div>
+                <div className={`text-truncate`}>
+                    管理员/助教
+                </div>
+            </div>
+            <button className={`btn btn-outline-secondary btn-sm ${styles.deleteThisMember}`} id='techerDeleted'
+                onClick={(e) => {
+                    deleteSelf(e)
+                }}
+            >删除</button>
+        </div>
+    </>)
+}
+
+
 
 //成绩
 export const SubjectInfoGrades = (props) => {
