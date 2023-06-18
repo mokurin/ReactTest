@@ -15,6 +15,7 @@ function homeworkInfo(stuNum, name, workInfo) {
     }
 }
 
+
 // 作业人员
 const HomeworkMemberInfo = (props) => {
     return (<>
@@ -104,7 +105,6 @@ const HomeworkDetailed = (props) => {
         </div>
     </>)
 }
-
 
 export default function HomeworkRating(props) {
 

@@ -142,6 +142,7 @@
     height: 45px;
     border-bottom: 1px solid #d6dcdf;
 }
+
 .SubjectMemberInfoTableNav>div:first-child {
     padding-top: 8px;
     margin-left: 20px;
@@ -192,6 +193,44 @@
     width: 750px;
     padding-bottom: 10px;
 }
+
+.teacherMemberInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 45px;
+    font-size: 15px;
+}
+
+.teacherMemberInfo>div {
+    display: flex;
+}
+
+.teacherMemberInfo>div>img {
+    margin-left: 20px;
+    width: 28px;
+    border-radius: 50%;
+}
+
+.teacherMemberInfo>div>div {
+    margin: 0 10px;
+}
+
+.teacherMemberInfo>div>:nth-child(2) {
+    width: 120px;
+    text-align: center;
+}
+
+.teacherMemberInfo>div>:nth-child(3) {
+    width: 150px;
+    text-align: center;
+}
+
+.teacherMemberInfo>div>:nth-child(4) {
+    width: 150px;
+    text-align: center;
+}
+
 
 /* 学号 */
 .SubjectMemberInfo>div>div:nth-child(3) {
