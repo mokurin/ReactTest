@@ -13,7 +13,7 @@ import InteractionTool from './homework/InteractionTool'
 
 //工具模块
 import * as Util from './Util'
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 
 //课程详情
@@ -35,6 +35,9 @@ export default function SubjectDetailedInfo(props) {
         maxGrade: 200,
         interaction: [2, 3, 4]
     }]);
+
+    //成员信息跳转
+    const navigate = useNavigate();
 
 
     return (<>
@@ -77,10 +80,10 @@ export default function SubjectDetailedInfo(props) {
 }
 
 //班级下面的 操作栏
-export const infoButton = (name, data) => {
+export const infoButton = (name, data, fuc) => {
     if (name === "成员") {
         return (<>
-            <div className={`${styles.infoButton}`}>
+            <div className={`${styles.infoButton}`} onClick={(e) => { fuc() }}>
                 <img src={icon_person} alt="" />
                 {name} {data}
             </div>
