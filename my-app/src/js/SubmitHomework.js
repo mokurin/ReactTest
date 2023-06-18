@@ -6,7 +6,7 @@ import { Upload } from 'antd';
 
 // 组件引用
 import { SubjectCheckNav } from "./IndividualSubjectCheck"
-import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.js';
+import bootstrap from 'bootstrap/dist/js/bootstrap'
 
 // css引用
 import styles from '../css/SubmitHomework.module.css'
@@ -104,7 +104,7 @@ const SubmitHomeworkMain = (props) => {
     let count = 5;
     let stopCount;
     function setTime(btn) {
-        if (count != 0) {
+        if (count !== 0) {
             btn.setAttribute("disabled", true);
             btn.innerHTML = "已提交 " + count;
             count -= 1;
@@ -160,10 +160,10 @@ const SubmitHomeworkMain = (props) => {
                     作业名{props.homeworkName}
                 </div>
                 <div className={`${styles.homeworkOtherInfo}`}>
-                    <div>
+                    <div className='shadow rounded'>
                         截止日期{props.homeworkDeadline}
                     </div>
-                    <div>
+                    <div className='shadow rounded'>
                         个人作业
                     </div>
                 </div>
@@ -180,9 +180,9 @@ const SubmitHomeworkMain = (props) => {
                         <button className={`btn btn-primary btn-sm`} id='liveToastBtn' type='button'
                             onClick={(e) => {
                                 const toastLiveExample = document.getElementById('liveToast')
-                                const toast = new bootstrap.Toast(toastLiveExample, { delay: 500 })
+                                const toast = new bootstrap.Toast(toastLiveExample, { delay: 1000 })
                                 // 上传文件为空
-                                if (fileList.length == 0) {
+                                if (fileList.length === 0) {
                                     toast.show()
                                     return;
                                 }

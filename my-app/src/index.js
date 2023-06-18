@@ -8,8 +8,6 @@ import reportWebVitals from './reportWebVitals';
 import './css/App.css';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap'
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import 'mdbreact/dist/css/mdb.css';
 
 //组件
 import Forget from './js/Forget'; //忘记密码
@@ -20,6 +18,7 @@ import SubjectDetailedInfo from './js/SubjectDetailedInfo'; //课程详情页
 import IndividualSubjectCheck from './js/IndividualSubjectCheck'; //课程成员页
 import SubmitHomework from './js/SubmitHomework'; //学生提交作业
 import HomeworkRating from './js/HomeworkRating';
+import Test from './js/Test'
 
 //服务器连接模块
 import Connect from './js/Connect'
@@ -40,5 +39,14 @@ ReactDOM.createRoot(document.getElementById("root")).render((
     </Routes>
   </BrowserRouter >
 ));
+
+// ReactDOM.createRoot(document.getElementById("root")).render((
+//   <BrowserRouter>
+//     <Routes>
+//       <Route index element={<Navigate to={'/Test'} replace={true} />} />
+//       <Route path='/Test' element={<Test />} />
+//     </Routes>
+//   </BrowserRouter >
+// ));
 
 reportWebVitals();

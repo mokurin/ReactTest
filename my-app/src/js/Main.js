@@ -77,10 +77,6 @@ function Main(props) {
                     <div className={`${styles.select} ${styles.selected}`}>课堂</div>
                 </div>
                 <div className={`${styles.right}`}>
-                    <div className={`${styles.select}`}>
-                        <img src={addPerson} alt="" />
-                        邀请教师
-                    </div>
                     <div>
                         <img src={bell} alt="" />
                         <span id='haveMsg' className="position-relative translate-middle badge border border-light rounded-circle bg-danger p-1"><span></span></span>
@@ -126,7 +122,7 @@ function Main(props) {
                         <SubjectAction setNoArchivedSub={setNoArchivedSub} setArchivedSub={setArchivedSub}
                             noArchivedSub={noArchivedSub} archivedSub={archivedSub} />
 
-                        <div className={`btn  btn-primary ${styles.contentNavRightBtn}`}>+创建/加入课程</div>
+                        <div className={`btn btn-primary ${styles.contentNavRightBtn}`}>+创建/加入课程</div>
                     </div>
                 </div>
                 <div className={`${styles.divider} shadow-sm`} />

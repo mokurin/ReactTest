@@ -64,7 +64,6 @@ function Subject(props) {
         sub.name = data.name;
         sub.class = data.class;
         setSubData(sub);
-        // updateSubject(sub);
         new Promise((resolve, reject) => {
             if (updateSubject(sub)) {
                 let newSubs = []

@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 
+import styles from '../css/Main.module.css'
+
 const Test = () => {
-    // 设置一个state属性content，初始值是字符串‘初始状态’
-    // 初始值其实可以是任意类型的变量，包括字符串、boolean、列表、字典对象等等
-    const [content, setContent] = useState('初始状态')
     return (
-        <div onClick={() => {
-            content === '初始状态' ? setContent('新的状态') : setContent('初始状态')
-        }}>
-            {content}
+        <div className="dropdown">
+            <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Dropdown button
+            </button>
+            <ul className="dropdown-menu">
+                <li><a className="dropdown-item" href="#">Action</a></li>
+                <li><a className="dropdown-item" href="#">Another action</a></li>
+                <li><a className="dropdown-item" href="#">Something else here</a></li>
+            </ul>
         </div>
     )
 }
