@@ -140,7 +140,7 @@ export const SubjectCheckMainMembers = (props) => {
                                 )
                             </label>
                         </div>
-                        <div className={`${styles.subjectMembersDeleted} btn btn-outline-secondary`}
+                        <div className={`${styles.subjectMembersDeleted} btn-outline-secondary`}
                             // data-bs-toggle="modal"
                             // data-bs-target="#deleteSubject"
                             onClick={(e) => {

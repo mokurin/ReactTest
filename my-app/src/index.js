@@ -2,11 +2,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Forget from './js/Forget';
-import Signup from './js/Signup';
-import Login from './js/Login'
-import Main from './js/Main'
-import SubjectDetailedInfo from './js/SubjectDetailedInfo';
+import reportWebVitals from './reportWebVitals';
+
+//样式
+import './css/App.css';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap'
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -20,6 +19,7 @@ import Main from './js/Main'; //主页
 import SubjectDetailedInfo from './js/SubjectDetailedInfo'; //课程详情页
 import IndividualSubjectCheck from './js/IndividualSubjectCheck'; //课程成员页
 import SubmitHomework from './js/SubmitHomework'; //学生提交作业
+import HomeworkRating from './js/HomeworkRating';
 
 //服务器连接模块
 import Connect from './js/Connect'
