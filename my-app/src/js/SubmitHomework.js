@@ -27,7 +27,7 @@ class SearchData extends Component {
     }
 
 
-    //文件发送请求事件
+    // 文件发送请求事件
     // getFilesHandle = () => {
     //     const { file } = this.state;
     //     const formData = new FormData();
