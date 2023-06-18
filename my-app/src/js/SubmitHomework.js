@@ -46,7 +46,7 @@ export const UploadFiles = (props) => {
             const end = Math.min((currentChunk + 1) * chunkSize, file.size);
             const chunk = file.slice(start, end);
             const msg = {
-                // userEmail: email,
+                // userEmail: props.email,
                 fileName: file.name,
                 fileSize: file.size,
                 fileType: file.type,
