@@ -8,8 +8,6 @@ import reportWebVitals from './reportWebVitals';
 import './css/App.css';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap'
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import 'mdbreact/dist/css/mdb.css';
 
 //组件
 import Forget from './js/Forget'; //忘记密码

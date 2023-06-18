@@ -215,3 +215,17 @@
     margin: 0 25px;
     margin-top: 20px;
 }
+
+/* 返回上一级 */
+.returnLastPage {
+    position: fixed;
+    left: 5px;
+    top: 5px;
+    color: black;
+    font-size: 12px;
+}
+
+.returnLastPageq>img {
+    width: 12px;
+    margin-right: 5px;
+}

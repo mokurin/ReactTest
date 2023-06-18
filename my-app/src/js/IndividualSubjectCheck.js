@@ -11,6 +11,7 @@ import bell from '../img/bell.svg'
 import ProfilePicture from '../img/profile.png'
 import icon_back from '../img/arrow-left.svg'
 import icon_search from '../img/search_info.svg'
+import { useLocation, useNavigate } from 'react-router';
 
 // 已删除的学生数据
 let deletedMember = []
@@ -71,12 +72,16 @@ function createdStuInfo(stuNum, name, eMail) {
 
 //导航栏
 export const SubjectCheckNav = (props) => {
+    const navigate = useNavigate()
+
     return (<>
         <div className={`${styles.subjectCheckNav} shadow-lg`}>
             <div className={`${styles.subjectCheckNavBack}`}>
-                <img src={icon_back} alt="" />
+                <img src={icon_back} alt="" onClick={(e) => {
+                    navigate(-1);
+                }} />
                 <div className={`${styles.IndividualSubjectCheckName} text-truncate`}>
-                    课程名课程名课程名课程名课程名{props.subjectName}
+                    {props.info.subName}
                 </div>
             </div>
             <div className={`${styles.IndividualSubjectCheckActions}`}>
@@ -154,7 +159,7 @@ const StuManaged = (props) => {
                         )
                     </label>
                 </div>
-                <div className={`${styles.subjectMembersDeleted} shadow`}
+                <div className={`${styles.subjectMembersDeleted} btn btn-outline-secondary`}
                     onClick={(e) => {
                         deletedMembers(e)
                     }}
@@ -281,13 +286,19 @@ export const SubjectInfoGrades = (props) => {
 export default function IndividualSubjectCheck(props) {
     const [status, setStatus] = useState(true);
 
+    const location = useLocation();
+    const subjectData = (location.state == null || location.state == undefined) ? "" : location.state;
+
+
     const statusInfo = useMemo(() => ({
         value: status
     }), [status])
 
     return (<>
         <div className={`${styles.subjectCheckPage}`}>
-            <SubjectCheckNav setStatus={setStatus} action="成员" />
+            <SubjectCheckNav setStatus={setStatus} action="成员" info={{
+                subName: subjectData.subName
+            }} />
             <SubjectInfoMain status={statusInfo} />
         </div>
     </>)

@@ -5,6 +5,7 @@ import styles from "../css/SubjectInfo.module.css"
 
 //图标引用
 import icon_person from '../img/person.svg'
+import icon_back from '../img/arrow-left.svg'
 
 // 组件引用
 import PostHomework from './PostHomework';
@@ -39,10 +40,23 @@ export default function SubjectDetailedInfo(props) {
     //成员信息跳转
     const navigate = useNavigate();
 
+    //跳转成员管理
+    function jumpToMngMem() {
+        navigate('/IndividualSubjectCheck', {
+            state: {
+                subName: subData.name
+            }
+        })
+    }
 
     return (<>
         <div className={`${styles.subjectInfoPage} container shadow-lg`}>
             <div className={`${styles.subjectInfoPageHeader}`}>
+                <div className={`${styles.returnLastPage}`} onClick={(e) => {
+                    navigate(-1)
+                }} >
+                    <img src={icon_back} alt="" />返回
+                </div>
                 <div className={`${styles.subjectInfoPageHeaderLeft}`}>
                     <div className={`${styles.headerleftTitle} text-truncate fs-1`}>
                         <div className={`text-truncate fs-1`}>
@@ -54,7 +68,7 @@ export default function SubjectDetailedInfo(props) {
                     </div>
                     <div className={`${styles.headerleftActions}`}>
                         {infoButton("加课码", subData !== null ? subData.code : '')}
-                        {infoButton("成员", "128")}
+                        {infoButton("成员", "128", jumpToMngMem)}
                     </div>
                 </div>
                 {Util.isTeacher("0") &&
