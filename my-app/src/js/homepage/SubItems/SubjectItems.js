@@ -10,7 +10,8 @@ export default function SubjectItems(props) {
     const getSubjectItems = () => {
         let subjectItems = noArchivedSub.map(
             (sub, index) => {
-                return <Subject setNoArchivedSub={setNoArchivedSub} setArchivedSub={setArchivedSub}
+                return <Subject noArchivedSub={noArchivedSub}
+                 setNoArchivedSub={setNoArchivedSub} setArchivedSub={setArchivedSub}
                     data={sub} key={index} id={`subject${index}`} />;
             }
         )

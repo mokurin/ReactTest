@@ -15,7 +15,7 @@ import PostHomework from './PostHomework';
 
 //班级下面的 操作栏
 export const infoButton = (name, data) => {
-    if (name == "成员" || name == "同学") {
+    if (name === "成员") {
         return (<>
             <div className={`${styles.infoButton}`}>
                 <img src={icon_person} alt="" />
@@ -23,76 +23,35 @@ export const infoButton = (name, data) => {
             </div>
         </>)
     }
-    else if (name == "成绩") {
-        return (<>
-            <div className={`${styles.infoButton}`}>
-                <img src={icon_grade} alt="" />
-                {name} {data}
-            </div>
-        </>)
-    }
-    else if (name == "数据分析") {
-        return (<>
-            <div className={`${styles.infoButton}`}>
-                <img src={icon_data} alt="" />
-                {name} {data}
-            </div>
-        </>)
-    }
-
     return (<>
         <div className={`${styles.infoButton}`}>
             {name}：{data}
         </div>
     </>)
 }
-//
+
 export const interationTool = (name, nums) => {
-    if (name == "未批") {
-        return (<>
-            <div className={`${styles.interationTool}`}>
-                <div className={`${styles.interationToolNums} fs-1`}>
-                    {nums}
-                </div>
-                <div className={`${styles.interationToolName} text-danger`}>
-                    {name}
-                </div>
-            </div>
-        </>);
-    }
     return (<>
         <div className={`${styles.interationTool}`}>
             <div className={`${styles.interationToolNums} fs-1`}>
                 {nums}
             </div>
-            <div className={`${styles.interationToolName}`}>
+            <div className={`${styles.interationToolName} ${name == "未批" ? 'text-danger' : ''}`}>
                 {name}
             </div>
         </div>
     </>);
 }
+
 //导航栏按钮
-export const navButton = (name) => {
+export const navButton = (name, isSelected) => {
     return (<>
-        <div className={`${styles.navButton}`}>
+        <div className={`${styles.navButton} ${isSelected ? styles.selected : ''}`}>
             {name}
         </div>
     </>);
 }
-// 老师独有的发布作业和下载作业按钮
-export const homeworkButtons = () => {
-    return (<>
-        <div className={`${styles.homeworkActions}`}>
-            <button className={`btn btn-outline-primary ${styles.homeworkPublished}`}>
-                发布个人作业
-            </button>
-            <div className={`${styles.doloadHomeworks}`}>
-                <img src={icon_download} alt="" />
-                <a href="#">下载所有作业</a>
-            </div>
-        </div>
-    </>);
-}
+
 
 //判断身份
 function isTeacher(status) {
@@ -134,7 +93,7 @@ export const homeworkInfo = (props) => {
                         <div className={`${styles.homeworkSubmissionInfo}`}>
                             {interationTool("已批", 0)}
                             {interationTool("未批", 0)}
-                            {interationTool("未叫", 0)}
+                            {interationTool("未交", 0)}
                         </div>
                         :
                         <div className={`${styles.homeworkSubmitted}`}>
@@ -170,17 +129,7 @@ export default function SubjectDetailedInfo(props) {
                     </div>
                     <div className={`${styles.headerleftActions}`}>
                         {infoButton("加课码", "ABCDE")}
-                        {isTeacher("0") ?
-                            <>
-                                {infoButton("成员", "128")}
-                                {infoButton("数据分析")}
-                            </>
-                            :
-                            <>
-                                {infoButton("同学", "128")}
-                            </>
-                        }
-                        {infoButton("成绩")}
+                        {infoButton("成员", "128")}
                     </div>
                 </div>
                 {isTeacher("0") &&
@@ -193,13 +142,12 @@ export default function SubjectDetailedInfo(props) {
             </div>
             <div className={`${styles.navActions} shadow-sm`}>
                 {navButton("课程互动")}
-                {navButton("作业")}
+                {navButton("作业", true)}
                 {navButton("话题")}
                 {navButton("资料")}
                 {navButton("测试")}
                 {navButton("公告")}
             </div>
-            {homeworkButtons()}
             <div className={`${styles.homeworkTable} shadow`}>
                 <PostHomework />
                 {homeworkInfo()}
