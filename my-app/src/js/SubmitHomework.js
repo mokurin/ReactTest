@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router';
 
 // 上传文件
 import { Upload } from 'antd';
@@ -10,16 +11,15 @@ import { SubjectCheckNav } from "./IndividualSubjectCheck"
 import styles from '../css/SubmitHomework.module.css'
 
 //服务端连接
-import {Send} from './Connect'
+import { Send } from './Connect'
 
 
 //上传文件 作业
 export const UploadFiles = (props) => {
-    const [fileList, setFileList] = useState([]);
+    const { fileList, setFileList } = props;
 
     //更改上传的文件列表
     const handleFilesChange = ({ fileList }) => {
-        console.log(fileList);
         setFileList(fileList);
     };
 
@@ -31,6 +31,26 @@ export const UploadFiles = (props) => {
         beforeUpload: () => false,
         fileList: fileList
     };
+
+
+
+    return (<>
+        <div className={`${styles.UploadFiles} shadow`}>
+            <Upload {...settings}>
+                <button className={`btn btn-primary`}>导入作业</button>
+            </Upload>
+        </div>
+    </>);
+}
+
+// 整个提交作业区域
+const SubmitHomeworkMain = (props) => {
+    const [fileList, setFileList] = useState([]);
+    const [message, setMessage] = useState('');
+    const location = useLocation();
+    const s = location.state;
+    const email = (s !== null && s !== undefined) ? s.email : '';
+
 
     //文件上传
     const handleUploadFiles = () => {
@@ -68,17 +88,36 @@ export const UploadFiles = (props) => {
         sendChunk();
     };
 
-    return (<>
-        <div className={`${styles.UploadFiles} shadow`}>
-            <Upload {...settings}>
-                <button className={`btn btn-primary`}>导入作业</button>
-            </Upload>
-        </div>
-    </>);
-}
 
-// 整个提交作业区域
-const SubmitHomeworkMain = (props) => {
+    function submitMessage() {
+        const msg = {
+            api: '',
+            email: email,
+            message: message
+        }
+        Send(msg, (msg) => {
+            if (msg.status)
+                console.log('submit finished');
+            else {
+                console.log(msg.err_code);
+            }
+        });
+    }
+
+    function submitHomework() {
+        //提交留言
+        submitMessage();
+        //提交文件
+        handleUploadFiles();
+    }
+
+    //输入框变化
+    const handleChange = (e) => {
+        const value = e.target.value;
+        setMessage(value)
+    }
+
+
     return (<>
         <div className={`${styles.SubmitHomeworkMain} shadow`}>
             <div className={`${styles.SubmitHomeworkMainTitle}`}>
@@ -95,14 +134,16 @@ const SubmitHomeworkMain = (props) => {
                 </div>
             </div>
             <div className={`${styles.SubmitHomeworkArea}`}>
-                <UploadFiles />
+                <UploadFiles fileList={fileList} setFileList={setFileList} />
                 <div className={`${styles.otherActions}`}>
                     <div className={``}>
                         <label htmlFor="inputPassword" className=" col-form-label">作业留言：</label>
-                        <input type="text" className="form-control" id="inputPassword" placeholder='点击添加留言' />
+                        <input value={message} onChange={handleChange}
+                            type="text" className="form-control" id="inputPassword" placeholder='点击添加留言' />
                     </div>
                     <button className={`btn btn-primary btn-sm`}
                         onClick={() => {
+                            submitHomework();
                         }}
                     >提交作业</button>
                 </div>

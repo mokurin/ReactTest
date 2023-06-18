@@ -50,6 +50,7 @@ export default function PostHomework(props) {
             const end = Math.min((currentChunk + 1) * chunkSize, file.size);
             const chunk = file.slice(start, end);
             const msg = {
+                api: '',
                 userEmail: email,
                 fileName: file.name,
                 fileSize: file.size,
