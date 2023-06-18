@@ -5,6 +5,7 @@ import styles from "../css/SubjectInfo.module.css"
 
 //图标引用
 import icon_person from '../img/person.svg'
+import icon_back from '../img/arrow-left.svg'
 
 // 组件引用
 import PostHomework from './PostHomework';
@@ -13,7 +14,7 @@ import InteractionTool from './homework/InteractionTool'
 
 //工具模块
 import * as Util from './Util'
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 
 //课程详情
@@ -36,10 +37,26 @@ export default function SubjectDetailedInfo(props) {
         interaction: [2, 3, 4]
     }]);
 
+    //成员信息跳转
+    const navigate = useNavigate();
+
+    //跳转成员管理
+    function jumpToMngMem() {
+        navigate('/IndividualSubjectCheck', {
+            state: {
+                subName: subData.name
+            }
+        })
+    }
 
     return (<>
         <div className={`${styles.subjectInfoPage} container shadow-lg`}>
             <div className={`${styles.subjectInfoPageHeader}`}>
+                <div className={`${styles.returnLastPage}`} onClick={(e) => {
+                    navigate(-1)
+                }} >
+                    <img src={icon_back} alt="" />返回
+                </div>
                 <div className={`${styles.subjectInfoPageHeaderLeft}`}>
                     <div className={`${styles.headerleftTitle} text-truncate fs-1`}>
                         <div className={`text-truncate fs-1`}>
@@ -51,7 +68,7 @@ export default function SubjectDetailedInfo(props) {
                     </div>
                     <div className={`${styles.headerleftActions}`}>
                         {infoButton("加课码", subData !== null ? subData.code : '')}
-                        {infoButton("成员", "128")}
+                        {infoButton("成员", "128", jumpToMngMem)}
                     </div>
                 </div>
                 {Util.isTeacher("0") &&
@@ -77,10 +94,10 @@ export default function SubjectDetailedInfo(props) {
 }
 
 //班级下面的 操作栏
-export const infoButton = (name, data) => {
+export const infoButton = (name, data, fuc) => {
     if (name === "成员") {
         return (<>
-            <div className={`${styles.infoButton}`}>
+            <div className={`${styles.infoButton}`} onClick={(e) => { fuc() }}>
                 <img src={icon_person} alt="" />
                 {name} {data}
             </div>

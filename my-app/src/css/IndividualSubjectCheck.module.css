@@ -157,13 +157,6 @@
     margin-left: 30px;
     padding: 2px 8px;
     transition: 0.5s;
-    border: 2px solid #a6c;
-    color: #a6c;
-}
-
-.subjectMembersDeleted:hover {
-    background-color: #a6c;
-    color: white;
 }
 
 .SubjectMemberInfo {

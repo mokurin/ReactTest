@@ -6,7 +6,7 @@ import { updateArchivedSubjects } from '../subject/ArchivedSubjects'
 export default function subjectInfo(CreatedTime, name, subClass, code, teacher, data) {
     return {
         createdTime: CreatedTime,//学期
-        name: name,//姓名
+        name: name,//课程名
         class: subClass,//班级
         code: code,//课程代码
         teacher: teacher,//老师
