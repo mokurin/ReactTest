@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import styles from '../../css/Main.module.css'
 import FilingModal from './FilingModal'
 //课程信息
-import { noArchivedSubjects, updateNoArchivedSubjects } from '../subject/NoArchivedSubjects'
+import { noArchivedSubjects, updateNoArchivedSubjects, getSubByCode, updateSubject } from '../subject/NoArchivedSubjects'
 import { archivedSubjects, updateArchivedSubjects, requestArchiveAll } from '../subject/ArchivedSubjects'
+import { useNavigate } from 'react-router';
 
 
 //课程组件
 function Subject(props) {
     const [index] = useState(Number(props.id.substring(7)));
+    const [subData, setSubData] = useState(props.noArchivedSub[index]);
+    const navigate = useNavigate();
 
     // 删除课程
     function removeSubject() {
@@ -52,8 +55,47 @@ function Subject(props) {
     }
 
     //编辑课程
-    function editSubject() {
-       
+    function editSubject(data) {
+        //获取旧课程信息
+        let sub = { ...props.noArchivedSub[index] }
+
+        //更新课程信息
+        sub.createdTime = data.createdTime;
+        sub.name = data.name;
+        sub.class = data.class;
+        setSubData(sub);
+        // updateSubject(sub);
+        new Promise((resolve, reject) => {
+            if (updateSubject(sub)) {
+                let newSubs = []
+                for (let i in noArchivedSubjects) {
+                    newSubs[i] = noArchivedSubjects[i];
+                }
+                resolve(newSubs);
+            }
+            else reject();
+        }).then((result) => {
+            props.setNoArchivedSub(result);
+            return true;
+        }).catch(() => {
+            return false;
+        })
+    }
+
+    function getSubData() {
+        return props.noArchivedSub[index];
+    }
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setSubData((prevSubData) => ({
+            ...prevSubData,
+            [name]: value,
+        }));
+    };
+
+    function handleNav() {
+        // navigate('/')
     }
 
     return (
@@ -87,14 +129,18 @@ function Subject(props) {
                                     id={'edi-' + props.id}
                                     type="button"
                                     data-bs-toggle="modal"
-                                    data-bs-target={"#editSubject" + props.id}>
+                                    data-bs-target={"#editSubject" + index}
+                                    onClick={() => {
+                                        setSubData(getSubData);
+                                    }}
+                                >
                                     编辑
                                 </li>
                                 <li className={`dropdown-item`}
                                     id={'del-' + props.id}
                                     type="button"
                                     data-bs-toggle="modal"
-                                    data-bs-target={"#deleteSubject" + props.id}
+                                    data-bs-target={"#deleteSubject" + index}
                                 >
                                     删除
                                 </li >
@@ -102,7 +148,7 @@ function Subject(props) {
                                     id={'arc-' + props.id}
                                     type="button"
                                     data-bs-toggle="modal"
-                                    data-bs-target={"#filingSubject" + props.id}
+                                    data-bs-target={"#filingSubject" + index}
                                 >
                                     归档
                                 </li>
@@ -110,13 +156,13 @@ function Subject(props) {
                             {/* 对应操作的模态框显示 */}
                             <FilingModal data={{
                                 title: "要删除此课程吗？",
-                                id: "deleteSubject" + props.id,
+                                id: "deleteSubject" + index
                             }}
                                 command={removeSubject}
                             />
                             <FilingModal data={{
                                 title: "要归档此课程吗？",
-                                id: "filingSubject" + props.id
+                                id: "filingSubject" + index
                             }}
                                 command={{
                                     arc: archive,
@@ -125,8 +171,11 @@ function Subject(props) {
                             />
                             <FilingModal data={{
                                 title: "课程编辑",
-                                id: "editSubject" + props.id
-                            }} />
+                                id: "editSubject" + index
+                            }} sub={subData}
+                                handleInputChange={handleInputChange}
+                                command={editSubject}
+                            />
                         </span>
 
                     </div>

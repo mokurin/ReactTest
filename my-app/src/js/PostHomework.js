@@ -1,33 +1,46 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 // css引用
 import styles from '../css/PostHomework.module.css'
 
 import { Upload, message, Button } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
 
 
+//发布作业组件
 export default function PostHomework(props) {
     let settings = {
         multiple: true,
         action: null,
     };
 
-    return (<>
-        <div className={`${styles.postHomework} shadow-sm`}>
+    //重置内容
+    function reset() {
+        const input = document.getElementById('homeworkEditor').getElementsByTagName('INPUT');
+        for (let i of input)
+            i.value = '';
+        document.getElementById('homeworkIntroduce').value = '';
+    }
+
+    //提交作业
+    function submitHomework() {
+        //提交作业代码
+    }
+
+    return (
+        <div id='homeworkEditor' className={`${styles.postHomework} shadow-sm`}>
             <div>
-                <input type="text" className={`form-control`} placeholder='作业名称' />
+                <input id='homeworkName' type="text" className={`form-control`} placeholder='作业名称' />
             </div>
             <div className={`mt-2`}>
-                <textarea class="form-control" placeholder='作业简介，作业格等要求'></textarea>
+                <textarea id='homeworkIntroduce' className="form-control" placeholder='作业简介，作业格等要求'></textarea>
                 <div className={`${styles.homeworkSettings} mt-3`}>
                     <div>
-                        <label htmlFor="birthday">截止日期:</label>
-                        <input type="date" id="birthday" value='' className='form-control' />
+                        <label htmlFor="deadline">截止日期:</label>
+                        <input id='deadline' type="datetime-local" min={getNow()} className='form-control' />
                     </div>
                     <div>
                         <label htmlFor="maxGrade">满分值: </label>
-                        <input type="text" id="maxGrade" value='' className='form-control' />
+                        <input id="maxGrade" type="number" className='form-control' />
                     </div>
                 </div>
             </div>
@@ -38,10 +51,29 @@ export default function PostHomework(props) {
                     </Upload>
                 </div>
                 <div>
-                    <button className={`btn btn-outline-primary`}>取消</button>
-                    <button className={`btn btn-primary`}>发布个人作业</button>
+                    <button className={`btn btn-outline-primary`} onClick={reset}>重置</button>
+                    <button className={`btn btn-primary`} onClick={() => {
+                        new Promise((resolve, reject) => {
+                            if (submitHomework())
+                                resolve();
+                            else reject();
+                        }).then(() => {
+                            reset();
+                        })
+                    }}>发布个人作业</button>
                 </div>
             </div>
         </div>
-    </>)
+    )
+}
+
+//获取当前时间
+function getNow() {
+    const date = new Date();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + (date.getDate())).slice(-2);
+    const year = date.getFullYear();
+    const hour = ("0" + (date.getHours())).slice(-2);
+    const min = ("0" + (date.getMinutes())).slice(-2);
+    return year + "-" + month + "-" + day + " " + hour + ":" + min;
 }

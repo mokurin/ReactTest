@@ -108,7 +108,7 @@ const SubmitHomeworkMain = (props) => {
                 <div className={`${styles.otherActions}`}>
                     <div className={``}>
                         <label htmlFor="inputPassword" className=" col-form-label">作业留言：</label>
-                        <input type="text" class="form-control" id="inputPassword" placeholder='点击添加留言' />
+                        <input type="text" className="form-control" id="inputPassword" placeholder='点击添加留言' />
                     </div>
                     <button className={`btn btn-primary btn-sm`}
                         onClick={() => {

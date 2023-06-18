@@ -4,7 +4,6 @@
     padding-bottom: 12px;
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 12px;
-    caret-color: transparent;
 }
 
 /* 头部 */
@@ -46,6 +45,11 @@
     background-color: rgba(256, 256, 256, 0.15);
     padding: 2px 8px;
     margin: 0 8px;
+    cursor: pointer;
+}
+
+.infoButton:hover {
+    background-color: rgba(256, 256, 256, 0.3);
 }
 
 .infoButton>img {
@@ -81,10 +85,15 @@
     line-height: 65px;
     font-size: 24px;
     width: 110px;
+    cursor: pointer;
     text-align: center;
 }
 
 .navButton:hover {
+    border-bottom: 4px solid #328eeb;
+}
+
+.selected{
     border-bottom: 4px solid #328eeb;
 }
 

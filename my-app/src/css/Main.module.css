@@ -173,11 +173,14 @@
 .subjectBottomAction {
     display: flex;
     padding: 0 10px;
+    position: relative;
+    top: -10px;
 }
 
 .dropdownHead {
     margin-left: 10px;
     text-align: center;
+    font-size: 34px;
 }
 
 #dropdown-menu {

@@ -48,23 +48,38 @@ export function addSubject(sub) {
 export function updateSubject(sub) {
     //更新前端
     for (let i = 0; i < noArchivedSubjects.length; i++) {
-        if (noArchivedSubjects[i].code === sub.code)
+        if (noArchivedSubjects[i].code === sub.code) {
             noArchivedSubjects[i] = sub;
-    }
-    //更新后端
-    const user_Account = JSON.parse(localStorage.getItem('user_Account'));
-    let msg;
-    if (user_Account !== undefined && user_Account !== null) {
-        msg = {
-            api: 'update-subject',
-            email: user_Account.email,
-            code: sub.code,
-            subject: sub
+            break;
         }
-        Send(msg, msg => {
-            if (!msg.status) {
-                alert(msg.err_code);
-            }
-        })
+    }
+    return true;
+    //更新后端
+    // const user_Account = JSON.parse(localStorage.getItem('user_Account'));
+    // let msg;
+    // if (user_Account !== undefined && user_Account !== null) {
+    //     msg = {
+    //         api: 'update-subject',
+    //         email: user_Account.email,
+    //         code: sub.code,
+    //         subject: sub
+    //     }
+    //     Send(msg, msg => {
+    //         if (!msg.status) {
+    //             alert(msg.err_code);
+    //             return false;
+    //         } else {
+    //             return true;
+    //         }
+    //     })
+    // }
+    // return false;
+}
+
+//获取指定课程
+export function getSubByCode(code) {
+    for (let i = 0; i < noArchivedSubjects.length; i++) {
+        if (noArchivedSubjects[i].code === code)
+            return noArchivedSubjects[i];
     }
 }
