@@ -7,6 +7,7 @@ import Forget from './js/Forget';
 import Signup from './js/Signup';
 import Login from './js/Login'
 import Main from './js/Main'
+import HomeworkRating from './js/HomeworkRating';
 import SubjectDetailedInfo from './js/SubjectDetailedInfo';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap'
@@ -27,6 +28,7 @@ ReactDOM.createRoot(document.getElementById("root")).render((
       <Route path='/Login' element={<Login />} />
       <Route path="/Forget" element={<Forget />} />
       <Route path='/Signup' element={<Signup />} />
+      <Route path='/HomeworkRating' element={<HomeworkRating />} />
       <Route path='/Main' element={<Main />} />
       <Route path='/SubjectInfo' element={<SubjectDetailedInfo info={{ subjectName: "" }} />} />
       <Route path='/IndividualSubjectCheck' element={<IndividualSubjectCheck data={{ subjectName: "" }} />} />
