@@ -16,44 +16,49 @@ import icon_search from '../img/search_info.svg'
 let deletedMember = []
 //监听人数
 function checkNumsOfChecked(e) {
-    // let nums = 0;
-    // let membersChecked = document.getElementsByClassName(styles.individualMember)
-    // for (let i = 0; i < membersChecked.length; i++) {
-    //     if (membersChecked[i].checked)
-    //         nums += 1;
-    // }
-    // document.getElementById("allMembers").checked = (nums == membersChecked.length)
-    // document.getElementById("homeworkNumsOfChecked").innerHTML = nums
+    let nums = 0;
+    let membersChecked = document.getElementsByClassName(styles.individualMember)
+    if (membersChecked) {
+        for (let i = 0; i < membersChecked.length; i++) {
+            if (membersChecked[i].checked)
+                nums += 1;
+        }
+        document.getElementById("allMembers").checked = (nums == membersChecked.length)
+        document.getElementById("homeworkNumsOfChecked").innerHTML = nums
+    }
 }
 // 全选按钮
 function checkedAll() {
-    // let allMembers = document.getElementById("allMembers");
-    // let membersChecked = document.getElementsByClassName(styles.individualMember)
-    // for (let i = 0; i < membersChecked.length; i++) {
-    //     membersChecked[i].checked = allMembers.checked;
-    // }
-    // document.getElementById("homeworkNumsOfChecked").innerHTML = allMembers.checked ? membersChecked.length : 0;
+    let allMembers = document.getElementById("allMembers");
+    if (allMembers) {
+        let membersChecked = document.getElementsByClassName(styles.individualMember)
+        for (let i = 0; i < membersChecked.length; i++) {
+            membersChecked[i].checked = allMembers.checked;
+        }
+        document.getElementById("homeworkNumsOfChecked").innerHTML = allMembers.checked ? membersChecked.length : 0;
+    }
 }
 // 批量删除
 function deletedMembers(e) {
-    // let membersChecked = document.getElementsByClassName(styles.individualMember)
+    let membersChecked = document.getElementsByClassName(styles.individualMember)
 
-    // for (let i = membersChecked.length - 1; i >= 0; i--) {
-    //     if (membersChecked[i].checked) {
-    //         let info = membersChecked[i].parentNode.parentNode.parentNode
-    //         // 删除的学生数据
-    //         deletedMember.push(info)
+    if (membersChecked) {
 
-    //         info.remove()
-    //     }
-    // }
+        for (let i = membersChecked.length - 1; i >= 0; i--) {
+            if (membersChecked[i].checked) {
+                let info = membersChecked[i].parentNode.parentNode.parentNode
+                // 删除的学生数据
+                deletedMember.push(info)
 
-    // document.getElementById("homeworkNumsOfChecked").innerHTML = 0;
-    // document.getElementById("allMembers").checked = false;
-    //后端
+                info.remove()
+            }
+        }
+
+        document.getElementById("homeworkNumsOfChecked").innerHTML = 0;
+        document.getElementById("allMembers").checked = false;
+        //后端
+    }
 }
-
-
 
 //学生信息构建方法
 function createdStuInfo(stuNum, name, eMail) {
