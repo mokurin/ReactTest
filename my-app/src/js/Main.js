@@ -83,7 +83,7 @@ function Main(props) {
                     </div>
                     <div>
                         <img src={bell} alt="" />
-                        <span class="position-absolute top-0 start-100 translate-middle badge border border-light rounded-circle bg-danger p-2"><span class="visually-hidden">unread messages</span></span>
+                        <span id='haveMsg' class="position-relative translate-middle badge border border-light rounded-circle bg-danger p-1"><span></span></span>
                     </div>
                     <div className="">
                         <img src={ProfilePicture} alt="" className={styles.profile} />
