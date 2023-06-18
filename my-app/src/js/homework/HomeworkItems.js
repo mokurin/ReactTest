@@ -10,7 +10,7 @@ export default function HomeworkItems(props) {
     const getItems = () => {
         let items = allHomeworkInfo.map(
             (info, index) => {
-                return <HomeworkInfo data={info} interaction={interactions[index]} key={index} id={`homework${index}`} />;
+                return <HomeworkInfo data={info} key={index} id={`homework${index}`} />;
             }
         )
         return items;

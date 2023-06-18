@@ -100,9 +100,9 @@ function Subject(props) {
         if (!parentNode.contains(e.target)) {
             //跳转课程详情页
             navigate('/SubjectInfo', {
-                state: {
+                // state: {
                     subData: subData
-                }
+                // }
             })
         }
     }

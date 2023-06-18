@@ -58,11 +58,9 @@
 
 /* 右半部分 */
 .subjectInfoPageHeaderRight {
-    margin-right: 50px;
-    width: 350px;
+    width: 120px;
     padding-top: 75px;
     display: flex;
-    justify-content: space-between;
 }
 
 .interationToolNums {
@@ -93,7 +91,7 @@
     border-bottom: 4px solid #328eeb;
 }
 
-.selected{
+.selected {
     border-bottom: 4px solid #328eeb;
 }
 
@@ -133,7 +131,11 @@
     margin-top: 30px;
     border-radius: 8px;
     color: #80858a;
-    
+    cursor: pointer;
+}
+
+.homeworkInfo:hover {
+    background-color: #f2f2f2;
 }
 
 .homeworkInfoHeader {

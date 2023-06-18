@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 // css引用
 import styles from "../css/SubjectInfo.module.css"
@@ -21,19 +21,20 @@ export default function SubjectDetailedInfo(props) {
     const location = useLocation();
     const s = location.state;
     const subData = (s !== null && s !== undefined) ? s.subData : null;//课程数据
-    const allHomeworkInfo = [{
+    const user_Account = JSON.parse(localStorage.getItem('user_Account'));
+    const [allHomeworkInfo, setAllHomeworkInfo] = useState([{
         homeworkName: 'aaa',
         homeworkIntroduce: 'asdawrdasregesASEF',
         deadline: new Date(),
-        maxGrade: 100
+        maxGrade: 100,
+        interaction: [1, 2, 3]
     }, {
         homeworkName: 'bbb',
         homeworkIntroduce: 'wsedfal,asdsaasdsfdsafaeasasf',
         deadline: new Date(),
-        maxGrade: 200
-    }];
-    
-    const interactions = [[1, 2, 3], [2, 3, 4]];
+        maxGrade: 200,
+        interaction: [2, 3, 4]
+    }]);
 
 
     return (<>
@@ -55,9 +56,7 @@ export default function SubjectDetailedInfo(props) {
                 </div>
                 {Util.isTeacher("0") &&
                     <div className={`${styles.subjectInfoPageHeaderRight}`}>
-                        <InteractionTool name={"互动个数"} nums={0} />
-                        <InteractionTool name={"发布作业"} nums={0} />
-                        <InteractionTool name={"发布测试"} nums={0} />
+                        <InteractionTool name={"发布作业"} nums={allHomeworkInfo.length} />
                     </div>
                 }
             </div>
@@ -70,8 +69,8 @@ export default function SubjectDetailedInfo(props) {
                 {navButton("公告")}
             </div>
             <div className={`${styles.homeworkTable}`}>
-                <PostHomework />
-                <HomeworkItems allHomeworkInfo={allHomeworkInfo} interactions={interactions} />
+                {Util.isTeacher("0") && <PostHomework />}
+                <HomeworkItems allHomeworkInfo={allHomeworkInfo} />
             </div>
         </div>
     </>);
