@@ -6,12 +6,16 @@ import { Upload } from 'antd';
 
 // 组件引用
 import { SubjectCheckNav } from "./IndividualSubjectCheck"
+import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.js';
 
 // css引用
 import styles from '../css/SubmitHomework.module.css'
 
 //服务端连接
 import { Send } from './Connect'
+
+//图片引用
+import icon_upload from '../img/plus-circle-fill.svg'
 
 
 //上传文件 作业
@@ -35,9 +39,17 @@ export const UploadFiles = (props) => {
 
 
     return (<>
-        <div className={`${styles.UploadFiles} shadow`}>
+        <div className={`${styles.UploadFilesArea} shadow`}>
             <Upload {...settings}>
-                <button className={`btn btn-primary`}>导入作业</button>
+                <div className={`${styles.UploadFiles}`}>
+                    <div className={`fs-1`}>
+                        <img src={icon_upload} alt="" />
+                        添加作业文件
+                    </div>
+                    <div className={`fs-5`}>
+                        支持各类文件格式
+                    </div>
+                </div>
             </Upload>
         </div>
     </>);
@@ -88,7 +100,26 @@ const SubmitHomeworkMain = (props) => {
         sendChunk();
     };
 
-
+    // 提交作业 间隔
+    let count = 5;
+    let stopCount;
+    function setTime(btn) {
+        if (count != 0) {
+            btn.setAttribute("disabled", true);
+            btn.innerHTML = "已提交 " + count;
+            count -= 1;
+            stopCount = setTimeout(() => {
+                setTime(btn)
+            }, 1000);
+        }
+        else {
+            btn.removeAttribute("disabled")
+            btn.innerHTML = "提交作业"
+            count = 5;
+            clearTimeout(stopCount)
+        }
+    }
+    // 发送留言
     function submitMessage() {
         const msg = {
             api: '',
@@ -103,12 +134,17 @@ const SubmitHomeworkMain = (props) => {
             }
         });
     }
-
+    // 发送作业
     function submitHomework() {
         //提交留言
         submitMessage();
         //提交文件
         handleUploadFiles();
+
+
+        //清空文件列表和留言
+        setFileList([])
+        setMessage("")
     }
 
     //输入框变化
@@ -116,7 +152,6 @@ const SubmitHomeworkMain = (props) => {
         const value = e.target.value;
         setMessage(value)
     }
-
 
     return (<>
         <div className={`${styles.SubmitHomeworkMain} shadow`}>
@@ -141,23 +176,38 @@ const SubmitHomeworkMain = (props) => {
                         <input value={message} onChange={handleChange}
                             type="text" className="form-control" id="inputPassword" placeholder='点击添加留言' />
                     </div>
-                    <button className={`btn btn-primary btn-sm`}
-                        onClick={() => {
-                            submitHomework();
-                        }}
-                    >提交作业</button>
+                    <div>
+                        <button className={`btn btn-primary btn-sm`} id='liveToastBtn' type='button'
+                            onClick={(e) => {
+                                const toastLiveExample = document.getElementById('liveToast')
+                                const toast = new bootstrap.Toast(toastLiveExample, { delay: 500 })
+                                // 上传文件为空
+                                if (fileList.length == 0) {
+                                    toast.show()
+                                    return;
+                                }
+                                setTime(e.target);
+                                submitHomework();
+                            }}
+                        >提交作业</button>
+                        <div className={`toast-container ${styles.myToast}`}>
+                            <div id="liveToast" className="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                                <div className="toast-body">
+                                    请上传文件！
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            {/* <SearchData /> */}
-        </div>
+        </div >
     </>)
 }
 
-
 export default function SubmitHomework(props) {
-
     return (<>
         <SubjectCheckNav action="提交作业" />
         <SubmitHomeworkMain />
+
     </>)
 }

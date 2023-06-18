@@ -33,21 +33,41 @@
 }
 
 /* 上传文件区域 */
-.UploadFiles {
+.UploadFilesArea {
     margin: 0px 2px;
+    padding-bottom: 5px;
     background-color: white;
     box-sizing: border-box;
-    height: 200px;
-    border-radius: 5px;
+    min-height: 150px;
+}
+
+.UploadFiles {
+    box-sizing: border-box;
+    margin: 0 1px;
+    width: 1170px;
+    height: 150px;
+}
+
+.UploadFiles>div:nth-child(1) {
+    margin-left: 180px;
+    margin-top: 12px;
+}
+
+.UploadFiles>div:nth-child(2) {
+    margin-left: 200px;
 }
 
 /* 留言 和 提交作业 */
 .otherActions {
+    height: 50px;
+    box-sizing: border-box;
+    align-items: center;
     display: flex;
-    justify-content: space-between;
     background-color: #f1f3f4;
+    justify-content: space-between;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
+    border: 1.5px solid rgba(0, 0, 0, 0.2);
 }
 
 .otherActions>div>label {
@@ -61,7 +81,14 @@
     height: fit-content;
 }
 
-.otherActions>div {
+.otherActions>div:nth-child(1) {
     width: 1000px;
     display: flex;
+}
+
+.myToast {
+    width: 110px;
+    font-size: 15px;
+    position: absolute;
+    text-align: center;
 }
