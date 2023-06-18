@@ -18,7 +18,7 @@
 .homeworkOtherInfo>div {
     width: fit-content;
     height: fit-content;
-    background-color: #f1f3f4;
+    background-color: #dedede;
     padding: 5px 12px;
 }
 
@@ -29,7 +29,6 @@
 /* 主体 */
 .SubmitHomeworkArea {
     padding-top: 2px;
-    background-color: #f1f3f4;
 }
 
 /* 上传文件区域 */
@@ -59,14 +58,16 @@
 
 /* 留言 和 提交作业 */
 .otherActions {
+    margin-bottom: 7px;
+    padding: 0 10px;
     height: 50px;
     box-sizing: border-box;
     align-items: center;
     display: flex;
     background-color: #f1f3f4;
     justify-content: space-between;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
     border: 1.5px solid rgba(0, 0, 0, 0.2);
 }
 
