@@ -12,8 +12,8 @@ import FilingModal from '../homepage/FilingModal'
 
 // 单个作业
 export const HomeworkInfo = (props) => {
-    const { homeworkName, homeworkIntroduce, deadline, maxGrade } = props.data;
-    const { interaction, id } = props;
+    const { homeworkName, homeworkIntroduce, deadline, maxGrade, interaction } = props.data;
+    const { id } = props;
     const index = Number(id.substring(8));
 
     return (<>
