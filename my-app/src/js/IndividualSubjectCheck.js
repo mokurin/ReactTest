@@ -81,7 +81,7 @@ export const SubjectCheckNav = (props) => {
                     navigate(-1);
                 }} />
                 <div className={`${styles.IndividualSubjectCheckName} text-truncate`}>
-                    {props.info.subName}
+                    {/* {props.info.subName} */}
                 </div>
             </div>
             <div className={`${styles.IndividualSubjectCheckActions}`}>
@@ -287,7 +287,7 @@ export default function IndividualSubjectCheck(props) {
     const [status, setStatus] = useState(true);
 
     const location = useLocation();
-    const subjectData = (location.state == null || location.state == undefined) ? "" : location.state;
+    // const subjectData = (location.state == null || location.state == undefined) ? "" : location.state;
 
 
     const statusInfo = useMemo(() => ({
@@ -297,7 +297,7 @@ export default function IndividualSubjectCheck(props) {
     return (<>
         <div className={`${styles.subjectCheckPage}`}>
             <SubjectCheckNav setStatus={setStatus} action="成员" info={{
-                subName: subjectData.subName
+                // subName: subjectData.subName
             }} />
             <SubjectInfoMain status={statusInfo} />
         </div>

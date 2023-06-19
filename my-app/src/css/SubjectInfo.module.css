@@ -221,11 +221,17 @@
     position: fixed;
     left: 5px;
     top: 5px;
-    color: black;
-    font-size: 12px;
+    width: 80px;
+    cursor: pointer;
+    margin: 40px;
+    padding: 8px 20px;
+    border-radius: 50px;
+    box-shadow: 5px 5px 6px rgb(212, 212, 212);
+    transition: all 1s;
 }
 
-.returnLastPageq>img {
-    width: 12px;
-    margin-right: 5px;
+.returnLastPage:hover {}
+
+.returnLastPage:active {
+    box-shadow: -3px 3px 6px rgb(215, 215, 215) inset;
 }

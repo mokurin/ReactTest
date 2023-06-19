@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 // css引用
 import styles from "../css/HomeworkRating.module.css"
