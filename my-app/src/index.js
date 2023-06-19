@@ -31,11 +31,11 @@ ReactDOM.createRoot(document.getElementById("root")).render((
       <Route path='/Login' element={<Login />} />
       <Route path="/Forget" element={<Forget />} />
       <Route path='/Signup' element={<Signup />} />
-      <Route path='/HomeworkRating' element={<HomeworkRating />} />
       <Route path='/Main' element={<Main />} />
       <Route path='/SubjectInfo' element={<SubjectDetailedInfo />} />
       <Route path='/IndividualSubjectCheck' element={<IndividualSubjectCheck data={{ subjectName: "" }} />} />
       <Route path='/SummitHomework' element={<SubmitHomework />} />
+      <Route path='/HomeworkRating' element={<HomeworkRating />} />
     </Routes>
   </BrowserRouter >
 ));

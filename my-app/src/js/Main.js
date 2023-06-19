@@ -9,7 +9,6 @@ import SubjectItems from './homepage/SubItems/SubjectItems'
 // 图标
 import logo from '../img/logo.png'
 import ProfilePicture from '../img/profile.png'
-import addPerson from '../img/person-fill-add.svg'
 import bell from '../img/bell.svg'
 import Plus from '../img/plus-lg.svg'
 import Msg from '../img/envelope.svg'
@@ -122,7 +121,7 @@ function Main(props) {
                         <SubjectAction setNoArchivedSub={setNoArchivedSub} setArchivedSub={setArchivedSub}
                             noArchivedSub={noArchivedSub} archivedSub={archivedSub} />
 
-                        <div className={`btn btn-primary ${styles.contentNavRightBtn}`}>+创建/加入课程</div>
+                        <div className={`btn btn-primary ${styles.contentNavRightBtn}`}>+加入课程</div>
                     </div>
                 </div>
                 <div className={`${styles.divider} shadow-sm`} />

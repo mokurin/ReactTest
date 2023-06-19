@@ -75,7 +75,6 @@
 }
 
 .contentNavRightBtn {
-    width: auto;
     margin: 0 13px;
 }
 
@@ -128,7 +127,7 @@
 
 .subject:hover {
     position: relative;
-    top: -3px ;
+    top: -3px;
 }
 
 .subjectTop {

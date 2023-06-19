@@ -52,11 +52,9 @@ export default function SubjectDetailedInfo(props) {
     return (<>
         <div className={`${styles.subjectInfoPage} container shadow-lg`}>
             <div className={`${styles.subjectInfoPageHeader}`}>
-                <div className={`${styles.returnLastPage}`} onClick={(e) => {
+                <img onClick={(e) => {
                     navigate(-1)
-                }} >
-                    <img src={icon_back} alt="" />返回
-                </div>
+                }} src={icon_back} className={`${styles.returnLastPage}`} alt="" />
                 <div className={`${styles.subjectInfoPageHeaderLeft}`}>
                     <div className={`${styles.headerleftTitle} text-truncate fs-1`}>
                         <div className={`text-truncate fs-1`}>

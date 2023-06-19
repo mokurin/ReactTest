@@ -1,19 +1,29 @@
 import React, { useState } from 'react';
 
-import styles from '../css/Main.module.css'
+import { Send } from './Connect';
 
 const Test = () => {
+    function handleClick() {
+        const msg = {
+            api: "echo",
+            content: '我的回显数据'
+        }
+        Send(msg, (msg) => {
+            const node = document.querySelector('#content');
+            if (msg.status) {
+                node.innerHTML = msg.content;
+            } else node.innerHTML = msg.err_code;
+        })
+    }
+
     return (
-        <div className="dropdown">
-            <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Dropdown button
+        <>
+            <button onClick={handleClick} className="btn btn-secondary" type="button">
+                Test
             </button>
-            <ul className="dropdown-menu">
-                <li><a className="dropdown-item" href="#">Action</a></li>
-                <li><a className="dropdown-item" href="#">Another action</a></li>
-                <li><a className="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-        </div>
+            <span id='content'>
+            </span>
+        </>
     )
 }
 export default Test;
