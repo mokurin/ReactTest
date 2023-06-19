@@ -18,6 +18,7 @@ import SubjectDetailedInfo from './js/SubjectDetailedInfo'; //课程详情页
 import IndividualSubjectCheck from './js/IndividualSubjectCheck'; //课程成员页
 import SubmitHomework from './js/SubmitHomework'; //学生提交作业
 import HomeworkRating from './js/HomeworkRating';
+import HomeworkPreview from './js/HomeworkPreview';
 import Test from './js/Test'
 
 //服务器连接模块
@@ -41,6 +42,8 @@ ReactDOM.createRoot(document.getElementById("root")).render((
       <Route path='/SummitHomework' element={<SubmitHomework />} />
       <Route index element={<Navigate to={'/Test'} replace={true} />} />
       <Route path='/Test' element={<Test />} />
+      <Route path='/HomeworkRating' element={<HomeworkRating />} />
+      <Route path='/HomeworkPreview' element={<HomeworkPreview />} />
     </Routes>
   </BrowserRouter >
 ));

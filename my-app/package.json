@@ -9,7 +9,6 @@
     "antd": "^5.6.1",
     "bootstrap": "^5.3.0",
     "react": "^18.2.0",
-    "react-doc-viewer": "^0.1.5",
     "react-dom": "^18.2.0",
     "react-router": "^6.12.1",
     "react-router-dom": "^6.12.1",
