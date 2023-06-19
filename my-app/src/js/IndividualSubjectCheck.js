@@ -78,10 +78,11 @@ export const SubjectCheckNav = (props) => {
         <div className={`${styles.subjectCheckNav} shadow-lg`}>
             <div className={`${styles.subjectCheckNavBack}`}>
                 <img src={icon_back} alt="" onClick={(e) => {
+                    console.log(1);
                     navigate(-1);
                 }} />
                 <div className={`${styles.IndividualSubjectCheckName} text-truncate`}>
-                    {/* {props.info.subName} */}
+                    {props.subName}
                 </div>
             </div>
             <div className={`${styles.IndividualSubjectCheckActions}`}>
@@ -287,7 +288,7 @@ export default function IndividualSubjectCheck(props) {
     const [status, setStatus] = useState(true);
 
     const location = useLocation();
-    // const subjectData = (location.state == null || location.state == undefined) ? "" : location.state;
+    const subjectData = (location.state == null || location.state == undefined) ? "" : location.state;
 
 
     const statusInfo = useMemo(() => ({
