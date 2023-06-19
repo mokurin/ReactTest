@@ -18,6 +18,7 @@ function homeworkInfo(stuNum, name, workInfo) {
         workInfo: workInfo
     }
 }
+// -------------------------------------------------------分割线-------------------------------------------------------
 
 function isCheckAll() {
     let nums = 0;
@@ -50,7 +51,6 @@ function checkAll() {
     else
         checkNums(0)
 }
-
 function checkNums(status) {
     if (status == -1) {
         document.getElementById("selectedNums").innerHTML = document.getElementsByClassName(styles.individualMember).length
@@ -59,6 +59,8 @@ function checkNums(status) {
         document.getElementById("selectedNums").innerHTML = status;
     }
 }
+// -------------------------------------------------------分割线-------------------------------------------------------
+
 
 //单个 作业人员
 const HomeworkMemberInfo = (props) => {
@@ -141,7 +143,9 @@ const HomeworkDetailed = (props) => {
                     <label htmlFor="allMembers" className='fs-4'>已选 （<span id='selectedNums'>0</span>） 人</label> */}
                     <button className={`btn btn-outline-secondary btn-lg`}
                         onClick={(e) => {
-                            console.log(props.state);
+                            console.log(props.subData);
+                            console.log("----------");
+                            console.log(props.homeworkData);
                         }}
                     >
                         一键催交
@@ -154,7 +158,6 @@ const HomeworkDetailed = (props) => {
         </div>
     </>)
 }
-
 
 export default function HomeworkRating(props) {
     const location = useLocation();

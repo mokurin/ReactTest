@@ -42,7 +42,6 @@ ReactDOM.createRoot(document.getElementById("root")).render((
       <Route path='/SummitHomework' element={<SubmitHomework />} />
       <Route index element={<Navigate to={'/Test'} replace={true} />} />
       <Route path='/Test' element={<Test />} />
-      <Route path='/HomeworkRating' element={<HomeworkRating />} />
       <Route path='/HomeworkPreview' element={<HomeworkPreview />} />
     </Routes>
   </BrowserRouter >
