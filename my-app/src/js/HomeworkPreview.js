@@ -1,20 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import styles from '../css/HomeworkPreview.module.css'
 import { useLocation } from 'react-router';
 
 const WorkPreviewNav = (props) => {
+    const [value, setValue] = useState(props.info.grade);
+
+
     return (<>
         <div className={`${styles.workPreviewNav}`}>
             <div>打分</div>
-            <input type="number" className="form-control" id="staticEmail" placeholder="分值最大为:"
+            <input type="number" className="form-control" id="staticEmail" placeholder="请输入分数"
                 min={0}
                 max={100}
-                value={props.info.grade}
+                value={value}
                 onChange={(e) => {
                     if (e.target.value < 0 || e.target.value > 100) {
                         e.target.value = ''
                     }
+                    setValue(e.target.value)
                 }}
             />
             <div className={`ms-2`}>
@@ -26,7 +30,7 @@ const WorkPreviewNav = (props) => {
 
 function App() {
     const docs = [
-        // { uri: "" },                               //服务器文件?
+        // { uri: ["url1 ","url2 ",] },                               //服务器文件?
         { uri: require("../file/sqlDetail.pdf") }    // 本地文件
     ];
 
@@ -45,7 +49,7 @@ export default function HomeworkPreview() {
     return (<>
         <div className={`${styles.HomeworkPreview}`}>
             <WorkPreviewNav info={state} />
-            <App />
+            {/* <App filePath={state.filePath} /> */}
         </div>
     </>)
 }

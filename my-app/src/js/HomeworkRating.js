@@ -6,6 +6,7 @@ import styles from "../css/HomeworkRating.module.css"
 // 组件引用
 import { SubjectCheckNav } from "./IndividualSubjectCheck"
 import { useLocation, useNavigate } from 'react-router';
+import bootstrap from 'bootstrap/dist/js/bootstrap'
 
 //工具模块
 import * as Util from './Util'
@@ -34,12 +35,20 @@ const HomeworkMemberInfo = (props) => {
                 <div className={`text-truncate`}>
                     {props.info.stuName}
                 </div>
-                <div className={`text-truncate`}>
+                <div className={`text-truncate`} id="isSumitted">
                     {props.info.submittedHW.length != 0 ? (props.info.grade.length != 0 ? props.info.grade + "/" + props.maxGrade : "未批") : "未交"}
                 </div>
             </div>
             <button className={`btn btn-outline-secondary btn-sm ${styles.checkThisHomework}`}
                 onClick={(e) => {
+                    let node = e.target.parentNode;
+                    const toastLiveExample = document.getElementById('liveToast')
+                    const toast = new bootstrap.Toast(toastLiveExample, { delay: 3000 })
+                    if (node.querySelector("#isSumitted").innerHTML == "未交") {
+                        toast.show()
+                        return;
+                    }
+
                     navigate("/HomeworkPreview", {
                         state: { maxGrade: props.maxGrade, filePath: props.info.submittedHW, grade: props.info.grade }
                     })
@@ -47,6 +56,13 @@ const HomeworkMemberInfo = (props) => {
             >
                 进入批阅
             </button>
+        </div>
+        <div className={`toast-container position-fixed bottom-0 end-0 p-3`}>
+            <div id="liveToast" className="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div className="toast-body fs-5 shadow-lg">
+                    该同学未交作业，无法批阅！！！
+                </div>
+            </div>
         </div>
     </>)
 }
@@ -166,6 +182,7 @@ const HomeworkDetailed = (props) => {
                         一键催交
                     </button>
                 </div>
+                <HomeworkMemberInfo info={allMemGrades[2]} maxGrade={hwInfo.max_score} />
                 <HomeworkMemberInfo info={allMemGrades[0]} maxGrade={hwInfo.max_score} />
                 <HomeworkMemberInfo info={allMemGrades[1]} maxGrade={hwInfo.max_score} />
                 <HomeworkMemberInfo info={allMemGrades[2]} maxGrade={hwInfo.max_score} />
