@@ -15,7 +15,6 @@ import { Send } from './Connect'
 // -------------------------------------------------------分割线-------------------------------------------------------
 
 //单个 作业人员
-
 const HomeworkMemberInfo = (props) => {
     const navigate = useNavigate();
 
@@ -63,29 +62,69 @@ const HomeworkMemberInfo = (props) => {
 // 人员显示
 const HomeworkDetailed = (props) => {
     const [all, setAll] = useState(true)
+    // 筛选  ------------------------------------------------------------------------------------
+    const allMembers = document.getElementsByClassName(styles.homeworkMemberInfo);
+    const [filteredNums, setFilteredNums] = useState(0)
+    const [condition, setCondition] = useState("")
+    useEffect(() => {
+        if (condition == "/") {
+            searchItems("/")
+        } else if (condition === "未批") {
+            searchItems("未批")
+        } else if (condition === "未交") {
+            searchItems("未交")
+        } else {
+            showAllListItems()
+        }
+    }, [condition])
 
 
+    // 数组 存放所有数组
+    let listItems = [];
 
-    //所有成员成绩
+    // 获取列表中的所有列表项,存储到数组中
+    for (let i = 0; i < allMembers.length; i++) {
+        listItems.push(allMembers[i]);
+    }
+
+    // 遍历列表项,检查是否包含搜索值
+    function searchItems(key) {
+        listItems.forEach(listItem => {
+            if (listItem.querySelector("#isSumitted").innerHTML.includes(key)) {
+                listItem.style.display = "flex"
+            }
+            else {
+                listItem.style.display = "none"
+            }
+        });
+    }
+
+    // 显示所有
+    function showAllListItems() {
+        listItems.forEach(item => {
+            item.style.display = 'flex';
+        });
+    }
+    //所有成员成绩--------------------------------------------------------------------------------
     let allMemGrades = [{
-        stuNum: "121231111",
-        stuName: "你好",
-        submittedHW: "work.file",
+        stuNum: "11111111",
+        stuName: "许宏涛",
+        submittedHW: "work1.file",
         isGraded: true,
         grade: "90",
         comment: ""
     },
     {
-        stuNum: "121231231",
-        stuName: "你好啊",
-        submittedHW: "work.file",
+        stuNum: "22222222",
+        stuName: "许宏",
+        submittedHW: "work2.file",
         isGraded: false,
         grade: "",
         comment: ""
     },
     {
-        stuNum: "121233333",
-        stuName: "好好好",
+        stuNum: "33333333",
+        stuName: "许",
         submittedHW: "",
         isGraded: false,
         grade: "",
@@ -127,50 +166,20 @@ const HomeworkDetailed = (props) => {
     }
 
 
-    // 筛选
-    const allMembers = document.getElementsByClassName(styles.homeworkMemberInfo);
+    //分隔线------------------------------
+    // 渲染成员
 
-    const [condition, setCondition] = useState("")
-    useEffect(() => {
-        if (condition == "/") {
-            searchItems("/")
-        } else if (condition === "未批") {
-            searchItems("未批")
-        } else if (condition === "未交") {
-            searchItems("未交")
-        } else {
-            showAllListItems()
+    let nums = props.homeworkData.interaction
+    function renderMembers() {
+        let list = []
+        for (let i = 0; i < nums.length; i++) {
+            for (let j = 0; j < nums[i]; j++) {
+                list.push(<HomeworkMemberInfo info={allMemGrades[i]} maxGrade={hwInfo.max_score} key={`person${i}${j}`} />)
+            }
         }
-    }, [condition])
-
-
-    // 数组 存放所有数组
-    let listItems = [];
-
-    // 获取列表中的所有列表项,存储到数组中
-    for (let i = 0; i < allMembers.length; i++) {
-        listItems.push(allMembers[i]);
+        const memberComponents = list.map(component => component)
+        return memberComponents
     }
-
-    // 遍历列表项,检查是否包含搜索值
-    function searchItems(key) {
-        listItems.forEach(listItem => {
-            if (listItem.querySelector("#isSumitted").innerHTML.includes(key)) {
-                listItem.style.display = "flex"
-            }
-            else {
-                listItem.style.display = "none"
-            }
-        });
-    }
-
-    // 显示所有
-    function showAllListItems() {
-        listItems.forEach(item => {
-            item.style.display = 'flex';
-        });
-    }
-
     return (<>
         <div className={`${styles.homeworkDetailed} shadow-lg container`}>
             <div className={`${styles.homeworkDetailedTitle}`}>
@@ -185,7 +194,7 @@ const HomeworkDetailed = (props) => {
 
             <div className={`${styles.filteringTools} fs-4 shadow-sm`}>
                 <div>
-                    已经筛选出<span id="stuFiltered">100</span>人 (全班共<span id='allStu'>100</span>人)
+                    已经筛选出<span id="stuFiltered">{nums[0] + nums[1] + nums[2]}</span>人 (全班共<span id='allStu'>{filteredNums}</span>人)
                 </div>
                 <div className={`${styles.filteredBar} fs-5`}>
                     <div>
@@ -198,6 +207,7 @@ const HomeworkDetailed = (props) => {
                             onClick={(e) => {
                                 setAll(true)
                                 setCondition("")
+                                setFilteredNums(nums[0] + nums[1] + nums[2])
                             }}
 
                         />
@@ -208,6 +218,7 @@ const HomeworkDetailed = (props) => {
                             onClick={(e) => {
                                 setAll(false)
                                 setCondition("/")
+                                setFilteredNums(nums[0])
                             }}
                         />
                         <label className="form-check-label" htmlFor="inlineRadio2">已批</label>
@@ -217,6 +228,7 @@ const HomeworkDetailed = (props) => {
                             onClick={(e) => {
                                 setAll(false)
                                 setCondition("未批")
+                                setFilteredNums(nums[1])
                             }} />
                         <label className="form-check-label" htmlFor="inlineRadio3">未批</label>
                     </div>
@@ -224,7 +236,8 @@ const HomeworkDetailed = (props) => {
                         <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4"
                             onClick={(e) => {
                                 setAll(false)
-                                searchItems("未交")
+                                setCondition("未交")
+                                setFilteredNums(nums[2])
                             }} />
                         <label className="form-check-label" htmlFor="inlineRadio4">未交</label>
                     </div>
@@ -235,16 +248,22 @@ const HomeworkDetailed = (props) => {
                 <div className={``}>
                     <button className={`btn btn-outline-secondary btn-lg`}
                         onClick={(e) => {
+                            renderMembers();
+
                             //发送消息
+
+
                         }}
                     >
                         一键催交
                     </button>
                 </div>
-                <HomeworkMemberInfo info={allMemGrades[2]} maxGrade={hwInfo.max_score} />
+                {/* <HomeworkMemberInfo info={allMemGrades[2]} maxGrade={hwInfo.max_score} />
                 <HomeworkMemberInfo info={allMemGrades[0]} maxGrade={hwInfo.max_score} />
                 <HomeworkMemberInfo info={allMemGrades[1]} maxGrade={hwInfo.max_score} />
-                <HomeworkMemberInfo info={allMemGrades[2]} maxGrade={hwInfo.max_score} />
+                <HomeworkMemberInfo info={allMemGrades[2]} maxGrade={hwInfo.max_score} /> */}
+
+                {renderMembers()}
             </div>
         </div>
     </>)
@@ -255,8 +274,6 @@ export default function HomeworkRating(props) {
     const state = (location.state == null || location.state === undefined) ? "" : location.state;;
     const subData = (state == null || state === undefined) ? null : state.subData;
     const homeworkData = (state == null || state === undefined) ? null : state.homeworkData;
-
-    console.log(state);
 
     return (<>
         <SubjectCheckNav subData={subData} homeworkData={homeworkData} action="学生作业" />
