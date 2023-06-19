@@ -27,15 +27,20 @@ import Connect from './js/Connect'
 ReactDOM.createRoot(document.getElementById("root")).render((
   <BrowserRouter>
     <Routes>
-      <Route index element={<Navigate to={'/Login'} replace={true} />} />
+      {/* <Route index element={<Navigate to={'/Login'} replace={true} />} /> */}
       <Route path='/Login' element={<Login />} />
       <Route path="/Forget" element={<Forget />} />
       <Route path='/Signup' element={<Signup />} />
+      {/* 主页 */}
       <Route path='/Main' element={<Main />} />
+      {/* 课程详情页 */}
       <Route path='/SubjectInfo' element={<SubjectDetailedInfo />} />
+      {/* 作业批改详情页 */}
+      <Route path='/HomeworkRating' element={<HomeworkRating />} />
       <Route path='/IndividualSubjectCheck' element={<IndividualSubjectCheck />} />
       <Route path='/SummitHomework' element={<SubmitHomework />} />
-      <Route path='/HomeworkRating' element={<HomeworkRating />} />
+      <Route index element={<Navigate to={'/Test'} replace={true} />} />
+      <Route path='/Test' element={<Test />} />
     </Routes>
   </BrowserRouter >
 ));

@@ -7,6 +7,9 @@ import styles from "../css/HomeworkRating.module.css"
 import { SubjectCheckNav } from "./IndividualSubjectCheck"
 import { useLocation, useNavigate } from 'react-router';
 
+//工具模块
+import * as Util from './Util'
+
 // 个人作业状态返回方法
 function homeworkInfo(stuNum, name, workInfo) {
     return {
@@ -93,10 +96,10 @@ const HomeworkDetailed = (props) => {
         <div className={`${styles.homeworkDetailed} shadow-lg container`}>
             <div className={`${styles.homeworkDetailedTitle}`}>
                 <div className={`${styles.homeworkName} fs-2`}>
-                    {(props.state.subName == "" || props.state.subName == undefined) ? "课程名" : props.state.subName}
+                    {(props.homeworkData === null || props.homeworkData === undefined) ? "课程名" : props.homeworkData.homeworkName}
                 </div>
                 <div>
-                    {(props.state.deadLine == "" || props.state.deadLine == undefined) ? "截止日期" : props.state.deadLine}
+                    截止日期{(props.homeworkData === null || props.homeworkData === undefined) ? "" : Util.getTime(props.homeworkData.deadline)}
                 </div>
             </div>
 
@@ -152,20 +155,15 @@ const HomeworkDetailed = (props) => {
     </>)
 }
 
-const exp = {
-    subName: "ABC",
-    deadLine: "2023/1/1"
-}
-
 
 export default function HomeworkRating(props) {
     const location = useLocation();
-    let state = (location.state == null || location.state == undefined) ? "" : location.state;;
-
-    // state = exp;
+    const state = (location.state == null || location.state === undefined) ? "" : location.state;;
+    const subData = (state == null || state === undefined) ? null : state.subData;
+    const homeworkData = (state == null || state === undefined) ? null : state.homeworkData;
 
     return (<>
-        <SubjectCheckNav action="学生作业" />
-        <HomeworkDetailed state={state} />
+        <SubjectCheckNav subData={subData} homeworkData={homeworkData} action="学生作业" />
+        <HomeworkDetailed subData={subData} homeworkData={homeworkData} />
     </>)
 }

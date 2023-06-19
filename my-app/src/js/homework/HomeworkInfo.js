@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 // css引用
 import styles from "../../css/SubjectInfo.module.css"
@@ -9,15 +9,37 @@ import * as Util from '../Util'
 //组件引用
 import InteractionTool from './InteractionTool'
 import FilingModal from '../homepage/FilingModal'
+import { useNavigate } from 'react-router';
 
 // 单个作业
 export const HomeworkInfo = (props) => {
     const { homeworkName, homeworkIntroduce, deadline, maxGrade, interaction } = props.data;
     const { id } = props;
     const index = Number(id.substring(8));
+    const navigate = useNavigate();
+
+    //单击作业
+    function handleNav(e) {
+        const parentNode = document.getElementById('homeworkMore' + index);
+        if (!parentNode.contains(e.target)) {
+            //跳转作业详情页
+            navigate('/HomeworkRating', {
+                state: {
+                    subData: props.subData,
+                    homeworkData: props.data
+                }
+            })
+        }
+    }
+
+    const [editHomework, setEditHomework] = useState(props.data);
+    function handleInputChange(e) {
+        
+    }
+
 
     return (<>
-        <div className={`${styles.homeworkInfo} shadow`}>
+        <div onClick={handleNav} className={`${styles.homeworkInfo} shadow`}>
             <div className={`${styles.homeworkInfoHeader}`}>
                 <div className={`${styles.homeworkInfoHeaderLeft}`}>
                     <div className={`${styles.homeworkType}`}>
@@ -25,7 +47,7 @@ export const HomeworkInfo = (props) => {
                     </div>
                 </div>
                 {Util.isTeacher("0") &&
-                    <>
+                    <div id={'homeworkMore' + index}>
                         <div className={`${styles.homeworkInfoHeaderRight}`}
                             type="button"
                             data-bs-toggle="dropdown"
@@ -61,7 +83,7 @@ export const HomeworkInfo = (props) => {
                             id: "deleteHomework" + index
                         }}
                         />
-                    </>
+                    </div>
                 }
             </div>
             <div className={`${styles.homeworkMainInfo}`}>

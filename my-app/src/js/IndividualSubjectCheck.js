@@ -82,7 +82,7 @@ export const SubjectCheckNav = (props) => {
                     navigate(-1);
                 }} />
                 <div className={`${styles.IndividualSubjectCheckName} text-truncate`}>
-                    {/* {(props.info.subName == "" || props.info.subName == undefined) ? "示例课程名" : props.info.subName} */}
+                    {(props.subData == null || props.subData == undefined) ? "" : props.subData.name}
                 </div>
             </div>
             <div className={`${styles.IndividualSubjectCheckActions}`}>
@@ -102,14 +102,6 @@ export const SubjectCheckNav = (props) => {
             </div>
         </div>
     </>)
-}
-//点击判断
-export const SubjectInfoMain = (props) => {
-    if (props.status.value) {
-        return (<SubjectCheckMainMembers />);
-    } else {
-        return (<SubjectInfoGrades />)
-    }
 }
 
 //所有成员显示区域
@@ -273,22 +265,11 @@ export const SubjectTeacherInfo = (props) => {
     </>)
 }
 
-
-
-//成绩
-export const SubjectInfoGrades = (props) => {
-    return (<>
-        <div className={`${styles.SubjectCheckMainMembers}`}>什么都没有
-
-        </div>
-    </>)
-}
-
 export default function IndividualSubjectCheck(props) {
     const [status, setStatus] = useState(true);
 
     const location = useLocation();
-    const subjectData = (location.state == null || location.state == undefined) ? "" : location.state;
+    const subjectData = (location.state == null || location.state === undefined) ? "" : location.state;
     console.log(typeof (subjectData.name));
 
 
@@ -301,7 +282,7 @@ export default function IndividualSubjectCheck(props) {
             <SubjectCheckNav setStatus={setStatus} action="成员" info={{
                 subName: subjectData.name
             }} />
-            <SubjectInfoMain status={statusInfo} />
+            (<SubjectCheckMainMembers />)
         </div>
     </>)
 }

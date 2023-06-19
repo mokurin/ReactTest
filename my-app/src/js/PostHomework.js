@@ -11,13 +11,15 @@ import { getTime } from './Util'
 
 //发布作业组件
 export default function PostHomework(props) {
-    const [fileList, setFileList] = useState([]);
-    const [homeworkDetails, setHomeworkDetails] = useState({
-        homeworkName: '',
-        homeworkIntroduce: '',
-        deadline: '',
-        maxGrade: ''
-    })
+    const { fileListData, homeworkDetailsData } = props;
+    const [fileList, setFileList] = useState((fileListData === null || fileListData === undefined) ? [] : fileListData.fileList);
+    const [homeworkDetails, setHomeworkDetails] = useState((homeworkDetailsData === null || homeworkDetailsData === undefined) ?
+        {
+            homeworkName: '',
+            homeworkIntroduce: '',
+            deadline: '',
+            maxGrade: ''
+        } : homeworkDetailsData)
     const location = useLocation();
     const s = location.state;
     const email = (s !== null && s !== undefined) ? s.email : '';
@@ -51,28 +53,68 @@ export default function PostHomework(props) {
             const end = Math.min((currentChunk + 1) * chunkSize, file.size);
             const chunk = file.slice(start, end);
             const msg = {
-                api: '',
-                userEmail: email,
-                fileName: file.name,
-                fileSize: file.size,
-                fileType: file.type,
-                chunkIndex: currentChunk,
-                chunkCount: chunks,
-                chunk: chunk
+                api: 'request_upload_file',
+                filename: file.name,
+                filesize: file.size,
             }
-            Send(msg, (msg) => {
-                if (msg.status)
-                    if (currentChunk < chunks - 1) {
-                        currentChunk++;
-                        sendChunk();
-                    } else {
-                        console.log('upload finished');
+            //发送请求上传
+            Send(msg, msg => {
+                if (msg.status) {
+                    const msg = {
+                        api: '',
+                        fileType: file.type,
+                        chunkIndex: currentChunk,
+                        chunkCount: chunks,
+                        chunk: chunk
                     }
-            });
+                    //发送文件
+                    Send(msg, (msg) => {
+                        if (msg.status)
+                            if (currentChunk < chunks - 1) {
+                                currentChunk++;
+                                sendChunk();
+                            } else {
+                                console.log('upload file finished');
+                            }
+                    });
+                }
+            })
+
         };
 
         sendChunk();
     };
+
+    //上传作业信息
+    function handleUploadHomeworkInfo() {
+        const msg = {
+            api: '',
+            userEmail: email,
+            homeworkName: homeworkDetails.homeworkName,
+            homeworkIntroduce: homeworkDetails.homeworkIntroduce,
+            deadline: homeworkDetails.deadline,
+            maxGrade: homeworkDetails.maxGrade
+        }
+        Send(msg, (msg) => {
+            if (msg.status)
+                console.log('upload homeworkInfo finished');
+        });
+    }
+
+    //提交作业
+    function submitHomework() {
+        //提交作业代码
+        new Promise((resolve, reject) => {
+            //上传作业信息
+            handleUploadHomeworkInfo();
+            //上传作业文件
+            handleUploadFiles();
+            resolve();
+        }).then(() => {
+            //重置作业发布框
+            reset();
+        })
+    }
 
     //输入框变化
     const handleChange = (e) => {
@@ -97,20 +139,6 @@ export default function PostHomework(props) {
         setFileList([]);
     }
 
-    //提交作业
-    function submitHomework() {
-        //提交作业代码
-        new Promise((resolve, reject) => {
-            //上传作业信息
-
-            //上传作业文件
-            handleUploadFiles();
-            resolve();
-        }).then(() => {
-            //重置作业发布框
-            reset();
-        })
-    }
 
     return (
         <div id='homeworkEditor' className={`${styles.postHomework} shadow`}>
@@ -137,12 +165,12 @@ export default function PostHomework(props) {
             <div className={`${styles.postHomeworkButtons}`}>
                 <div>
                     <Upload {...settings}>
-                        <button className={`btn btn-primary`}>导入作业</button>
+                        <button className={`btn btn-primary m-2`}>导入作业</button>
                     </Upload>
                 </div>
                 <div>
-                    <button className={`btn btn-outline-primary`} onClick={reset}>重置</button>
-                    <button className={`btn btn-primary`} onClick={submitHomework}>发布个人作业</button>
+                    <button className={`btn btn-outline-primary m-2`} onClick={reset}>重置</button>
+                    <button className={`btn btn-primary m-2`} onClick={submitHomework}>发布个人作业</button>
                 </div>
             </div>
         </div>

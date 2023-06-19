@@ -85,7 +85,7 @@ export default function SubjectDetailedInfo(props) {
             </div>
             <div className={`${styles.homeworkTable}`}>
                 {Util.isTeacher("0") && <PostHomework />}
-                <HomeworkItems allHomeworkInfo={allHomeworkInfo} />
+                <HomeworkItems subData={subData} allHomeworkInfo={allHomeworkInfo} />
             </div>
         </div>
     </>);

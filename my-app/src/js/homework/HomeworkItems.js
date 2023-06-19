@@ -4,13 +4,13 @@ import React from 'react';
 import { HomeworkInfo } from './HomeworkInfo';
 
 export default function HomeworkItems(props) {
-    const { allHomeworkInfo, interactions } = props
+    const { allHomeworkInfo, subData } = props
 
     //获取作业组件列表
     const getItems = () => {
         let items = allHomeworkInfo.map(
             (info, index) => {
-                return <HomeworkInfo data={info} key={index} id={`homework${index}`} />;
+                return <HomeworkInfo subData={subData} data={info} key={index} id={`homework${index}`} />;
             }
         )
         return items;

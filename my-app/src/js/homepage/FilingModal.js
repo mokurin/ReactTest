@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import bootstrap from 'bootstrap/dist/js/bootstrap'
+import PostHomework from '../PostHomework'
 
 // 课程操作对应的模态框
 const buttonStyles = ["btn-outline-secondary", "btn-outline-primary", "btn-primary"]
@@ -54,7 +55,7 @@ const Button = (props) => {
                     onClick={e => {
                         if (check(e, props.index)) {
                             new Promise((resolve, reject) => {
-                                resolve(props.command(getDate(props.index)));
+                                resolve(props.command(getSubDate(props.index)));
                             }).then((result) => {
                                 const modal = new bootstrap.Modal('#editSubject' + props.index);
                                 modal._hideModal();
@@ -62,6 +63,17 @@ const Button = (props) => {
                             })
                         }
                     }}
+                >
+                    {props.msg}
+                </button>
+            </>
+        );
+    } else if (props.msg === '确认编辑作业') {
+        return (
+            <>
+                <button
+                    type="button"
+                    className={`btn ${props.buttonStyle}`}
                 >
                     {props.msg}
                 </button>
@@ -111,8 +123,8 @@ function check(e, index) {
 }
 
 //获取表单数据
-function getDate(index) {
-    const node = document.getElementById('needs-validation' + index);
+function getSubDate(index) {
+    const node = document.getElementById('needs-validation-editSubject' + index);
     return {
         createdTime: node.querySelector('#BodyEdit1').value,
         name: node.querySelector('#BodyEdit2').value,
@@ -123,35 +135,70 @@ function getDate(index) {
 
 //课程编辑
 const BodyEdit = (props) => {
-    return (
-        <form id={'needs-validation' + props.index} className="mt-1 mb-4 row g-3 container justify-content-center" noValidate>
+    let content;
+    if (props.mode === 'editSubject') {
+        content = (<form id={'needs-validation-editSubject' + props.index} className="mt-1 mb-4 row g-3 container justify-content-center" noValidate>
             <div className="col-md-9">
-                <label htmlFor="BodyEdit1" className="form-label">学期</label>
-                <input onChange={props.handleInputChange} name="createdTime" type="text" className="form-control" id="BodyEdit1" value={props.sub.createdTime} required />
+                <label htmlFor="BodyEditSubject1" className="form-label">学期</label>
+                <input onChange={props.handleInputChange} name="createdTime" type="text" className="form-control" id="BodyEditSubject1" value={props.sub.createdTime} required />
                 <div className="invalid-feedback">
                     请输入学期
                 </div>
             </div>
             <div className="col-md-9">
-                <label htmlFor="BodyEdit2" className="form-label">课程名</label>
-                <input onChange={props.handleInputChange} name="name" type="text" className="form-control" id="BodyEdit2" value={props.sub.name} required />
+                <label htmlFor="BodyEditSubject2" className="form-label">课程名</label>
+                <input onChange={props.handleInputChange} name="name" type="text" className="form-control" id="BodyEditSubject2" value={props.sub.name} required />
                 <div className="invalid-feedback">
                     请输入课程名
                 </div>
             </div>
 
             <div className="col-md-9">
-                <label htmlFor="BodyEdit3" className="form-label">班级</label>
-                <input onChange={props.handleInputChange} name="class" type="text" className="form-control" id="BodyEdit3" value={props.sub.class} required />
+                <label htmlFor="BodyEditSubject3" className="form-label">班级</label>
+                <input onChange={props.handleInputChange} name="class" type="text" className="form-control" id="BodyEditSubject3" value={props.sub.class} required />
                 <div className="invalid-feedback">
                     请输入班级
                 </div>
             </div>
             <div className="col-md-9">
-                <label htmlFor="BodyEdit4" className="form-label">课程代码</label>
-                <input type="text" disabled className="form-control" id="BodyEdit4" defaultValue={props.sub.code} required />
+                <label htmlFor="BodyEditSubject4" className="form-label">课程代码</label>
+                <input type="text" disabled className="form-control" id="BodyEditSubject4" required />
             </div>
-        </form>
+        </form>)
+    }
+    //  else if (props.mode === 'editHomework') {
+    //     content = (<form id={'needs-validation' + props.index} className="mt-1 mb-4 row g-3 container justify-content-center" noValidate>
+    //         <div className="col-md-9">
+    //             <label htmlFor="BodyEdit1" className="form-label">作业名</label>
+    //             <input name="createdTime" type="text" className="form-control" id="BodyEdit1" required />
+    //             <div className="invalid-feedback">
+    //                 请输入作业名
+    //             </div>
+    //         </div>
+    //         <div className="col-md-9">
+    //             <label htmlFor="BodyEdit2" className="form-label">作业详情</label>
+    //             <input onChange={props.handleInputChange} name="name" type="text" className="form-control" id="BodyEdit2" />
+    //         </div>
+
+    //         <div className="col-md-9">
+    //             <label htmlFor="BodyEdit3" className="form-label">班级</label>
+    //             <input onChange={props.handleInputChange} name="class" type="text" className="form-control" id="BodyEdit3" required />
+    //             <div className="invalid-feedback">
+    //                 请输入班级
+    //             </div>
+    //         </div>
+    //         <div className="col-md-9">
+    //             <label htmlFor="BodyEdit4" className="form-label">课程代码</label>
+    //             <input type="text" disabled className="form-control" id="BodyEdit4" required />
+    //         </div>
+    //     </form>)
+    else {
+        content = (
+            <PostHomework />
+        )
+    }
+    return (
+        content
     );
 }
 
@@ -180,7 +227,8 @@ function FilingModal(props) {
                             />
                         </div>
                         {props.data.id.includes("filingSubject") && <BodyContent />}
-                        {props.data.id.includes("editSubject") && <BodyEdit handleInputChange={props.handleInputChange} sub={props.sub} index={props.data.id.substring(11)} />}
+                        {props.data.id.includes("editSubject") && <BodyEdit mode={'editSubject'} handleInputChange={props.handleInputChange} sub={props.sub} index={props.data.id.substring(11)} />}
+                        {props.data.id.includes("editHomework") && <BodyEdit mode={'editHomework'} handleInputChange={props.handleInputChange} homework={props.homework} index={props.data.id.substring(12)} />}
                         <div className="modal-footer">
                             {/*未归档课程 删除 */}
                             {props.data.id.includes("deleteSubject") && <Button command={props.command} msg='确认删除' buttonStyle={buttonStyles[2]} />}
@@ -193,6 +241,8 @@ function FilingModal(props) {
                             {props.data.id.includes("restoreSubject") && <Button command={props.command} msg='确认恢复' buttonStyle={buttonStyles[2]} />}
                             {/*归档课程 删除 */}
                             {props.data.id.includes("deleteArchiveSubject") && <Button command={props.command} msg='确认删除' buttonStyle={buttonStyles[2]} />}
+                            {/* 作业编辑 */}
+                            {props.data.id.includes("editHomework") && <Button command={props.command} msg='确认编辑作业' buttonStyle={buttonStyles[2]} />}
                         </div>
                     </div>
                 </div>
