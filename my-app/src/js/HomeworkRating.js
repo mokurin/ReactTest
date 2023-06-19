@@ -155,6 +155,7 @@ const HomeworkDetailed = (props) => {
             api: '',
             subName: props.subData.subName,                     //课程名称
             name: props.homeworkData.homeworkName,              //作业名称
+            home: ""
         }
         Send(msg, (msg) => {
             if (msg.status)
@@ -194,7 +195,7 @@ const HomeworkDetailed = (props) => {
 
             <div className={`${styles.filteringTools} fs-4 shadow-sm`}>
                 <div>
-                    已经筛选出<span id="stuFiltered">{nums[0] + nums[1] + nums[2]}</span>人 (全班共<span id='allStu'>{filteredNums}</span>人)
+                    已经筛选出<span id="stuFiltered">{filteredNums}</span>人 (全班共<span id='allStu'>{nums[0] + nums[1] + nums[2]}</span>人)
                 </div>
                 <div className={`${styles.filteredBar} fs-5`}>
                     <div>
