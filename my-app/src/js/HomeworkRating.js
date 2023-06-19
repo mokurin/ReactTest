@@ -23,6 +23,8 @@ function homeworkInfo(stuNum, name, workInfo) {
 
 //单个 作业人员
 const HomeworkMemberInfo = (props) => {
+    const navigate = useNavigate();
+
     return (<>
         <div className={`${styles.homeworkMemberInfo} shadow-sm`}>
             <div className='fs-5'>
@@ -36,7 +38,13 @@ const HomeworkMemberInfo = (props) => {
                     {props.info.submittedHW.length != 0 ? (props.info.grade.length != 0 ? props.info.grade + "/" + props.maxGrade : "未批") : "未交"}
                 </div>
             </div>
-            <button className={`btn btn-outline-secondary btn-sm ${styles.checkThisHomework}`}>
+            <button className={`btn btn-outline-secondary btn-sm ${styles.checkThisHomework}`}
+                onClick={(e) => {
+                    navigate("/HomeworkPreview", {
+                        state: { maxGrade: props.maxGrade, filePath: props.info.submittedHW, grade: props.info.grade }
+                    })
+                }}
+            >
                 进入批阅
             </button>
         </div>
@@ -79,7 +87,6 @@ const HomeworkDetailed = (props) => {
         grade: "",                      //成绩   
         comment: ""                     //留言
     }
-
 
     // 作业信息
     let hwInfo = {
@@ -153,10 +160,7 @@ const HomeworkDetailed = (props) => {
                 <div className={``}>
                     <button className={`btn btn-outline-secondary btn-lg`}
                         onClick={(e) => {
-                            console.log(props.subData);
-                            console.log("----------");
-                            // console.log(props.homeworkData);
-                            console.log(hwInfo);
+                            //发送消息
                         }}
                     >
                         一键催交
