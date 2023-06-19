@@ -78,7 +78,6 @@ export const SubjectCheckNav = (props) => {
         <div className={`${styles.subjectCheckNav} shadow-lg`}>
             <div className={`${styles.subjectCheckNavBack}`}>
                 <img src={icon_back} alt="" onClick={(e) => {
-                    console.log(1);
                     navigate(-1);
                 }} />
                 <div className={`${styles.IndividualSubjectCheckName} text-truncate`}>
@@ -108,7 +107,7 @@ export const SubjectCheckNav = (props) => {
 export const SubjectCheckMainMembers = (props) => {
     // 老师成员和学生成员切换
     const [status, setStatus] = useState(true);
-
+    
     return (<>
         <div className={`${styles.SubjectCheckMainMembers} shadow`}>
             <div className={`${styles.subjectMemberInfoSearch}`}>
