@@ -85,9 +85,22 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    transition: 0.5s;
+    animation: fadeIn 0.5s ease-in forwards;
+    ;
 }
 
-.individualMember{
+@keyframes fadeIn {
+    0% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.individualMember {
     box-sizing: border-box;
 }
 

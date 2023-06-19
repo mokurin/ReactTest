@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // css引用
 import styles from "../css/HomeworkRating.module.css"
@@ -12,17 +12,10 @@ import bootstrap from 'bootstrap/dist/js/bootstrap'
 import * as Util from './Util'
 import { Send } from './Connect'
 
-// 个人作业状态返回方法
-function homeworkInfo(stuNum, name, workInfo) {
-    return {
-        stuNum: stuNum,
-        name: name,
-        workInfo: workInfo
-    }
-}
 // -------------------------------------------------------分割线-------------------------------------------------------
 
 //单个 作业人员
+
 const HomeworkMemberInfo = (props) => {
     const navigate = useNavigate();
 
@@ -66,8 +59,13 @@ const HomeworkMemberInfo = (props) => {
         </div>
     </>)
 }
+
 // 人员显示
 const HomeworkDetailed = (props) => {
+    const [all, setAll] = useState(true)
+
+
+
     //所有成员成绩
     let allMemGrades = [{
         stuNum: "121231111",
@@ -125,12 +123,53 @@ const HomeworkDetailed = (props) => {
 
             // 数据接收部分
 
-
-
-
         });
     }
 
+
+    // 筛选
+    const allMembers = document.getElementsByClassName(styles.homeworkMemberInfo);
+
+    const [condition, setCondition] = useState("")
+    useEffect(() => {
+        if (condition == "/") {
+            searchItems("/")
+        } else if (condition === "未批") {
+            searchItems("未批")
+        } else if (condition === "未交") {
+            searchItems("未交")
+        } else {
+            showAllListItems()
+        }
+    }, [condition])
+
+
+    // 数组 存放所有数组
+    let listItems = [];
+
+    // 获取列表中的所有列表项,存储到数组中
+    for (let i = 0; i < allMembers.length; i++) {
+        listItems.push(allMembers[i]);
+    }
+
+    // 遍历列表项,检查是否包含搜索值
+    function searchItems(key) {
+        listItems.forEach(listItem => {
+            if (listItem.querySelector("#isSumitted").innerHTML.includes(key)) {
+                listItem.style.display = "flex"
+            }
+            else {
+                listItem.style.display = "none"
+            }
+        });
+    }
+
+    // 显示所有
+    function showAllListItems() {
+        listItems.forEach(item => {
+            item.style.display = 'flex';
+        });
+    }
 
     return (<>
         <div className={`${styles.homeworkDetailed} shadow-lg container`}>
@@ -142,7 +181,6 @@ const HomeworkDetailed = (props) => {
                     截止日期: {(props.homeworkData === null || props.homeworkData === undefined) ? "" : Util.getTime(props.homeworkData.deadline)}
                 </div>
             </div>
-
             <div className={`divider`}></div>
 
             <div className={`${styles.filteringTools} fs-4 shadow-sm`}>
@@ -154,19 +192,40 @@ const HomeworkDetailed = (props) => {
                         成绩
                     </div>
                     <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" />
+                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
+                            checked={all}
+                            readOnly
+                            onClick={(e) => {
+                                setAll(true)
+                                setCondition("")
+                            }}
+
+                        />
                         <label className="form-check-label" htmlFor="inlineRadio1">不限</label>
                     </div>
                     <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" />
+                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
+                            onClick={(e) => {
+                                setAll(false)
+                                setCondition("/")
+                            }}
+                        />
                         <label className="form-check-label" htmlFor="inlineRadio2">已批</label>
                     </div>
                     <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" />
+                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3"
+                            onClick={(e) => {
+                                setAll(false)
+                                setCondition("未批")
+                            }} />
                         <label className="form-check-label" htmlFor="inlineRadio3">未批</label>
                     </div>
                     <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" />
+                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4"
+                            onClick={(e) => {
+                                setAll(false)
+                                searchItems("未交")
+                            }} />
                         <label className="form-check-label" htmlFor="inlineRadio4">未交</label>
                     </div>
                 </div>
@@ -196,6 +255,8 @@ export default function HomeworkRating(props) {
     const state = (location.state == null || location.state === undefined) ? "" : location.state;;
     const subData = (state == null || state === undefined) ? null : state.subData;
     const homeworkData = (state == null || state === undefined) ? null : state.homeworkData;
+
+    console.log(state);
 
     return (<>
         <SubjectCheckNav subData={subData} homeworkData={homeworkData} action="学生作业" />
