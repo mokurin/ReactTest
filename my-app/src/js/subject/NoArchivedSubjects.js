@@ -18,7 +18,7 @@ export function updateNoArchivedSubjects(data) {
         }
         Send(msg, msg => {
             if (!msg.status) {
-                alert(msg.err_code);
+                alert(msg.errcode);
             }
         })
     }
@@ -38,7 +38,7 @@ export function addSubject(sub) {
         }
         Send(msg, msg => {
             if (!msg.status) {
-                alert(msg.err_code);
+                alert(msg.errcode);
             }
         })
     }
@@ -66,7 +66,7 @@ export function updateSubject(sub) {
     //     }
     //     Send(msg, msg => {
     //         if (!msg.status) {
-    //             alert(msg.err_code);
+    //             alert(msg.errcode);
     //             return false;
     //         } else {
     //             return true;

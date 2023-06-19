@@ -1,15 +1,31 @@
 //工具模块
 
-//获取时间字符串
+//获取时间戳
 export function getTime(date) {
-    if (date !== undefined) {
-        const month = ("0" + (date.getMonth() + 1)).slice(-2);
-        const day = ("0" + (date.getDate())).slice(-2);
-        const year = date.getFullYear();
-        const hour = ("0" + (date.getHours())).slice(-2);
-        const min = ("0" + (date.getMinutes())).slice(-2);
-        return year + "-" + month + "-" + day + " " + hour + ":" + min;
+    console.log(date);
+    return Date.parse(date);
+}
+
+//将时间戳格式化
+export function formatTimestamp(timestamp) {
+    let date = new Date(timestamp);
+    
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    let hour = date.getHours();
+    let minute = date.getMinutes();
+
+    month = month < 10 ? "0" + month : month;
+    day = day < 10 ? "0" + day : day;
+    hour = hour < 10 ? "0" + hour : hour;
+    minute = minute < 10 ? "0" + minute : minute;
+
+    let result = year + "-" + month + "-" + day + " " + hour + ":" + minute;
+    if (isNaN(year)) {
+        return '';
     }
+    return result;
 }
 
 //判断是否是老师

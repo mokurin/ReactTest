@@ -48,25 +48,23 @@ const Button = (props) => {
         );
     } else if (props.msg === '确认编辑') {
         return (
-            <>
-                <button
-                    type="button"
-                    className={`btn ${props.buttonStyle}`}
-                    onClick={e => {
-                        if (check(e, props.index)) {
-                            new Promise((resolve, reject) => {
-                                resolve(props.command(getSubDate(props.index)));
-                            }).then((result) => {
-                                const modal = new bootstrap.Modal('#editSubject' + props.index);
-                                modal._hideModal();
-                                document.getElementsByClassName('modal-backdrop')[0].remove();
-                            })
-                        }
-                    }}
-                >
-                    {props.msg}
-                </button>
-            </>
+            <button
+                type="button"
+                className={`btn ${props.buttonStyle}`}
+                onClick={e => {
+                    if (check(e, props.index, 'editSubject')) {
+                        new Promise((resolve, reject) => {
+                            resolve(props.command(getSubDate(props.index)));
+                        }).then((result) => {
+                            const modal = new bootstrap.Modal('#editSubject' + props.index);
+                            modal._hideModal();
+                            document.getElementsByClassName('modal-backdrop')[0].remove();
+                        })
+                    }
+                }}
+            >
+                {props.msg}
+            </button>
         );
     } else if (props.msg === '确认编辑作业') {
         return (
@@ -74,10 +72,43 @@ const Button = (props) => {
                 <button
                     type="button"
                     className={`btn ${props.buttonStyle}`}
+                    onClick={e => {
+                        new Promise((resolve, reject) => {
+                            props.setIsOK(true);
+                            resolve();
+                        }).then((result) => {
+                            const modal = new bootstrap.Modal('#editHomework' + props.index);
+                            modal._hideModal();
+                            document.getElementsByClassName('modal-backdrop')[0].remove();
+                        }).then(() => {
+                            props.setIsOK(false);
+                        })
+                    }}
                 >
                     {props.msg}
                 </button>
             </>
+        );
+    } else if (props.msg === '确认创建') {
+        return (
+            <button
+                type="button"
+                className={`btn ${props.buttonStyle}`}
+                onClick={e => {
+                    if (check(e, '', 'createSubject')) {
+                        new Promise((resolve, reject) => {
+                            resolve(props.command(getNewSubDate()));
+                        }).then((result) => {
+                            const modal = new bootstrap.Modal('#createSubject');
+                            modal._hideModal();
+                            document.getElementsByClassName('modal-backdrop')[0].remove();
+                            resetNewSubDate();
+                        })
+                    }
+                }}
+            >
+                {props.msg}
+            </button>
         );
     } else {
         return (
@@ -108,11 +139,11 @@ const BodyContent = () => {
 }
 
 //检查表单
-function check(e, index) {
-    const form = document.querySelector('#needs-validation' + index);
+function check(e, index, mode) {
+    const form = document.querySelector('#needs-validation-' + mode + index);
     if (!form.checkValidity()) {
         e.preventDefault();
-        e.stopPropagation()
+        e.stopPropagation();
     }
     form.classList.add('was-validated');
 
@@ -122,14 +153,14 @@ function check(e, index) {
     }
 }
 
-//获取表单数据
+//获取修改后的数据
 function getSubDate(index) {
     const node = document.getElementById('needs-validation-editSubject' + index);
     return {
-        createdTime: node.querySelector('#BodyEdit1').value,
-        name: node.querySelector('#BodyEdit2').value,
-        class: node.querySelector('#BodyEdit3').value,
-        code: node.querySelector('#BodyEdit4').value
+        createdTime: node.querySelector('#BodyEditSubject1').value,
+        name: node.querySelector('#BodyEditSubject2').value,
+        class: node.querySelector('#BodyEditSubject3').value,
+        code: node.querySelector('#BodyEditSubject4').value
     }
 }
 
@@ -162,44 +193,64 @@ const BodyEdit = (props) => {
             </div>
             <div className="col-md-9">
                 <label htmlFor="BodyEditSubject4" className="form-label">课程代码</label>
-                <input type="text" disabled className="form-control" id="BodyEditSubject4" required />
+                <input type="text" defaultValue={props.sub.code} disabled className="form-control" id="BodyEditSubject4" required />
             </div>
         </form>)
-    }
-    //  else if (props.mode === 'editHomework') {
-    //     content = (<form id={'needs-validation' + props.index} className="mt-1 mb-4 row g-3 container justify-content-center" noValidate>
-    //         <div className="col-md-9">
-    //             <label htmlFor="BodyEdit1" className="form-label">作业名</label>
-    //             <input name="createdTime" type="text" className="form-control" id="BodyEdit1" required />
-    //             <div className="invalid-feedback">
-    //                 请输入作业名
-    //             </div>
-    //         </div>
-    //         <div className="col-md-9">
-    //             <label htmlFor="BodyEdit2" className="form-label">作业详情</label>
-    //             <input onChange={props.handleInputChange} name="name" type="text" className="form-control" id="BodyEdit2" />
-    //         </div>
-
-    //         <div className="col-md-9">
-    //             <label htmlFor="BodyEdit3" className="form-label">班级</label>
-    //             <input onChange={props.handleInputChange} name="class" type="text" className="form-control" id="BodyEdit3" required />
-    //             <div className="invalid-feedback">
-    //                 请输入班级
-    //             </div>
-    //         </div>
-    //         <div className="col-md-9">
-    //             <label htmlFor="BodyEdit4" className="form-label">课程代码</label>
-    //             <input type="text" disabled className="form-control" id="BodyEdit4" required />
-    //         </div>
-    //     </form>)
-    else {
+    } else if (props.mode === 'editHomework') {
         content = (
-            <PostHomework />
+            <PostHomework homeworkDetailsData={props.homework} isEdit={true} handleInputChange={props.handleInputChange} />
         )
     }
     return (
         content
     );
+}
+
+//获取新的课程数据
+function getNewSubDate() {
+    const node = document.getElementById('needs-validation-createSubject');
+    return {
+        createdTime: node.querySelector('#BodyCreateSubject1').value,
+        name: node.querySelector('#BodyCreateSubject2').value,
+        class: node.querySelector('#BodyCreateSubject3').value
+    }
+}
+
+//清空表单
+function resetNewSubDate() {
+    const node = document.getElementById('needs-validation-createSubject');
+    node.querySelector('#BodyCreateSubject1').value = '';
+    node.querySelector('#BodyCreateSubject2').value = '';
+    node.querySelector('#BodyCreateSubject3').value = '';
+}
+
+//课程创建
+const BodyCreate = (props) => {
+    return (<form id={'needs-validation-createSubject'} className="mt-1 mb-4 row g-3 container justify-content-center" noValidate>
+        <div className="col-md-9">
+            <label htmlFor="BodyCreateSubject1" className="form-label">学期</label>
+            <input name="createdTime" type="text" className="form-control" id="BodyCreateSubject1" required />
+            <div className="invalid-feedback">
+                请输入学期
+            </div>
+        </div>
+
+        <div className="col-md-9">
+            <label htmlFor="BodyCreateSubject2" className="form-label">课程名</label>
+            <input onChange={props.handleInputChange} name="name" type="text" className="form-control" id="BodyCreateSubject2" required />
+            <div className="invalid-feedback">
+                请输入课程名
+            </div>
+        </div>
+
+        <div className="col-md-9">
+            <label htmlFor="BodyCreateSubject3" className="form-label">班级</label>
+            <input onChange={props.handleInputChange} name="class" type="text" className="form-control" id="BodyCreateSubject3" required />
+            <div className="invalid-feedback">
+                请输入班级
+            </div>
+        </div>
+    </form>)
 }
 
 
@@ -226,9 +277,12 @@ function FilingModal(props) {
                                 aria-label="Close"
                             />
                         </div>
+
                         {props.data.id.includes("filingSubject") && <BodyContent />}
                         {props.data.id.includes("editSubject") && <BodyEdit mode={'editSubject'} handleInputChange={props.handleInputChange} sub={props.sub} index={props.data.id.substring(11)} />}
-                        {props.data.id.includes("editHomework") && <BodyEdit mode={'editHomework'} handleInputChange={props.handleInputChange} homework={props.homework} index={props.data.id.substring(12)} />}
+                        {props.data.id.includes("editHomework") && <BodyEdit mode={'editHomework'} handleInputChange={props.handleInputChange} homework={props.homeworkDetailsData} index={props.data.id.substring(12)} />}
+                        {props.data.id.includes("createSubject") && <BodyCreate handleInputChange={props.handleInputChange} />}
+
                         <div className="modal-footer">
                             {/*未归档课程 删除 */}
                             {props.data.id.includes("deleteSubject") && <Button command={props.command} msg='确认删除' buttonStyle={buttonStyles[2]} />}
@@ -242,7 +296,11 @@ function FilingModal(props) {
                             {/*归档课程 删除 */}
                             {props.data.id.includes("deleteArchiveSubject") && <Button command={props.command} msg='确认删除' buttonStyle={buttonStyles[2]} />}
                             {/* 作业编辑 */}
-                            {props.data.id.includes("editHomework") && <Button command={props.command} msg='确认编辑作业' buttonStyle={buttonStyles[2]} />}
+                            {props.data.id.includes("editHomework") && <Button isOK={props.isOK} setIsOK={props.setIsOK} index={props.data.id.substring(12)} msg='确认编辑作业' buttonStyle={buttonStyles[2]} />}
+                            {/* 作业删除 */}
+                            {props.data.id.includes("deleteHomework") && <Button command={props.command} msg='确认删除' buttonStyle={buttonStyles[2]} />}
+                            {/* 创建课程 */}
+                            {props.data.id.includes('createSubject') && <Button command={props.command} msg='确认创建' buttonStyle={buttonStyles[2]} />}
                         </div>
                     </div>
                 </div>

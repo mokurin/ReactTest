@@ -12,7 +12,7 @@ const Test = () => {
             const node = document.querySelector('#content');
             if (msg.status) {
                 node.innerHTML = msg.content;
-            } else node.innerHTML = msg.err_code;
+            } else node.innerHTML = msg.errcode;
         })
     }
 

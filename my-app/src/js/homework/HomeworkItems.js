@@ -4,13 +4,25 @@ import React from 'react';
 import { HomeworkInfo } from './HomeworkInfo';
 
 export default function HomeworkItems(props) {
-    const { allHomeworkInfo, subData } = props
+    const { allHomeworkInfo, subData, setAllHomeworkInfo } = props
+
+    function updateHomeworkInfo(index, newInfo) {
+        const infos = [...allHomeworkInfo]
+        infos[index] = newInfo;
+        setAllHomeworkInfo(infos)
+    }
+
+    function delHomeworkInfo(index) {
+        const infos = [...allHomeworkInfo]
+        infos.splice(index, 1);
+        setAllHomeworkInfo(infos)
+    }
 
     //获取作业组件列表
     const getItems = () => {
         let items = allHomeworkInfo.map(
             (info, index) => {
-                return <HomeworkInfo subData={subData} data={info} key={index} id={`homework${index}`} />;
+                return <HomeworkInfo delHomeworkInfo={delHomeworkInfo} allHomeworkInfo={allHomeworkInfo} updateHomeworkInfo={updateHomeworkInfo} subData={subData} data={info} key={index} id={`homework${index}`} />;
             }
         )
         return items;

@@ -28,7 +28,7 @@ import Connect from './js/Connect'
 ReactDOM.createRoot(document.getElementById("root")).render((
   <BrowserRouter>
     <Routes>
-      {/* <Route index element={<Navigate to={'/Login'} replace={true} />} /> */}
+      <Route index element={<Navigate to={'/Login'} replace={true} />} />
       <Route path='/Login' element={<Login />} />
       <Route path="/Forget" element={<Forget />} />
       <Route path='/Signup' element={<Signup />} />
@@ -40,8 +40,8 @@ ReactDOM.createRoot(document.getElementById("root")).render((
       <Route path='/HomeworkRating' element={<HomeworkRating />} />
       <Route path='/IndividualSubjectCheck' element={<IndividualSubjectCheck />} />
       <Route path='/SummitHomework' element={<SubmitHomework />} />
-      <Route index element={<Navigate to={'/Test'} replace={true} />} />
-      <Route path='/Test' element={<Test />} />
+      {/* <Route index element={<Navigate to={'/Test'} replace={true} />} />
+      <Route path='/Test' element={<Test />} /> */}
       <Route path='/HomeworkRating' element={<HomeworkRating />} />
       <Route path='/HomeworkPreview' element={<HomeworkPreview />} />
     </Routes>

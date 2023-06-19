@@ -41,13 +41,13 @@ export default function Signup(props) {
         const ID = document.querySelector('#id').value;
         const code = document.querySelector('#code').value;
 
-        let identity = '';
+        let identity = 's';
         const teacher_bt = document.querySelector('#teacher-bt');
         const student_bt = document.querySelector('#student-bt');
         if (teacher_bt.classList.contains('btn-primary'))
-            identity = 'teacher';
+            identity = 't';
         else if (student_bt.classList.contains('btn-primary'))
-            identity = 'student';
+            identity = 's';
 
         setData({
             email: email,//邮箱
@@ -93,21 +93,21 @@ export default function Signup(props) {
         }).then(() => {
             //向服务器发送请求
             const message = {
-                api: 'signup',
+                api: 'register',
                 email: data.email,//邮箱
                 identity: data.identity,//身份
                 passwd: data.pwd,//密码
                 name: data.name,//姓名
                 school: data.institution,//机构
-                id: data.ID,//学号/工号
-                vercode: data.code//填入的验证码
+                id: data.id,//学号/工号
+                vercode: data.vercode//填入的验证码
             }
             Send(message, (msg) => {
                 if (msg.status) {
                     alert('注册成功');
                     navigate('/Login', { state: { email: message.email } })
                 } else {
-                    alert(msg.err_code);
+                    alert(msg.errcode);
                 }
             })
         })
@@ -115,7 +115,6 @@ export default function Signup(props) {
 
     function validateEmail(e) {
         if (!/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(e.target.value)) {
-            console.log('ok');
             e.target.setCustomValidity("邮箱格式不正确");
         } else {
             //没有错误。清除任何错误消息
@@ -207,6 +206,15 @@ class GetCode extends React.Component {
                 1000
             );
             //向服务器请求验证码
+            const msg = {
+                api: 'regverify',
+                email: this.props.email
+            }
+            Send(msg, msg => {
+                if (msg.status) {
+                    console.log('已成功发送');
+                } else console.log(msg.errcode);
+            });
             tip.classList.add(`${signup.displayNone}`)
         } else if (!/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(this.props.email)) {
             tip.classList.remove(`${signup.displayNone}`)

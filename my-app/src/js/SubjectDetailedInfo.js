@@ -26,13 +26,13 @@ export default function SubjectDetailedInfo(props) {
     const [allHomeworkInfo, setAllHomeworkInfo] = useState([{
         homeworkName: 'aaa',
         homeworkIntroduce: 'asdawrdasregesASEF',
-        deadline: new Date(),
+        deadline: Date.now(),
         maxGrade: 100,
         interaction: [1, 2, 3]
     }, {
         homeworkName: 'bbb',
         homeworkIntroduce: 'wsedfal,asdsaasdsfdsafaeasasf',
-        deadline: new Date(),
+        deadline: Date.now(),
         maxGrade: 200,
         interaction: [2, 3, 4]
     }]);
@@ -47,6 +47,14 @@ export default function SubjectDetailedInfo(props) {
                 subData: subData
             }
         })
+    }
+
+    function handlePostHomework(homework) {
+        // setAllHomeworkInfo(prevState => {
+
+        // })
+        allHomeworkInfo.push(homework);
+        setAllHomeworkInfo([...allHomeworkInfo])
     }
 
     return (<>
@@ -84,8 +92,8 @@ export default function SubjectDetailedInfo(props) {
                 {navButton("公告")}
             </div>
             <div className={`${styles.homeworkTable}`}>
-                {Util.isTeacher("0") && <PostHomework />}
-                <HomeworkItems subData={subData} allHomeworkInfo={allHomeworkInfo} />
+                {Util.isTeacher("0") && <PostHomework isEdit={false} handlePostHomework={handlePostHomework} />}
+                <HomeworkItems subData={subData} setAllHomeworkInfo={setAllHomeworkInfo} allHomeworkInfo={allHomeworkInfo} />
             </div>
         </div>
     </>);

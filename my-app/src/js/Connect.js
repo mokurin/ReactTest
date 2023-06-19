@@ -1,4 +1,4 @@
-const url = "ws://192.168.73.225:8080";
+const url = "ws://192.168.137.46:8080";
 const socket = new WebSocket(url);
 let statusArr = ['正在连接', '已建立连接', '正在关闭连接', '已关闭连接',]
 const task_queue = [];//处理主动请求后的返回的回调队列
@@ -11,11 +11,13 @@ socket.onopen = () => {
     //持续接收后端消息
     //接收到消息
     socket.onmessage = (jsonString) => {
-        const msg = JSON.parse(jsonString);
+        const msg = JSON.parse(jsonString.data);
         console.log('接收内容：');
         console.log(msg);
-        if (msg["type"] === "csc") {//向服务器请求后的返回
-            task_queue.pop(msg);
+        console.log(msg.type);
+        console.log(msg.type === "csc");
+        if (msg.type === "csc") {//向服务器请求后的返回
+            task_queue.pop()(msg);
         } else { // 服务器主动发送的数据
             actions[msg["action"]](msg);
         }

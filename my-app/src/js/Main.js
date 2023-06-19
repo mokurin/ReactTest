@@ -5,6 +5,7 @@ import styles from '../css/Main.module.css'
 // 组件引用
 import SubjectAction from './homepage/SubjectAction';
 import SubjectItems from './homepage/SubItems/SubjectItems'
+import FilingModal from './homepage/FilingModal'
 
 // 图标
 import logo from '../img/logo.png'
@@ -20,6 +21,7 @@ import fileCtrl from '../img/files-alt.svg'
 import { noArchivedSubjects, updateNoArchivedSubjects } from './subject/NoArchivedSubjects'
 import { archivedSubjects, updateArchivedSubjects } from './subject/ArchivedSubjects'
 import subjectInfo, { getAllSubs } from './subject/SubjectInfo'
+import { Send } from './Connect';
 
 
 
@@ -44,24 +46,48 @@ function Main(props) {
 
         updateArchivedSubjects([subjectInfo("第二学期", "离散数学离散数学离散数学离散数学离散数学离散数学离散数学", "121230202", "DDD", "sss")])
 
-        // new Promise((resolve, reject) => {
-        //     //请求所有课程数据
-        //     if (getAllSubs(user_Account))
-        //         resolve();
-        //     else reject();
-        // }).then(() => {
-        //     //请求成功则加载内容
+        //     new Promise((resolve, reject) => {
+        //         //请求所有课程数据
+        //         if (getAllSubs(user_Account))
+        //             resolve();
+        //         else reject();
+        //     }).then(() => {
+        //         //请求成功则加载内容
         setNoArchivedSub(noArchivedSubjects);
         setArchivedSub(archivedSubjects);
-        // }).catch(() => {
-        //     //请求失败则加载到登录页面
-        //     navigate('/Login');
-        // })
+        //     }).catch(() => {
+        //         //请求失败则加载到登录页面
+        //         navigate('/Login');
+        //     })
         // } else {
         //     //未登录则加载到登录页面
         //     navigate('/Login');
         // }
     }, [])
+
+
+    //创建课程
+    function handleCreateSub(sub) {
+        new Promise((resolve, reject) => {
+            const msg = {
+                api: 'create_subject',
+                term: sub.createdTime,  //学期
+                title: sub.name,        //课程名
+                klass_ids: sub.class    //班级
+            }
+            Send(msg, msg => {
+                if (msg.status) {
+                    sub.code = msg.id;
+                    sub.teacher = msg.creator;
+                    //添加到前端
+                    const subs = [...noArchivedSub]
+                    subs.push(sub);
+                    setNoArchivedSub(subs);
+                    updateNoArchivedSubjects(subs);
+                }
+            })
+        })
+    }
 
 
 
@@ -133,22 +159,25 @@ function Main(props) {
                         archivedSub={archivedSub} setArchivedSub={setArchivedSub} />
 
                     {/* 创建课程 */}
-                    <div className={`${styles.subject} ${styles.no_select} shadow`}>
+                    <div onClick={handleCreateSub} className={`${styles.subject} ${styles.no_select} shadow`}
+                        data-bs-toggle="modal"
+                        data-bs-target={"#createSubject"}>
                         <div className={styles.addSubjectTop}>
-
                         </div>
                         <div className={styles.addSubjectBottom}>
                             <img src={Plus} alt="" />
                             <div>创建课程</div>
                         </div>
                     </div>
+                    <FilingModal data={{
+                        title: "课程编辑",
+                        id: "createSubject"
+                    }}
+                        command={handleCreateSub}
+                    />
                 </div>
             </div>
-            {/* 侧边栏 */}
-            <div className={`${styles.sidebar} shadow-lg`}>
-                <img src={Msg} alt="" />
-                <img src={help} alt="" />
-            </div>
+
         </>
     )
 }

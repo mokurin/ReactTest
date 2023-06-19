@@ -48,14 +48,14 @@ export default function Login(props) {
                     email: data.email,
                     passwd: data.passwd,
                     isAutoLogin: isAutoLogin,
-                    data: msg.user_data
+                    data: msg.userdata
                 }
                 localStorage.setItem('user_Account', JSON.stringify(user_Account));
                 //跳转主页
                 navigate('/Main', { state: user_Account.data });
             } else {//登录失败
                 new Promise((resolve, reject) => {
-                    setMsg(msg.err_code);
+                    setMsg(msg.errcode);
                     resolve();
                 }).then(() => {
                     const modal = new bootstrap.Modal('#exampleModal');

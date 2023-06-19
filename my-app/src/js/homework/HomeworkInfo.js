@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // css引用
 import styles from "../../css/SubjectInfo.module.css"
@@ -13,8 +13,9 @@ import { useNavigate } from 'react-router';
 
 // 单个作业
 export const HomeworkInfo = (props) => {
+    const [isOK, setIsOK] = useState(false);
     const { homeworkName, homeworkIntroduce, deadline, maxGrade, interaction } = props.data;
-    const { id } = props;
+    const { id, updateHomeworkInfo, delHomeworkInfo, allHomeworkInfo } = props;
     const index = Number(id.substring(8));
     const navigate = useNavigate();
 
@@ -32,11 +33,35 @@ export const HomeworkInfo = (props) => {
         }
     }
 
-    const [editHomework, setEditHomework] = useState(props.data);
-    function handleInputChange(e) {
-        
+    //删除当前作业
+    function delHomework() {
+        delHomeworkInfo(index);
     }
 
+    const [editHomework, setEditHomework] = useState(props.data);
+    function handleInputChange(e) {
+        const value = e.target.value;
+        const id = e.target.id;
+        setEditHomework(prevState => {
+            return {
+                ...prevState,
+                [id]: value
+            }
+        });
+    }
+
+    useEffect(() => {
+        //当isOK为true时，保存编辑后的信息
+        if (isOK) {
+            new Promise((resolve, reject) => {
+                updateHomeworkInfo(index, editHomework);
+                resolve();
+            }).then(() => {
+                console.log(allHomeworkInfo);
+                console.log(props.data);
+            })
+        }
+    }, [isOK])
 
     return (<>
         <div onClick={handleNav} className={`${styles.homeworkInfo} shadow`}>
@@ -60,6 +85,9 @@ export const HomeworkInfo = (props) => {
                                 type="button"
                                 data-bs-toggle="modal"
                                 data-bs-target={"#editHomework" + index}
+                                onClick={() => {
+                                    setEditHomework(props.data);
+                                }}
                             >
                                 编辑
                             </li>
@@ -76,12 +104,14 @@ export const HomeworkInfo = (props) => {
                         <FilingModal data={{
                             title: "作业编辑",
                             id: "editHomework" + index
-                        }}
+                        }} homeworkDetailsData={editHomework}
+                            handleInputChange={handleInputChange}
+                            setIsOK={setIsOK}
                         />
                         <FilingModal data={{
                             title: "要删除此作业吗？",
                             id: "deleteHomework" + index
-                        }}
+                        }} command={delHomework}
                         />
                     </div>
                 }
@@ -114,7 +144,7 @@ export const HomeworkInfo = (props) => {
                 </div>
             }
             <div className={`${styles.homeworkDeadline}`}>
-                截止日期: {Util.getTime(deadline)}
+                截止日期: {Util.formatTimestamp(deadline)}
             </div>
         </div>
     </>);

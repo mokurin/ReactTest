@@ -6,19 +6,20 @@ import styles from '../css/PostHomework.module.css'
 import { Upload } from 'antd';
 import { Send } from './Connect'
 import { useLocation } from 'react-router';
-import { getTime } from './Util'
+import { getTime, formatTimestamp } from './Util'
 
 
 //发布作业组件
 export default function PostHomework(props) {
-    const { fileListData, homeworkDetailsData } = props;
-    const [fileList, setFileList] = useState((fileListData === null || fileListData === undefined) ? [] : fileListData.fileList);
+    const { fileListData, homeworkDetailsData, isEdit, handleInputChange, handlePostHomework } = props;
+    const [fileList, setFileList] = useState([]);
     const [homeworkDetails, setHomeworkDetails] = useState((homeworkDetailsData === null || homeworkDetailsData === undefined) ?
         {
             homeworkName: '',
             homeworkIntroduce: '',
-            deadline: '',
-            maxGrade: ''
+            deadline: NaN,
+            maxGrade: '',
+            interaction: [0, 0, 0]
         } : homeworkDetailsData)
     const location = useLocation();
     const s = location.state;
@@ -26,7 +27,6 @@ export default function PostHomework(props) {
 
     //更改上传的文件列表
     const handleFilesChange = ({ fileList }) => {
-        console.log(fileList);
         setFileList(fileList);
     };
 
@@ -101,19 +101,33 @@ export default function PostHomework(props) {
         });
     }
 
+    function getFileList() {
+        //请求文件列表（文件名、文件大小）
+
+    }
+
     //提交作业
     function submitHomework() {
-        //提交作业代码
-        new Promise((resolve, reject) => {
-            //上传作业信息
-            handleUploadHomeworkInfo();
-            //上传作业文件
-            handleUploadFiles();
-            resolve();
-        }).then(() => {
-            //重置作业发布框
-            reset();
-        })
+        //前端操作
+        handlePostHomework(homeworkDetails);
+        // //提交作业代码
+        // new Promise((resolve, reject) => {
+        //     //上传作业信息
+        //     handleUploadHomeworkInfo();
+        //     //上传作业文件
+        //     handleUploadFiles();
+        //     resolve();
+        // }).then(() => {
+        //     //重置作业发布框
+        reset();
+        // })
+        setHomeworkDetails({
+            homeworkName: '',
+            homeworkIntroduce: '',
+            deadline: NaN,
+            maxGrade: '',
+            interaction: [0, 0, 0]
+        });
     }
 
     //输入框变化
@@ -126,6 +140,9 @@ export default function PostHomework(props) {
                 [id]: value
             }
         })
+        if (handleInputChange !== undefined && handleInputChange !== null) {
+            handleInputChange(e);
+        }
     }
 
     //重置内容
@@ -143,21 +160,21 @@ export default function PostHomework(props) {
     return (
         <div id='homeworkEditor' className={`${styles.postHomework} shadow`}>
             <div>
-                <input value={homeworkDetails.homeworkName} onChange={handleChange}
+                <input value={isEdit ? homeworkDetailsData.homeworkName : homeworkDetails.homeworkName} onChange={handleChange}
                     id='homeworkName' type="text" className={`form-control`} placeholder='作业名称' />
             </div>
             <div className={`mt-2`}>
-                <textarea value={homeworkDetails.homeworkIntroduce} onChange={handleChange}
+                <textarea value={isEdit ? homeworkDetailsData.homeworkIntroduce : homeworkDetails.homeworkIntroduce} onChange={handleChange}
                     id='homeworkIntroduce' className="form-control" placeholder='作业简介，作业格等要求'></textarea>
                 <div className={`${styles.homeworkSettings} mt-3`}>
                     <div>
                         <label htmlFor="deadline">截止日期:</label>
-                        <input value={homeworkDetails.deadline} onChange={handleChange}
-                            id='deadline' type="datetime-local" min={getTime(new Date())} className='form-control' />
+                        <input value={formatTimestamp(isEdit ? homeworkDetailsData.deadline : homeworkDetails.deadline)} onChange={handleChange}
+                            id='deadline' type="datetime-local" min={formatTimestamp(Date.now())} className='form-control' />
                     </div>
                     <div>
                         <label htmlFor="maxGrade">满分值: </label>
-                        <input value={homeworkDetails.maxGrade} onChange={handleChange}
+                        <input value={isEdit ? homeworkDetailsData.maxGrade : homeworkDetails.maxGrade} onChange={handleChange}
                             id="maxGrade" type="number" className='form-control' />
                     </div>
                 </div>
@@ -168,12 +185,23 @@ export default function PostHomework(props) {
                         <button className={`btn btn-primary m-2`}>导入作业</button>
                     </Upload>
                 </div>
-                <div>
-                    <button className={`btn btn-outline-primary m-2`} onClick={reset}>重置</button>
-                    <button className={`btn btn-primary m-2`} onClick={submitHomework}>发布个人作业</button>
-                </div>
+                {!isEdit &&
+                    <div>
+                        <button className={`btn btn-outline-primary m-2`} onClick={reset}>重置</button>
+                        <button className={`btn btn-primary m-2`} onClick={submitHomework}>发布个人作业</button>
+                    </div>}
             </div>
         </div>
     )
 }
 
+
+function createHomework(name, introduce, deadline, maxGrade, interaction) {
+    return {
+        homeworkName: name,
+        homeworkIntroduce: introduce,
+        deadline: deadline,
+        maxGrade: maxGrade,
+        interaction: interaction
+    }
+}

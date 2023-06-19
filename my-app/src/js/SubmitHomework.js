@@ -130,7 +130,7 @@ const SubmitHomeworkMain = (props) => {
             if (msg.status)
                 console.log('submit finished');
             else {
-                console.log(msg.err_code);
+                console.log(msg.errcode);
             }
         });
     }
