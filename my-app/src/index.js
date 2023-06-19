@@ -33,7 +33,7 @@ ReactDOM.createRoot(document.getElementById("root")).render((
       <Route path='/Signup' element={<Signup />} />
       <Route path='/Main' element={<Main />} />
       <Route path='/SubjectInfo' element={<SubjectDetailedInfo />} />
-      <Route path='/IndividualSubjectCheck' element={<IndividualSubjectCheck data={{ subjectName: "" }} />} />
+      <Route path='/IndividualSubjectCheck' element={<IndividualSubjectCheck />} />
       <Route path='/SummitHomework' element={<SubmitHomework />} />
       <Route path='/HomeworkRating' element={<HomeworkRating />} />
     </Routes>

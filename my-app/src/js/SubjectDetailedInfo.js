@@ -44,7 +44,7 @@ export default function SubjectDetailedInfo(props) {
     function jumpToMngMem() {
         navigate('/IndividualSubjectCheck', {
             state: {
-                subName: subData.name
+                subData: subData
             }
         })
     }
