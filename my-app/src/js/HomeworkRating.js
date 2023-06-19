@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from 'react-router';
 
 //工具模块
 import * as Util from './Util'
+import { Send } from './Connect'
 
 // 个人作业状态返回方法
 function homeworkInfo(stuNum, name, workInfo) {
@@ -20,69 +21,19 @@ function homeworkInfo(stuNum, name, workInfo) {
 }
 // -------------------------------------------------------分割线-------------------------------------------------------
 
-function isCheckAll() {
-    let nums = 0;
-    let checkboxes = document.getElementsByClassName(styles.individualMember);
-    let allChecked = document.getElementById("allMembers");
-    for (let i = 0; i < checkboxes.length; i++) {
-        if (checkboxes[i].checked) {
-            nums++
-        }
-        console.log(checkboxes[i]);
-    }
-
-    if (nums == checkboxes.length)
-        allChecked.checked = true;
-
-    // document.getElementById("selectedNums").innerHTML = nums;
-    checkNums(nums);
-}
-
-function checkAll() {
-    let allChecked = document.getElementById("allMembers");
-
-    let checkboxes = document.getElementsByClassName(styles.individualMember);
-    for (let i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].checked = allChecked.checked;
-        console.log(checkboxes[i]);
-    }
-    if (allChecked.checked)
-        checkNums(-1)
-    else
-        checkNums(0)
-}
-function checkNums(status) {
-    if (status == -1) {
-        document.getElementById("selectedNums").innerHTML = document.getElementsByClassName(styles.individualMember).length
-    }
-    else {
-        document.getElementById("selectedNums").innerHTML = status;
-    }
-}
-// -------------------------------------------------------分割线-------------------------------------------------------
-
-
 //单个 作业人员
 const HomeworkMemberInfo = (props) => {
     return (<>
         <div className={`${styles.homeworkMemberInfo} shadow-sm`}>
             <div className='fs-5'>
-                {/* <div className={`form-check mb-2`}>
-                    <input className={`form-check-input ${styles.individualMember}`} type="checkbox" id="individualMember"
-                        onClick={(e) => {
-                            isCheckAll()
-                        }}
-
-                    />
-                </div> */}
                 <div className={`text-truncate`}>
                     {props.info.stuNum}
                 </div >
                 <div className={`text-truncate`}>
-                    {props.info.name}
+                    {props.info.stuName}
                 </div>
                 <div className={`text-truncate`}>
-                    作业批改状态
+                    {props.info.submittedHW.length != 0 ? (props.info.grade.length != 0 ? props.info.grade + "/" + props.maxGrade : "未批") : "未交"}
                 </div>
             </div>
             <button className={`btn btn-outline-secondary btn-sm ${styles.checkThisHomework}`}>
@@ -93,6 +44,70 @@ const HomeworkMemberInfo = (props) => {
 }
 // 人员显示
 const HomeworkDetailed = (props) => {
+    //所有成员成绩
+    let allMemGrades = [{
+        stuNum: "121231111",
+        stuName: "你好",
+        submittedHW: "work.file",
+        isGraded: true,
+        grade: "90",
+        comment: ""
+    },
+    {
+        stuNum: "121231231",
+        stuName: "你好啊",
+        submittedHW: "work.file",
+        isGraded: false,
+        grade: "",
+        comment: ""
+    },
+    {
+        stuNum: "121233333",
+        stuName: "好好好",
+        submittedHW: "",
+        isGraded: false,
+        grade: "",
+        comment: ""
+    }];
+
+    // 单条学生作业信息
+    let stuGrade = {
+        stuNum: "",                     //学号
+        stuName: "",                    //学生名字
+        submittedHW: "",                //作业 文件
+        isGraded: "",                   //是否批阅
+        grade: "",                      //成绩   
+        comment: ""                     //留言
+    }
+
+
+    // 作业信息
+    let hwInfo = {
+        has_graded: props.homeworkData.interaction[0],                                  //已交成员
+        no_graded: props.homeworkData.interaction[1],                                   //未批成员
+        no_summitted: props.homeworkData.interaction[2],                                //未交成员
+        max_score: props.homeworkData.maxGrade                                          //满分值
+    }
+
+    // 发送作业请求接受成员数据
+    function getHomeworkMembers() {
+        const msg = {
+            api: '',
+            subName: props.subData.subName,                     //课程名称
+            name: props.homeworkData.homeworkName,              //作业名称
+        }
+        Send(msg, (msg) => {
+            if (msg.status)
+                console.log('成功发送请求');
+
+            // 数据接收部分
+
+
+
+
+        });
+    }
+
 
     return (<>
         <div className={`${styles.homeworkDetailed} shadow-lg container`}>
@@ -101,7 +116,7 @@ const HomeworkDetailed = (props) => {
                     {(props.homeworkData === null || props.homeworkData === undefined) ? "课程名" : props.homeworkData.homeworkName}
                 </div>
                 <div>
-                    截止日期{(props.homeworkData === null || props.homeworkData === undefined) ? "" : Util.getTime(props.homeworkData.deadline)}
+                    截止日期: {(props.homeworkData === null || props.homeworkData === undefined) ? "" : Util.getTime(props.homeworkData.deadline)}
                 </div>
             </div>
 
@@ -136,24 +151,20 @@ const HomeworkDetailed = (props) => {
 
             <div className={`${styles.homeworkMembersTable} shadow`}>
                 <div className={``}>
-                    {/* <input className={`form-check-input ${styles.allMembers} mb-2 fs-4`} type="checkbox" id="allMembers" onClick={(e) => {
-                        checkAll()
-                    }}
-                    />
-                    <label htmlFor="allMembers" className='fs-4'>已选 （<span id='selectedNums'>0</span>） 人</label> */}
                     <button className={`btn btn-outline-secondary btn-lg`}
                         onClick={(e) => {
                             console.log(props.subData);
                             console.log("----------");
-                            console.log(props.homeworkData);
+                            // console.log(props.homeworkData);
+                            console.log(hwInfo);
                         }}
                     >
                         一键催交
                     </button>
                 </div>
-                <HomeworkMemberInfo info={homeworkInfo("12123020406", "许宏涛")} />
-                <HomeworkMemberInfo info={homeworkInfo("12123020406", "许宏涛")} />
-                <HomeworkMemberInfo info={homeworkInfo("12123020406", "许宏涛")} />
+                <HomeworkMemberInfo info={allMemGrades[0]} maxGrade={hwInfo.max_score} />
+                <HomeworkMemberInfo info={allMemGrades[1]} maxGrade={hwInfo.max_score} />
+                <HomeworkMemberInfo info={allMemGrades[2]} maxGrade={hwInfo.max_score} />
             </div>
         </div>
     </>)
