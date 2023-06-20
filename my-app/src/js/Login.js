@@ -6,50 +6,61 @@ import bootstrap from 'bootstrap/dist/js/bootstrap';
 
 
 export default function Login(props) {
-    const [data, setDate] = useState({});
+    const [data, setDate] = useState({
+        email: '',
+        pwd: ''
+    });
     const [msg, setMsg] = useState('');
     const [isAutoLogin, setIsAutoLogin] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
     const s = location.state;
+    const user_Account = JSON.parse(localStorage.getItem('user_Account'));
 
     //加载内容
     useEffect(() => {
-        if (s !== null) {
-            if (s.email === null || s.email === undefined) {
-                const user_Account = JSON.parse(localStorage.getItem('user_Account'));
-                if (user_Account !== undefined && user_Account !== null)
-                    if (user_Account.isAutoLogin) {
-                        //跳转主页
-                        navigate('/Main');
-                    } else {
-                        //自动填充账号密码
-                        document.querySelector('#email').value = user_Account.email;
-                        document.querySelector('#pwd').value = user_Account.passwd;
-                    }
-            } else//填充账号
-                document.querySelector('#email').value = s.email;
-        }
+        // localStorage.clear('user_Account');
+        console.log(user_Account);
+        if (s === null) {
+            if (user_Account !== undefined && user_Account !== null)
+                if (user_Account.isAutoLogin) {
+                    //自动登录
+                    login(user_Account.email, user_Account.passwd);
+                    //跳转主页
+                    navigate('/Main');
+                } else {
+                    //自动填充账号密码
+                    setDate({
+                        email: user_Account.email,
+                        pwd: user_Account.passwd
+                    })
+                }
+        } else//填充账号
+            if (s.email !== null && s.email !== undefined)
+                setDate({
+                    email: s.email,
+                    pwd: ''
+                })
     }, [])
 
 
     //登录函数
-    const login = (e) => {
-        e.preventDefault();
+    const login = (email, pwd) => {
         const msg = {
             api: 'login',
-            email: data.email,
-            passwd: data.pwd
+            email: (email === undefined || email === null) ? data.email : email,
+            passwd: (pwd === undefined || pwd === null) ? data.pwd : pwd
         }
         Send(msg, (msg) => {
             if (msg.status) {//登录成功
                 //保存账户
                 const user_Account = {
                     email: data.email,
-                    passwd: data.passwd,
+                    passwd: data.pwd,
                     isAutoLogin: isAutoLogin,
                     data: msg.userdata
                 }
+                console.log(msg.userdata);
                 localStorage.setItem('user_Account', JSON.stringify(user_Account));
                 //跳转主页
                 navigate('/Main', { state: user_Account.data });
@@ -58,6 +69,7 @@ export default function Login(props) {
                     setMsg(msg.errcode);
                     resolve();
                 }).then(() => {
+                    console.log('modal');
                     const modal = new bootstrap.Modal('#exampleModal');
                     modal.show();
                 })
@@ -85,7 +97,8 @@ export default function Login(props) {
             <form className={styles.Form} id='needs-validation'>
                 <div className={`${styles.header} mt-1`}>账号登录</div>
                 <input
-                    onInput={handleInput}
+                    onChange={handleInput}
+                    value={data.email}
                     id='email'
                     type="email"
                     className="form-control mb-3"
@@ -93,7 +106,8 @@ export default function Login(props) {
                     required
                 />
                 <input
-                    onInput={handleInput}
+                    onChange={handleInput}
+                    value={data.pwd}
                     id='pwd'
                     type="password"
                     className="form-control mb-3"
@@ -117,8 +131,10 @@ export default function Login(props) {
                 </div>
                 <button
                     onClick={(e) => {
-                        if (check(e))
-                            login(e);
+                        if (check(e)) {
+                            e.preventDefault();
+                            login();
+                        }
                     }}
                     className={`btn btn-lg btn-primary ${styles.login}`}
                 >登录</button>

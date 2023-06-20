@@ -188,7 +188,7 @@ const HomeworkDetailed = (props) => {
                     {(props.homeworkData === null || props.homeworkData === undefined) ? "课程名" : props.homeworkData.homeworkName}
                 </div>
                 <div>
-                    截止日期: {(props.homeworkData === null || props.homeworkData === undefined) ? "" : Util.getTime(props.homeworkData.deadline)}
+                    截止日期: {(props.homeworkData === null || props.homeworkData === undefined) ? "" : Util.formatTimestamp(props.homeworkData.deadline)}
                 </div>
             </div>
             <div className={`divider`}></div>
@@ -259,11 +259,6 @@ const HomeworkDetailed = (props) => {
                         一键催交
                     </button>
                 </div>
-                {/* <HomeworkMemberInfo info={allMemGrades[2]} maxGrade={hwInfo.max_score} />
-                <HomeworkMemberInfo info={allMemGrades[0]} maxGrade={hwInfo.max_score} />
-                <HomeworkMemberInfo info={allMemGrades[1]} maxGrade={hwInfo.max_score} />
-                <HomeworkMemberInfo info={allMemGrades[2]} maxGrade={hwInfo.max_score} /> */}
-
                 {renderMembers()}
             </div>
         </div>

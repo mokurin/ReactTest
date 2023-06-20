@@ -31,38 +31,59 @@ function Main(props) {
     const navigate = useNavigate();
     const user_Account = JSON.parse(localStorage.getItem('user_Account'));
 
+
+    // updateNoArchivedSubjects([{
+    //     createdTime: "第一学期",
+    //     name: "软件工程软件工程软件工程软件工程软件工程",
+    //     class: "121230204",
+    //     code: "AAA",
+    //     teacher: "xxx"
+    // },
+    // subjectInfo("第二学期", "应用数学应用数学应用数学应用数学应用数学", "121230202", "BBB", "vvv"),
+    // subjectInfo("第一学期", "爱德华拉到哈罗德了", "121230202", "CCC", "vvv")]);
+
+    // updateArchivedSubjects([subjectInfo("第二学期", "离散数学离散数学离散数学离散数学离散数学离散数学离散数学", "121230202", "DDD", "sss")])
+
+
     //处理页面加载
     useEffect(() => {
-        // if (user_Account !== null && user_Account !== undefined) {
-        updateNoArchivedSubjects([{
-            createdTime: "第一学期",
-            name: "软件工程软件工程软件工程软件工程软件工程",
-            class: "121230204",
-            code: "AAA",
-            teacher: "xxx"
-        },
-        subjectInfo("第二学期", "应用数学应用数学应用数学应用数学应用数学", "121230202", "BBB", "vvv"),
-        subjectInfo("第一学期", "爱德华拉到哈罗德了", "121230202", "CCC", "vvv")]);
+        console.log(user_Account);
+        if (user_Account !== null && user_Account !== undefined) {
+            const msg = {
+                api: 'login',
+                email: user_Account.email,
+                passwd: user_Account.passwd
+            }
+            console.log(msg.email);
+            Send(msg, (msg) => {
+                if (msg.status) {//登录成功
+                    //请求所有课程数据
+                    getAllSubs().then(() => {
+                        console.log(111);
+                        //请求成功则加载内容
+                        setNoArchivedSub(noArchivedSubjects);
+                        setArchivedSub(archivedSubjects);
+                    }).catch(() => {
+                        console.log(222);
+                        //请求失败则加载到登录页面
+                        navigate('/Login');
+                    })
+                } else {//登录失败
+                    new Promise((resolve, reject) => {
+                        alert(msg.errcode);
+                        resolve();
+                    }).then(() => {
+                        // const modal = new bootstrap.Modal('#exampleModal');
+                        // modal.show();
+                    })
+                }
+            })
+        } else {
+            console.log(333);
+            //未登录则加载到登录页面
+            navigate('/Login');
+        }
 
-        updateArchivedSubjects([subjectInfo("第二学期", "离散数学离散数学离散数学离散数学离散数学离散数学离散数学", "121230202", "DDD", "sss")])
-
-        //     new Promise((resolve, reject) => {
-        //         //请求所有课程数据
-        //         if (getAllSubs(user_Account))
-        //             resolve();
-        //         else reject();
-        //     }).then(() => {
-        //         //请求成功则加载内容
-        setNoArchivedSub(noArchivedSubjects);
-        setArchivedSub(archivedSubjects);
-        //     }).catch(() => {
-        //         //请求失败则加载到登录页面
-        //         navigate('/Login');
-        //     })
-        // } else {
-        //     //未登录则加载到登录页面
-        //     navigate('/Login');
-        // }
     }, [])
 
 
@@ -70,15 +91,15 @@ function Main(props) {
     function handleCreateSub(sub) {
         new Promise((resolve, reject) => {
             const msg = {
-                api: 'create_subject',
+                api: 'createsub',
                 term: sub.createdTime,  //学期
                 title: sub.name,        //课程名
-                klass_ids: sub.class    //班级
+                klass_ids: sub.class.split(',')    //班级
             }
             Send(msg, msg => {
                 if (msg.status) {
-                    sub.code = msg.id;
-                    sub.teacher = msg.creator;
+                    sub.code = msg.id;                      //添加课程码
+                    sub.teacher = user_Account.data.name;   //添加负责人
                     //添加到前端
                     const subs = [...noArchivedSub]
                     subs.push(sub);
@@ -147,7 +168,9 @@ function Main(props) {
                         <SubjectAction setNoArchivedSub={setNoArchivedSub} setArchivedSub={setArchivedSub}
                             noArchivedSub={noArchivedSub} archivedSub={archivedSub} />
 
-                        <div className={`btn btn-primary ${styles.contentNavRightBtn}`}>+加入课程</div>
+                        <div className={`btn btn-primary ${styles.contentNavRightBtn}`}>
+                            +加入课程
+                        </div>
                     </div>
                 </div>
                 <div className={`${styles.divider} shadow-sm`} />
@@ -159,7 +182,7 @@ function Main(props) {
                         archivedSub={archivedSub} setArchivedSub={setArchivedSub} />
 
                     {/* 创建课程 */}
-                    <div onClick={handleCreateSub} className={`${styles.subject} ${styles.no_select} shadow`}
+                    <div className={`${styles.subject} ${styles.no_select} shadow`}
                         data-bs-toggle="modal"
                         data-bs-target={"#createSubject"}>
                         <div className={styles.addSubjectTop}>

@@ -2,7 +2,6 @@
 
 //获取时间戳
 export function getTime(date) {
-    console.log(date);
     return Date.parse(date);
 }
 

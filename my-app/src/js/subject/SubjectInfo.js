@@ -15,18 +15,34 @@ export default function subjectInfo(CreatedTime, name, subClass, code, teacher, 
 }
 
 //请求所有课程
-export function getAllSubs(email) {
-    const msg = {
-        api: 'all-subs',
-        email: email
-    }
-    Send(msg, (msg) => {
-        if (msg.status) {
-            updateNoArchivedSubjects(msg.archivedSubjects);
-            updateArchivedSubjects(msg.noArchivedSubjects);
-            return true;
-        } else {
-            return false;
+export function getAllSubs() {
+    return new Promise((resolve, reject) => {
+        const msg = {
+            api: 'reqsubinfo'
         }
+        Send(msg, (msg) => {
+            if (msg.status) {
+                //处理未归档的所有课程
+                const noArchived = msg.unarchived_subjects;
+                let subs = [];
+                for (const i in noArchived) {
+                    subs[i] = subjectInfo(noArchived[i].term, noArchived[i].title,
+                        noArchived[i].klass_ids, noArchived[i].id, '',/* 老师名字 ,*/noArchived[i]);
+                }
+                updateNoArchivedSubjects(subs);
+
+                //处理归档的所有课程
+                const archived = msg.archived_subjects;
+                subs = [];
+                for (const i in archived) {
+                    subs[i] = subjectInfo(archived[i].term, archived[i].title,
+                        archived[i].klass_ids, archived[i].id, '',/* 老师名字 ,*/archived[i]);
+                }
+                updateArchivedSubjects(subs);
+                resolve();
+            } else {
+                reject();
+            }
+        })
     })
 }
