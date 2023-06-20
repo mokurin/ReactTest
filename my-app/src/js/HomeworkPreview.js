@@ -8,7 +8,7 @@ import icon_back from '../img/arrow-left.svg'
 const WorkPreviewNav = (props) => {
     const [value, setValue] = useState(props.info.grade);
     const navigate = useNavigate();
-    
+
     // 发送该的作业分数
     function sendScore() {
         const msg = {
@@ -25,7 +25,6 @@ const WorkPreviewNav = (props) => {
 
         });
     }
-
 
     return (<>
         <div className={`${styles.returnLastPage} box-shadow-inset`}

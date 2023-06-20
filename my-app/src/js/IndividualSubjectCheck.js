@@ -3,6 +3,8 @@ import React, { Children, useEffect, useMemo, useState } from 'react';
 
 // 组件引用
 import FilingModal from './homepage/FilingModal';
+import { Send } from './Connect'
+
 // css引用
 import styles from '../css/IndividualSubjectCheck.module.css'
 
@@ -61,6 +63,7 @@ function deletedMembers(e) {
     }
 }
 
+
 //学生信息构建方法
 function createdStuInfo(stuNum, name, eMail) {
     return {
@@ -107,27 +110,87 @@ export const SubjectCheckMainMembers = (props) => {
     // 老师成员和学生成员切换
     const [status, setStatus] = useState(true);
 
+    // 老师 学生 数据
+    const [teaMembers, setTeaMember] = useState([]);
+    const [stuMembers, setStuMembers] = useState([]);
+
+    // 请求成员
+    function sendScore() {
+        const msg = {
+            api: '',
+        }
+        Send(msg, (msg) => {
+            if (msg.status)
+                console.log('success');
+            // 数据接收部分
+
+        });
+    }
+
+    // ---------- 渲染成员方法 ----------
+
+    // 成员列表
+    let listItems = []
+
+    let stuItems = document.getElementsByClassName(styles.SubjectMemberInfo)
+
+    function addItems() {
+        if (stuItems == null || stuItems == undefined || stuItems.length == 0)
+            return
+
+        for (let i = 0; i < stuItems.length; i++) {
+            listItems.push(stuItems[i]);
+        }
+
+    }
+    useEffect(() => {
+        if (status) {
+            addItems()
+        }
+    }, [status])
+    //输入框
+    let inputValue = document.getElementsByClassName(styles.subjectMemberInfoSearchInput)[0];
+
+    function searchItem(match) {
+        listItems.forEach(item => {
+            if(item.querySelector("#stuNum").innerHTML.includes(match) || item.querySelector("#stuName").innerHTML.includes(match)){
+                item.style.display = "flex"
+            }
+            else{
+                item.style.display = "none"
+            }
+        })
+    }
+
     return (<>
         <div className={`${styles.SubjectCheckMainMembers} shadow`}>
+            {/* 搜索栏 */}
             <div className={`${styles.subjectMemberInfoSearch}`}>
-                <input type="text" className={`form-control ${styles.subjectMemberInfoSearchInput}`} maxLength="10" placeholder='姓名、学号' id="search" />
+                <input type="text" className={`form-control ${styles.subjectMemberInfoSearchInput}`} maxLength="30"
+                    placeholder='姓名、学号' id="search"
+                    onChange={(e) => {
+                        // console.log(e.target.value);
+                        searchItem(e.target.value)
+                    }}
+                />
                 <label htmlFor="search"><img src={icon_search} alt="" /></label>
             </div>
             <div className='divider'></div>
             <div className={`${styles.SubjectMemberInfoMain}`}>
+                {/* 左侧边栏区域 */}
                 <div className={`${styles.SubjectMemberInfoActions}`}>
                     <div className={`${styles.subjectMemberTeachers}`}
                         onClick={(e) => {
                             setStatus(false)
                         }}
-                    >教师团队 ()</div>
-                    {/* 从后端拿数据提前渲染 */}
+                    >教师团队 () {/* 从后端拿数据提前渲染 */} </div>
                     <div className={`${styles.subjectMemberStudents}`}
                         onClick={(e) => {
                             setStatus(true)
                         }}
-                    >全部学生 ()</div>
+                    >全部学生 () {/* 从后端拿数据提前渲染 */} </div>
                 </div>
+                {/* 老师 和 学生 显示区域 */}
                 {status ? <StuManaged /> : <TeacherManaged />}
             </div>
         </div>
@@ -206,10 +269,10 @@ export const SubjectMemberInfo = (props) => {
                     />
                 </div>
                 <img src={ProfilePicture} alt="" />
-                <div className={`text-truncate`}>
+                <div className={`text-truncate`} id='stuNum'>
                     {props.info.stuNum}
                 </div >
-                <div className={`text-truncate`}>
+                <div className={`text-truncate`} id='stuName'>
                     {props.info.name}
                 </div>
                 <div className={`text-truncate`}>
@@ -263,20 +326,13 @@ export const SubjectTeacherInfo = (props) => {
 }
 
 export default function IndividualSubjectCheck(props) {
-    const [status, setStatus] = useState(true);
-
     const location = useLocation();
     const subjectData = (location.state == null || location.state === undefined) ? "" : location.state;
     console.log(typeof (subjectData.name));
 
-
-    const statusInfo = useMemo(() => ({
-        value: status
-    }), [status])
-
     return (<>
         <div className={`${styles.subjectCheckPage}`}>
-            <SubjectCheckNav setStatus={setStatus} action="成员" info={{
+            <SubjectCheckNav action="成员" info={{
                 subName: subjectData.name
             }} />
             (<SubjectCheckMainMembers />)
