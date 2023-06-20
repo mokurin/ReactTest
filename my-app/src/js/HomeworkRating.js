@@ -152,10 +152,10 @@ const HomeworkDetailed = (props) => {
     // 发送作业请求接受成员数据
     function getHomeworkMembers() {
         const msg = {
-            api: '',
+            api: 'reqworkinfo',
             subName: props.subData.subName,                     //课程名称
             name: props.homeworkData.homeworkName,              //作业名称
-            home: ""
+            id: ""
         }
         Send(msg, (msg) => {
             if (msg.status)
