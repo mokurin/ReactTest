@@ -4,24 +4,24 @@ import { Send } from '../Connect'
 //未归档课程
 export let noArchivedSubjects = [];
 
-//更新数据
+//更新所有课程
 export function updateNoArchivedSubjects(data) {
     noArchivedSubjects = data;
-    //更新后端
-    const user_Account = JSON.parse(localStorage.getItem('user_Account'));
-    let msg;
-    if (user_Account !== undefined && user_Account !== null) {
-        msg = {
-            api: 'update-noArchivedSubjects',
-            email: user_Account.email,
-            noArchivedSubjects: data
-        }
-        Send(msg, msg => {
-            if (!msg.status) {
-                alert(msg.errcode);
-            }
-        })
-    }
+    // //更新后端
+    // const user_Account = JSON.parse(localStorage.getItem('user_Account'));
+    // let msg;
+    // if (user_Account !== undefined && user_Account !== null) {
+    //     msg = {
+    //         api: 'update-noArchivedSubjects',
+    //         email: user_Account.email,
+    //         noArchivedSubjects: data
+    //     }
+    //     Send(msg, msg => {
+    //         if (!msg.status) {
+    //             alert(msg.errcode);
+    //         }
+    //     })
+    // }
 }
 
 //添加课程
@@ -44,7 +44,7 @@ export function addSubject(sub) {
     }
 }
 
-//更新课程
+//更新一门课程
 export function updateSubject(sub) {
     //更新前端
     for (let i = 0; i < noArchivedSubjects.length; i++) {
