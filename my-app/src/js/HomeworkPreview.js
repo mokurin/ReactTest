@@ -7,22 +7,20 @@ import icon_back from '../img/arrow-left.svg'
 
 const WorkPreviewNav = (props) => {
     const [value, setValue] = useState(props.info.grade);
-
     const navigate = useNavigate();
-
+    
     // 发送该的作业分数
     function sendScore() {
         const msg = {
-            api: '',
-            homeworkId: "",                     //作业ID
-            email: "",                          //学生ID
-            isgraded: "true",                   //已批阅
-            score: ""                           //分数
+            api: 'workrating',
+            sumitter_email: "",                     //学生ID
+            homework_id: "",                        //作业ID
+            graded: true,                           //是否批阅
+            score: ""                               //分数
         }
         Send(msg, (msg) => {
             if (msg.status)
-                console.log('成功批阅该作业');
-
+                console.log('success');
             // 数据接收部分
 
         });
@@ -38,6 +36,16 @@ const WorkPreviewNav = (props) => {
         >
             <img src={icon_back} alt="" />
             <div>返回</div>
+        </div>
+        <div className={`${styles.stuComments} shadow rounded`}>
+            <div className={`dropdown-toggle fs-5 shadow-lg `} type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                学生留言信息
+            </div>
+            <div className="collapse shadow-lg" id="collapseExample">
+                <div class="card card-body">
+                    Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+                </div>
+            </div>
         </div>
         <div className={`${styles.workPreviewNav}`}>
             <div>打分</div>
@@ -80,7 +88,7 @@ export default function HomeworkPreview() {
     return (<>
         <div className={`${styles.HomeworkPreview}`}>
             <WorkPreviewNav info={state} />
-            <App filePath={state.filePath} />
+            {/* <App filePath={state.filePath} /> */}
         </div>
     </>)
 }

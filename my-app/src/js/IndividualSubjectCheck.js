@@ -87,7 +87,6 @@ export const SubjectCheckNav = (props) => {
             <div className={`${styles.IndividualSubjectCheckActions}`}>
                 <div className={`${styles.IndividualSubjectMembers}`}
                     onClick={() => {
-                        props.setStatus(true)
                     }
                     }>
                     {props.action}
@@ -107,7 +106,7 @@ export const SubjectCheckNav = (props) => {
 export const SubjectCheckMainMembers = (props) => {
     // 老师成员和学生成员切换
     const [status, setStatus] = useState(true);
-    
+
     return (<>
         <div className={`${styles.SubjectCheckMainMembers} shadow`}>
             <div className={`${styles.subjectMemberInfoSearch}`}>
@@ -173,10 +172,9 @@ const TeacherManaged = (props) => {
     return (<>
         <div className={`${styles.SubjectAllTeachers}`}>
             <div className={`${styles.SubjectMemberInfoTableNav}`}>
-                <button className={`btn btn-outline-secondary btn-sm`}>
+                <button className={`btn btn-outline-secondary btn-sm ms-2`}>
                     添加 助教/老师
                 </button>
-                {/* <FilingModal data={{ id: "deleteSubject", title: "是否确认删除这些信息?" }} /> */}
             </div>
             <SubjectTeacherInfo />
             <SubjectTeacherInfo />

@@ -32,6 +32,23 @@
     height: fit-content;
 }
 
+/* 留言 */
+.stuComments {
+    position: absolute;
+    box-sizing: border-box;
+    top: 32px;
+    left: 15%;
+    width: 180px;
+    background-color: transparent;
+    height: fit-content;
+}
+.stuComments>div:nth-child(1){
+    box-sizing: border-box;
+    text-align: center;
+
+}
+
+/* 返回 */
 .returnLastPage {
     display: flex;
     position: fixed;

@@ -61,9 +61,10 @@ const HomeworkMemberInfo = (props) => {
 
 // 人员显示
 const HomeworkDetailed = (props) => {
+    //不限 按钮 和 其状态
     const [all, setAll] = useState(true)
-    // 筛选  ------------------------------------------------------------------------------------
     const allMembers = document.getElementsByClassName(styles.homeworkMemberInfo);
+    // 筛选条件
     const [filteredNums, setFilteredNums] = useState(0)
     const [condition, setCondition] = useState("")
     useEffect(() => {
@@ -78,8 +79,38 @@ const HomeworkDetailed = (props) => {
         }
     }, [condition])
 
+    // 所有学生及其作业
+    const [reqMemInfo, setReqMemInfo] = useState([]);
+    const [reqIndwork, setReqIndwork] = useState([]);
 
-    // 数组 存放所有数组
+
+
+
+
+    
+    // 发送请求 接收数据
+    function getHomeworkMembers() {
+        const msg = {
+            api: 'reqworkinfo',
+            subName: props.subData.subName,                     //课程名称
+            name: props.homeworkData.homeworkName,              //作业名称
+            id: ""                                              //作业id
+        }
+        Send(msg, (msg) => {
+            if (msg.status)
+                console.log('success');
+            // 数据接收部分
+
+        });
+    }
+
+
+
+    // 接受 已批 未批 未交 人数 数组
+    // let nums = [1,1,1];
+    let nums = (props.homeworkData == null || props.homeworkData == undefined) ? [1, 1, 1] : props.homeworkData.interaction;
+    // 筛选  ------------------------------------------------------------------------------------
+    // 数组 存放每条成绩
     let listItems = [];
 
     // 获取列表中的所有列表项,存储到数组中
@@ -143,34 +174,14 @@ const HomeworkDetailed = (props) => {
 
     // 作业信息
     let hwInfo = {
-        has_graded: props.homeworkData.interaction[0],                                  //已交成员
-        no_graded: props.homeworkData.interaction[1],                                   //未批成员
-        no_summitted: props.homeworkData.interaction[2],                                //未交成员
-        max_score: props.homeworkData.maxGrade                                          //满分值
+        has_graded: nums[0],                                  //已交成员
+        no_graded: nums[1],                                   //未批成员
+        no_summitted: nums[2],                                //未交成员
+        max_score: (props.homeworkData == null || props.homeworkData == undefined) ? 100 : props.homeworkData.maxGrade                                         //满分值
     }
 
-    // 发送作业请求接受成员数据
-    function getHomeworkMembers() {
-        const msg = {
-            api: 'reqworkinfo',
-            subName: props.subData.subName,                     //课程名称
-            name: props.homeworkData.homeworkName,              //作业名称
-            id: ""
-        }
-        Send(msg, (msg) => {
-            if (msg.status)
-                console.log('成功发送请求');
-
-            // 数据接收部分
-
-        });
-    }
-
-
-    //分隔线------------------------------
+    //分隔线---------------------------------------------------------
     // 渲染成员
-
-    let nums = props.homeworkData.interaction
     function renderMembers() {
         let list = []
         for (let i = 0; i < nums.length; i++) {
