@@ -66,7 +66,7 @@ const WorkPreviewNav = (props) => {
     </>)
 }
 
-function App() {
+function FileView() {
     const docs = [
         // { uri: ["url1 ","url2 ",] },                               //服务器文件?
         { uri: require("../file/sqlDetail.pdf") }    // 本地文件
@@ -87,7 +87,7 @@ export default function HomeworkPreview() {
     return (<>
         <div className={`${styles.HomeworkPreview}`}>
             <WorkPreviewNav info={state} />
-            {/* <App filePath={state.filePath} /> */}
+            <FileView filePath={state.filePath} />
         </div>
     </>)
 }

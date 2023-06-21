@@ -36,8 +36,6 @@ export const UploadFiles = (props) => {
         fileList: fileList
     };
 
-
-
     return (<>
         <div className={`${styles.UploadFilesArea} shadow`}>
             <Upload {...settings}>

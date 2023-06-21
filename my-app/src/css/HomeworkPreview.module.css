@@ -35,8 +35,9 @@
 /* 留言 */
 .stuComments {
     position: absolute;
+    z-index: 100;
     box-sizing: border-box;
-    top: 32px;
+    top: 35px;
     left: 15%;
     width: 180px;
     background-color: transparent;

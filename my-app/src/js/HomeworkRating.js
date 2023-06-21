@@ -83,10 +83,6 @@ const HomeworkDetailed = (props) => {
     const [reqMemInfo, setReqMemInfo] = useState([]);
     const [reqIndwork, setReqIndwork] = useState([]);
 
-
-
-
-
     
     // 发送请求 接收数据
     function getHomeworkMembers() {

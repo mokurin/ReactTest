@@ -257,6 +257,9 @@ export const SubjectMemberInfo = (props) => {
         deletedEle.remove()
         checkNumsOfChecked()
         // 后端部分
+
+
+        
     }
     return (<>
         <div className={`${styles.SubjectMemberInfo} shadow-sm`}>
