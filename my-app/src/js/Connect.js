@@ -1,4 +1,4 @@
-const url = "ws://192.168.137.46:8080";
+const url = "ws://192.168.137.33:8080";
 const socket = new WebSocket(url);
 let statusArr = ['正在连接', '已建立连接', '正在关闭连接', '已关闭连接',]
 const task_queue = [];//处理主动请求后的返回的回调队列
@@ -15,7 +15,7 @@ socket.onopen = () => {
         console.log('接收内容：');
         console.log(msg);
         if (msg.type === "csc") {//向服务器请求后的返回
-            task_queue.pop()(msg);
+            task_queue.shift()(msg);
         } else { // 服务器主动发送的数据
             actions[msg["action"]](msg);
         }
@@ -28,11 +28,20 @@ socket.onclose = () => {
 
 //发送请求
 export function Send(msg, callback) {
-    console.log(statusArr[socket.readyState]);
     if (socket.readyState === 1) {
         console.log('发送内容：');
         console.log(msg);
         socket.send(JSON.stringify(msg));
         task_queue.push(callback);
     }
+}
+
+//连接后运行
+export function afterOpen(callback) {
+    (async () => {
+        while (socket.readyState !== socket.OPEN)
+            await new Promise(resolve => setTimeout(resolve(), 1));
+
+        callback();
+    })();
 }

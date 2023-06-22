@@ -21,7 +21,10 @@ import fileCtrl from '../img/files-alt.svg'
 import { noArchivedSubjects, updateNoArchivedSubjects } from './subject/NoArchivedSubjects'
 import { archivedSubjects, updateArchivedSubjects } from './subject/ArchivedSubjects'
 import subjectInfo, { getAllSubs } from './subject/SubjectInfo'
-import { Send } from './Connect';
+import { Send, afterOpen } from './Connect';
+
+//工具模块
+import * as Util from './Util'
 
 
 
@@ -32,84 +35,110 @@ function Main(props) {
     const user_Account = JSON.parse(localStorage.getItem('user_Account'));
 
 
-    // updateNoArchivedSubjects([{
-    //     createdTime: "第一学期",
-    //     name: "软件工程软件工程软件工程软件工程软件工程",
-    //     class: "121230204",
-    //     code: "AAA",
-    //     teacher: "xxx"
-    // },
-    // subjectInfo("第二学期", "应用数学应用数学应用数学应用数学应用数学", "121230202", "BBB", "vvv"),
-    // subjectInfo("第一学期", "爱德华拉到哈罗德了", "121230202", "CCC", "vvv")]);
-
-    // updateArchivedSubjects([subjectInfo("第二学期", "离散数学离散数学离散数学离散数学离散数学离散数学离散数学", "121230202", "DDD", "sss")])
-
-
     //处理页面加载
     useEffect(() => {
         console.log(user_Account);
         if (user_Account !== null && user_Account !== undefined) {
-            const msg = {
-                api: 'login',
-                email: user_Account.email,
-                passwd: user_Account.passwd
-            }
-            console.log(msg.email);
-            Send(msg, (msg) => {
-                if (msg.status) {//登录成功
-                    //请求所有课程数据
-                    getAllSubs().then(() => {
-                        console.log(111);
-                        //请求成功则加载内容
-                        setNoArchivedSub(noArchivedSubjects);
-                        setArchivedSub(archivedSubjects);
-                    }).catch(() => {
-                        console.log(222);
-                        //请求失败则加载到登录页面
-                        navigate('/Login');
-                    })
-                } else {//登录失败
-                    new Promise((resolve, reject) => {
-                        alert(msg.errcode);
-                        resolve();
-                    }).then(() => {
-                        // const modal = new bootstrap.Modal('#exampleModal');
-                        // modal.show();
-                    })
+            afterOpen(() => {
+                const msg = {
+                    api: 'login',
+                    email: user_Account.email,
+                    passwd: user_Account.passwd
                 }
-            })
+                Send(msg, (msg) => {
+                    if (msg.status) {//登录成功
+                        (async () => {
+                            try {
+                                //请求所有课程数据
+                                await getAllSubs(user_Account.data.unarchived_subject_ids,
+                                    user_Account.data.archived_subject_ids);
+                                //请求完成则加载内容
+                                setNoArchivedSub(noArchivedSubjects);
+                                setArchivedSub(archivedSubjects);
+                            } catch (error) {
+                                //请求失败则加载到登录页面
+                                navigate('/Login');
+                            }
+                        })();
+                    } else {//登录失败
+                        alert(msg.errcode);
+                    }
+                })
+            });
         } else {
-            console.log(333);
             //未登录则加载到登录页面
             navigate('/Login');
         }
-
     }, [])
 
 
     //创建课程
     function handleCreateSub(sub) {
-        new Promise((resolve, reject) => {
+        (async () => {
             const msg = {
                 api: 'createsub',
                 term: sub.createdTime,  //学期
                 title: sub.name,        //课程名
                 klass_ids: sub.class.split(',')    //班级
             }
-            Send(msg, msg => {
-                if (msg.status) {
-                    sub.code = msg.id;                      //添加课程码
-                    sub.teacher = user_Account.data.name;   //添加负责人
-                    //添加到前端
-                    const subs = [...noArchivedSub]
-                    subs.push(sub);
-                    setNoArchivedSub(subs);
-                    updateNoArchivedSubjects(subs);
-                }
-            })
-        })
+
+            //发送创建
+            const create = (msg) => {
+                return new Promise((resolve, reject) => {
+                    Send(msg, (res) => {
+                        if (res.status) {
+                            resolve(res);
+                        } else {
+                            reject(res);
+                        }
+                    });
+                });
+            };
+
+            //向服务端发送创建课程请求
+            const res = await create(msg);
+            if (res.status) {
+                user_Account.data.unarchived_subject_ids.push(res.id);
+                localStorage.setItem('user_Account', JSON.stringify(user_Account));
+                await getAllSubs(user_Account.data.unarchived_subject_ids,
+                    user_Account.data.archived_subject_ids);//重新获取所有信息
+            }
+
+            //重新设置课程信息
+            setNoArchivedSub(noArchivedSubjects);
+            setArchivedSub(archivedSubjects);
+        })();
     }
 
+    //加入课程
+    function joinSubject() {
+        (async () => {
+            const subCode = Number(document.getElementById('SubCode').value);
+
+            const join = () => {
+                return new Promise((resolve, reject) => {
+                    const msg = {
+                        api: 'joinsub',
+                        sub_id: subCode
+                    }
+                    Send(msg, res => {
+                        resolve(res);
+                    });
+                })
+            }
+
+            const res = await join();
+            if (res.status) {
+                user_Account.data.unarchived_subject_ids.push(subCode);
+                localStorage.setItem('user_Account', JSON.stringify(user_Account));
+                await getAllSubs(user_Account.data.unarchived_subject_ids,
+                    user_Account.data.archived_subject_ids);//重新获取所有信息
+
+                document.getElementById('joinTip').innerHTML = '加入成功';
+            }
+            document.getElementById('joinTip').innerHTML = res.errcode;
+        })();
+    }
 
 
     return (
@@ -168,8 +197,52 @@ function Main(props) {
                         <SubjectAction setNoArchivedSub={setNoArchivedSub} setArchivedSub={setArchivedSub}
                             noArchivedSub={noArchivedSub} archivedSub={archivedSub} />
 
-                        <div className={`btn btn-primary ${styles.contentNavRightBtn}`}>
+                        <div className={`btn btn-primary ${styles.contentNavRightBtn}`}
+                            data-bs-toggle="modal" data-bs-target="#joinSub-modal">
                             +加入课程
+                        </div>
+
+                        {/* 加入课程模态框 */}
+                        <div className="modal fade" tabIndex="-1" id='joinSub-modal'>
+                            <div className="modal-dialog modal-dialog-centered">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title">加入课程</h5>
+                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <div className="col-md-4">
+                                            <label htmlFor="validationCustom01" className="form-label">请输入课程码</label>
+                                            <input type="text" className="form-control" id="SubCode" required />
+                                        </div>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                                        <button onClick={joinSubject} type="button" className="btn btn-primary"
+                                            data-bs-target="#tip-modal" data-bs-toggle="modal"
+                                        >
+                                            加入课程
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* 加入课程提示模态框 */}
+                        <div className="modal fade" id="tip-modal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabIndex="-1">
+                            <div className="modal-dialog modal-dialog-centered">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h1 className="modal-title fs-5" id="exampleModalToggleLabel2">提示</h1>
+                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <span id='joinTip'></span>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button className="btn btn-primary" data-bs-target="#joinSub-modal" data-bs-toggle="modal">确定</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -181,23 +254,33 @@ function Main(props) {
                     <SubjectItems setNoArchivedSub={setNoArchivedSub} noArchivedSub={noArchivedSub}
                         archivedSub={archivedSub} setArchivedSub={setArchivedSub} />
 
+
                     {/* 创建课程 */}
-                    <div className={`${styles.subject} ${styles.no_select} shadow`}
-                        data-bs-toggle="modal"
-                        data-bs-target={"#createSubject"}>
-                        <div className={styles.addSubjectTop}>
-                        </div>
-                        <div className={styles.addSubjectBottom}>
-                            <img src={Plus} alt="" />
-                            <div>创建课程</div>
-                        </div>
-                    </div>
-                    <FilingModal data={{
-                        title: "课程编辑",
-                        id: "createSubject"
-                    }}
-                        command={handleCreateSub}
-                    />
+                    {(() => {
+                        if (Util.isTeacher(user_Account.data.identity)) {
+                            return (
+                                <>
+                                    <div className={`${styles.subject} ${styles.no_select} shadow`}
+                                        data-bs-toggle="modal"
+                                        data-bs-target={"#createSubject"}>
+                                        <div className={styles.addSubjectTop}>
+                                        </div>
+                                        <div className={styles.addSubjectBottom}>
+                                            <img src={Plus} alt="" />
+                                            <div>创建课程</div>
+                                        </div>
+                                    </div>
+                                    <FilingModal data={{
+                                        title: "课程编辑",
+                                        id: "createSubject"
+                                    }}
+                                        command={handleCreateSub}
+                                    />
+                                </>
+                            )
+                        }
+                    })()}
+
                 </div>
             </div>
 

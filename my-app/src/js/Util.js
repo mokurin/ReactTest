@@ -8,7 +8,7 @@ export function getTime(date) {
 //将时间戳格式化
 export function formatTimestamp(timestamp) {
     let date = new Date(timestamp);
-    
+
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
     let day = date.getDate();
@@ -29,7 +29,7 @@ export function formatTimestamp(timestamp) {
 
 //判断是否是老师
 export function isTeacher(status) {
-    if (status === "老师" || status === "0")
+    if (status === "t" || status === "0")
         return true;
 
     return false;

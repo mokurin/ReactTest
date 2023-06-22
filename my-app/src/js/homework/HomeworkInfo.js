@@ -10,14 +10,16 @@ import * as Util from '../Util'
 import InteractionTool from './InteractionTool'
 import FilingModal from '../homepage/FilingModal'
 import { useNavigate } from 'react-router';
+import FileItems from '../files/FIleItems'
 
 // 单个作业
 export const HomeworkInfo = (props) => {
     const [isOK, setIsOK] = useState(false);
     const { homeworkName, homeworkIntroduce, deadline, maxGrade, interaction } = props.data;
-    const { id, updateHomeworkInfo, delHomeworkInfo, allHomeworkInfo } = props;
+    const { id, updateHomeworkInfo, delHomeworkInfo, allHomeworkInfo, filePaths } = props;
     const index = Number(id.substring(8));
     const navigate = useNavigate();
+    const user_Account = JSON.parse(localStorage.getItem('user_Account'));
 
     //单击作业
     function handleNav(e) {
@@ -71,7 +73,7 @@ export const HomeworkInfo = (props) => {
                         个人作业
                     </div>
                 </div>
-                {Util.isTeacher("0") &&
+                {Util.isTeacher(user_Account.data.identity) &&
                     <div id={'homeworkMore' + index}>
                         <div className={`${styles.homeworkInfoHeaderRight}`}
                             type="button"
@@ -126,7 +128,7 @@ export const HomeworkInfo = (props) => {
                     </div>
                 </div>
                 <div className={`${styles.homeworkMainInfoRight}`}>
-                    {Util.isTeacher("0") ?
+                    {Util.isTeacher(user_Account.data.identity) ?
                         <div className={`${styles.homeworkSubmissionInfo}`}>
                             <InteractionTool name={'已批'} nums={interaction[0]} />
                             <InteractionTool name={'未批'} nums={interaction[1]} />
@@ -138,9 +140,9 @@ export const HomeworkInfo = (props) => {
                         </div>}
                 </div>
             </div>
-            {Util.isTeacher("0") &&
+            {Util.isTeacher(user_Account.data.identity) &&
                 <div className={`${styles.homeworkAnnex}`}>
-                    作业附件内容
+                    <FileItems index={index} filePaths={filePaths} />
                 </div>
             }
             <div className={`${styles.homeworkDeadline}`}>

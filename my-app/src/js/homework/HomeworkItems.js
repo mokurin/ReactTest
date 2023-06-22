@@ -22,7 +22,7 @@ export default function HomeworkItems(props) {
     const getItems = () => {
         let items = allHomeworkInfo.map(
             (info, index) => {
-                return <HomeworkInfo delHomeworkInfo={delHomeworkInfo} allHomeworkInfo={allHomeworkInfo} updateHomeworkInfo={updateHomeworkInfo} subData={subData} data={info} key={index} id={`homework${index}`} />;
+                return <HomeworkInfo filePaths={info.data.annex_file_paths} delHomeworkInfo={delHomeworkInfo} allHomeworkInfo={allHomeworkInfo} updateHomeworkInfo={updateHomeworkInfo} subData={subData} data={info} key={index} id={`homework${index}`} />;
             }
         )
         return items;

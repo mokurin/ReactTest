@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../css/Login.module.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Send } from './Connect'
+import { Send, afterOpen } from './Connect'
 import bootstrap from 'bootstrap/dist/js/bootstrap';
 
 
@@ -24,10 +24,12 @@ export default function Login(props) {
         if (s === null) {
             if (user_Account !== undefined && user_Account !== null)
                 if (user_Account.isAutoLogin) {
-                    //自动登录
-                    login(user_Account.email, user_Account.passwd);
-                    //跳转主页
-                    navigate('/Main');
+                    afterOpen(() => {
+                        //自动登录
+                        login(user_Account.email, user_Account.passwd);
+                        //跳转主页
+                        navigate('/Main');
+                    })
                 } else {
                     //自动填充账号密码
                     setDate({
@@ -69,7 +71,6 @@ export default function Login(props) {
                     setMsg(msg.errcode);
                     resolve();
                 }).then(() => {
-                    console.log('modal');
                     const modal = new bootstrap.Modal('#exampleModal');
                     modal.show();
                 })

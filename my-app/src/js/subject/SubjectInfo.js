@@ -1,5 +1,5 @@
 import { Send } from '../Connect'
-import { updateNoArchivedSubjects } from '../subject/NoArchivedSubjects'
+import { updateNoArchivedSubjects, noArchivedSubjects } from '../subject/NoArchivedSubjects'
 import { updateArchivedSubjects } from '../subject/ArchivedSubjects'
 
 //构造课程方法
@@ -15,34 +15,93 @@ export default function subjectInfo(CreatedTime, name, subClass, code, teacher, 
 }
 
 //请求所有课程
-export function getAllSubs() {
+export function getAllSubs(noArchived_ids, archived_ids) {
     return new Promise((resolve, reject) => {
-        const msg = {
-            api: 'reqsubinfo'
+        //请求单个课程信息
+        const getSubject = (msg) => {
+            return new Promise((resolve, reject) => {
+                Send(msg, res => {
+                    if (res.status) {
+                        resolve(res);
+                    } else {
+                        reject(res);
+                    }
+                })
+            })
         }
-        Send(msg, (msg) => {
-            if (msg.status) {
-                //处理未归档的所有课程
-                const noArchived = msg.unarchived_subjects;
-                let subs = [];
-                for (const i in noArchived) {
-                    subs[i] = subjectInfo(noArchived[i].term, noArchived[i].title,
-                        noArchived[i].klass_ids, noArchived[i].id, '',/* 老师名字 ,*/noArchived[i]);
-                }
-                updateNoArchivedSubjects(subs);
 
-                //处理归档的所有课程
-                const archived = msg.archived_subjects;
-                subs = [];
-                for (const i in archived) {
-                    subs[i] = subjectInfo(archived[i].term, archived[i].title,
-                        archived[i].klass_ids, archived[i].id, '',/* 老师名字 ,*/archived[i]);
+        //获取所有课程信息
+        const getAllSubjects = async (sub_ids) => {
+            const subs = [];
+            //获取单个课程信息
+            for (let i = 0; i < sub_ids.length; i++) {
+                const msg = {
+                    api: 'reqsubinfo',
+                    sub_id: sub_ids[i]
                 }
-                updateArchivedSubjects(subs);
-                resolve();
-            } else {
-                reject();
+                const res = await getSubject(msg);
+                subs[i] = res.subject;
             }
-        })
+            return subs;
+        }
+
+        //处理未归档的所有课程
+        let noArchived;
+        let archived;
+
+        let subs = [];
+
+        //获取创建者姓名
+        const getTeacherName = (msg) => {
+            return new Promise((resolve, reject) => {
+                Send(msg, (res) => {
+                    if (res.status) {
+                        resolve(res);
+                    } else {
+                        reject(res);
+                    }
+                });
+            });
+        };
+
+        const getTeacherNameAndSubjectInfo = async (allSubs, i) => {
+            const msg = {
+                api: "requserinfo",
+                email: allSubs[i].creator_email,
+            };
+            // 等待Send函数返回msg
+            const res = await getTeacherName(msg);
+            if (res.status) {
+                subs[i] = subjectInfo(
+                    allSubs[i].term,
+                    allSubs[i].title,
+                    allSubs[i].klass_ids,
+                    allSubs[i].id,
+                    res.userdata.name,
+                    allSubs[i]
+                );
+            }
+        };
+
+        const getAllTeacherNamesAndSubjectInfos = async () => {
+            for (let i = 0; i < noArchived.length; i++) {
+                await getTeacherNameAndSubjectInfo(noArchived, i);
+            }
+            updateNoArchivedSubjects(subs);
+            subs = []
+            for (let i = 0; i < archived.length; i++) {
+                await getTeacherNameAndSubjectInfo(archived, i)
+            }
+            updateArchivedSubjects(subs);
+        };
+
+        //运行
+        (async () => {
+            noArchived = await getAllSubjects(noArchived_ids);
+            archived = await getAllSubjects(archived_ids);
+            await getAllTeacherNamesAndSubjectInfos();
+            resolve();
+        })();
+
     })
 }

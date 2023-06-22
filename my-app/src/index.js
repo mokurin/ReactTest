@@ -21,9 +21,6 @@ import HomeworkRating from './js/HomeworkRating';
 import HomeworkPreview from './js/HomeworkPreview';
 import Test from './js/Test'
 
-//服务器连接模块
-import Connect from './js/Connect'
-
 
 ReactDOM.createRoot(document.getElementById("root")).render((
   <BrowserRouter>
@@ -38,23 +35,16 @@ ReactDOM.createRoot(document.getElementById("root")).render((
       <Route path='/SubjectInfo' element={<SubjectDetailedInfo />} />
       {/* 作业批改详情页 */}
       <Route path='/HomeworkRating' element={<HomeworkRating />} />
+      {/* 课程成员页 */}
       <Route path='/IndividualSubjectCheck' element={<IndividualSubjectCheck />} />
+      {/* 提交作业页 */}
       <Route path='/SummitHomework' element={<SubmitHomework />} />
-      {/* <Route index element={<Navigate to={'/Test'} replace={true} />} />
-      <Route path='/Test' element={<Test />} /> */}
+      {/* 作业批改页 */}
       <Route path='/HomeworkRating' element={<HomeworkRating />} />
+      {/* 作业查看页 */}
       <Route path='/HomeworkPreview' element={<HomeworkPreview />} />
     </Routes>
   </BrowserRouter >
 ));
-
-// ReactDOM.createRoot(document.getElementById("root")).render((
-//   <BrowserRouter>
-//     <Routes>
-//       <Route index element={<Navigate to={'/Test'} replace={true} />} />
-//       <Route path='/Test' element={<Test />} />
-//     </Routes>
-//   </BrowserRouter >
-// ));
 
 reportWebVitals();

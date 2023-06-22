@@ -11,7 +11,7 @@ import { getTime, formatTimestamp } from './Util'
 
 //发布作业组件
 export default function PostHomework(props) {
-    const { fileListData, homeworkDetailsData, isEdit, handleInputChange, handlePostHomework } = props;
+    const { subData, fileListData, homeworkDetailsData, isEdit, handleInputChange, RefreshHomeworks } = props;
     const [fileList, setFileList] = useState([]);
     const [homeworkDetails, setHomeworkDetails] = useState((homeworkDetailsData === null || homeworkDetailsData === undefined) ?
         {
@@ -19,11 +19,9 @@ export default function PostHomework(props) {
             homeworkIntroduce: '',
             deadline: NaN,
             maxGrade: '',
+            fileNames: [],
             interaction: [0, 0, 0]
         } : homeworkDetailsData)
-    const location = useLocation();
-    const s = location.state;
-    const email = (s !== null && s !== undefined) ? s.email : '';
 
     //更改上传的文件列表
     const handleFilesChange = ({ fileList }) => {
@@ -40,65 +38,106 @@ export default function PostHomework(props) {
     };
 
     //文件上传
-    const handleUploadFiles = () => {
-        // 把文件切成块
-        const file = fileList[0].originFileObj;
-        const chunkSize = 1024 * 1024; // 1MB
-        const chunks = Math.ceil(file.size / chunkSize);
-        let currentChunk = 0;
+    const handleUploadFiles = (filepath) => {
+        return new Promise((resolve, reject) => {
+            for (let i = 0; i < fileList.length; i++) {
+                // 把文件切成块
+                const file = fileList[i].originFileObj;
+                const chunkSize = 1024 * 1024; // 1MB
+                const chunks = Math.ceil(file.size / chunkSize);
+                console.log('总块数：' + chunks);
 
-        // 把每一块发给服务端
-        const sendChunk = () => {
-            const start = currentChunk * chunkSize;
-            const end = Math.min((currentChunk + 1) * chunkSize, file.size);
-            const chunk = file.slice(start, end);
-            const msg = {
-                api: 'request_upload_file',
-                filename: file.name,
-                filesize: file.size,
-            }
-            //发送请求上传
-            Send(msg, msg => {
-                if (msg.status) {
+                // 把每一块发给服务端
+                const sendChunk = async (index) => {
+                    const start = index * chunkSize;
+                    console.log('start:' + start);
+                    const end = Math.min((index + 1) * chunkSize, file.size);
+                    console.log('end:' + end);
+                    const chunk = file.slice(start, end);
+                    const buffer = await chunk.arrayBuffer();
+                    const binaryString = new Uint8Array(buffer).reduce((acc, byte) => acc + String.fromCharCode(byte), '');
+                    const base64String = btoa(binaryString);
+
+                    //上传
                     const msg = {
-                        api: '',
-                        fileType: file.type,
-                        chunkIndex: currentChunk,
-                        chunkCount: chunks,
-                        chunk: chunk
+                        api: 'upfile',
+                        trunk: {
+                            id: index,
+                            data: base64String
+                        },
+                        filepath: filepath[i]
                     }
                     //发送文件
                     Send(msg, (msg) => {
                         if (msg.status)
-                            if (currentChunk < chunks - 1) {
-                                currentChunk++;
-                                sendChunk();
-                            } else {
-                                console.log('upload file finished');
-                            }
+                            console.log('发送成功id:' + index);
+                        else
+                            console.log('发送失败id:' + index);
+                        //发送失败就重新发送
+                        // sendChunk(index);
                     });
-                }
-            })
 
-        };
+                    if (index === chunks - 1) {
+                        //结束文件上传
+                        const msg = {
+                            api: 'finishupfile',
+                            filepath: filepath[i]
+                        }
+                        Send(msg, res => {
+                            if (res.status) {
+                                console.log('成功结束文件上传');
+                                resolve();
+                            }
+                        })
+                    }
+                };
 
-        sendChunk();
+                //循环发送每一块文件
+                for (let i = 0; i < chunks; i++)
+                    sendChunk(i);
+            }
+        })
     };
 
     //上传作业信息
     function handleUploadHomeworkInfo() {
-        const msg = {
-            api: '',
-            userEmail: email,
-            homeworkName: homeworkDetails.homeworkName,
-            homeworkIntroduce: homeworkDetails.homeworkIntroduce,
-            deadline: homeworkDetails.deadline,
-            maxGrade: homeworkDetails.maxGrade
+        if (isEdit) {//编辑作业
+            const msg = {
+                api: '',
+                homeworkName: homeworkDetails.homeworkName,
+                homeworkIntroduce: homeworkDetails.homeworkIntroduce,
+                deadline: homeworkDetails.deadline,
+                maxGrade: homeworkDetails.maxGrade
+            }
+            Send(msg, (msg) => {
+                if (msg.status)
+                    console.log('upload homeworkInfo finished');
+            });
+        } else {//创建作业
+            homeworkDetails.fileNames = [];
+            for (let i = 0; i < fileList.length; i++) {
+                homeworkDetails.fileNames[i] = {
+                    filename: fileList[i].originFileObj.name,
+                    filesize: fileList[i].originFileObj.size
+                };
+            }
+            const msg = {
+                api: 'createhomework',
+                homework: {
+                    title: homeworkDetails.homeworkName,
+                    desc: homeworkDetails.homeworkIntroduce,
+                    deadline: homeworkDetails.deadline,
+                    max_score: Number(homeworkDetails.maxGrade),
+                    annex_files: homeworkDetails.fileNames
+                },
+                sub_id: subData.code
+            }
+            return new Promise((resolve, reject) => {
+                Send(msg, res => {
+                    resolve(res);
+                })
+            })
         }
-        Send(msg, (msg) => {
-            if (msg.status)
-                console.log('upload homeworkInfo finished');
-        });
     }
 
     function getFileList() {
@@ -108,26 +147,19 @@ export default function PostHomework(props) {
 
     //提交作业
     function submitHomework() {
-        //前端操作
-        handlePostHomework(homeworkDetails);
-        // //提交作业代码
-        // new Promise((resolve, reject) => {
-        //     //上传作业信息
-        //     handleUploadHomeworkInfo();
-        //     //上传作业文件
-        //     handleUploadFiles();
-        //     resolve();
-        // }).then(() => {
-        //     //重置作业发布框
-        reset();
-        // })
-        setHomeworkDetails({
-            homeworkName: '',
-            homeworkIntroduce: '',
-            deadline: NaN,
-            maxGrade: '',
-            interaction: [0, 0, 0]
-        });
+        (async () => {
+            //提交作业信息
+            const res = await handleUploadHomeworkInfo();
+            if (res.status) {
+                if (fileList.length !== 0)
+                    await handleUploadFiles(res.filepaths);
+            }
+
+            //刷新作业
+            RefreshHomeworks();
+            //重置作业发布框
+            reset();
+        })();
     }
 
     //输入框变化
@@ -137,7 +169,7 @@ export default function PostHomework(props) {
         setHomeworkDetails(prevState => {
             return {
                 ...prevState,
-                [id]: value
+                [id]: id === 'deadline' ? getTime(value) : value
             }
         })
         if (handleInputChange !== undefined && handleInputChange !== null) {
@@ -150,9 +182,10 @@ export default function PostHomework(props) {
         setHomeworkDetails({
             homeworkName: '',
             homeworkIntroduce: '',
-            deadline: '',
-            maxGrade: ''
-        })
+            deadline: NaN,
+            maxGrade: '',
+            interaction: [0, 0, 0]
+        });
         setFileList([]);
     }
 

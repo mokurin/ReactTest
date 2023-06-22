@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import styles from '../../css/Main.module.css'
 import FilingModal from './FilingModal'
-//课程信息
-import { noArchivedSubjects, updateNoArchivedSubjects, getSubByCode, updateSubject } from '../subject/NoArchivedSubjects'
-import { archivedSubjects, updateArchivedSubjects, requestArchiveAll } from '../subject/ArchivedSubjects'
 import { useNavigate } from 'react-router';
+//课程信息
+import * as NoArchivedSubjects from '../subject/NoArchivedSubjects'
+import * as ArchivedSubjects from '../subject/ArchivedSubjects'
+import { getAllSubs } from '../subject/SubjectInfo'
+//工具模块
+import * as Util from '../Util'
 
 
 //课程组件
@@ -12,73 +15,106 @@ function Subject(props) {
     const [index] = useState(Number(props.id.substring(7)));
     const [subData, setSubData] = useState(props.noArchivedSub[index]);
     const navigate = useNavigate();
+    const user_Account = JSON.parse(localStorage.getItem('user_Account'));
 
     // 删除课程
     function removeSubject() {
-        let subs = noArchivedSubjects;
+        let subs = NoArchivedSubjects.noArchivedSubjects;
         let data = [];
 
-        for (let i = 0; i < subs.length; i++) {
-            if (i !== index)
-                data.push(subs[i]);
-        }
+        (async () => {
+            const flag = await NoArchivedSubjects.delSubject(subs[index]);
+            if (flag !== true)
+                alert(flag);
 
-        updateNoArchivedSubjects(data);
-        props.setNoArchivedSub(data)
+            for (let i = 0; i < subs.length; i++) {
+                if (i !== index)
+                    data.push(subs[i]);
+            }
+
+            var i = user_Account.data.unarchived_subject_ids.indexOf(subs[index].code);
+            if (i !== -1)
+                user_Account.data.unarchived_subject_ids.splice(i, 1);
+            localStorage.setItem('user_Account', JSON.stringify(user_Account));
+            NoArchivedSubjects.updateNoArchivedSubjects(data);
+            props.setNoArchivedSub(data)
+        })();
     }
 
     //归档自己
     function archive() {
+        (async()=>{
+
+        })();
         //获取未归档课程
-        let subs = noArchivedSubjects;
+        let subs = NoArchivedSubjects.noArchivedSubjects;
         //获取归档的课程
-        let data = archivedSubjects;
+        let data = ArchivedSubjects.archivedSubjects;
 
         //添加新归档课程
         data[data.length] = subs[index]
 
         //更新归档课程
-        updateArchivedSubjects(data)
+        ArchivedSubjects.updateArchivedSubjects(data)
         props.setArchivedSub(data)
 
         //删除未归档课程
-        removeSubject();
+        // removeSubject();
     }
 
     //归档全部
     function archiveAll() {
-        //获取未归档课程
-        let subs = noArchivedSubjects;
-        requestArchiveAll(subs[index]);
-        //归档个人
-        archive();
+        (async () => {
+            //获取未归档课程
+            let subs = NoArchivedSubjects.noArchivedSubjects;
+            const res = await ArchivedSubjects.requestArchiveAll(subs[index]);
+            if (res.status) {
+                //删除在未归档的课程
+                var i = user_Account.data.unarchived_subject_ids.indexOf(subs[index].code);
+                if (i !== -1)
+                    user_Account.data.unarchived_subject_ids.splice(i, 1);
+
+                //加入到归档课程
+                user_Account.data.archived_subject_ids.push(subs[index].code);
+
+                localStorage.setItem('user_Account', JSON.stringify(user_Account));
+                await getAllSubs(user_Account.data.unarchived_subject_ids,
+                    user_Account.data.archived_subject_ids);//重新获取所有信息
+
+                //重新设置课程信息
+                props.setNoArchivedSub(NoArchivedSubjects.noArchivedSubjects);
+                props.setArchivedSub(ArchivedSubjects.archivedSubjects);
+            } else console.log(res.errcode);
+        })();
     }
 
     //编辑课程
     function editSubject(data) {
-        //获取旧课程信息
-        let sub = { ...props.noArchivedSub[index] }
+        (async () => {
+            //获取旧课程信息
+            let sub = { ...props.noArchivedSub[index] }
 
-        //更新课程信息
-        sub.createdTime = data.createdTime;
-        sub.name = data.name;
-        sub.class = data.class;
-        setSubData(sub);
-        new Promise((resolve, reject) => {
-            if (updateSubject(sub)) {
-                let newSubs = []
-                for (let i in noArchivedSubjects) {
-                    newSubs[i] = noArchivedSubjects[i];
-                }
-                resolve(newSubs);
+            //获取新课程信息
+            sub.createdTime = data.createdTime;
+            sub.data.term = data.createdTime;
+            sub.name = data.name;
+            sub.data.title = data.name;
+            sub.class = data.class;
+            sub.data.klass_ids = data.class.split(',');
+
+            const flag = await NoArchivedSubjects.updateSubject(sub);
+
+            if (flag) {
+                //更新前端
+                let subs = [];
+                for (let i = 0; i < NoArchivedSubjects.noArchivedSubjects.length; i++)
+                    if (NoArchivedSubjects.noArchivedSubjects[i].code === sub.code)
+                        subs.push(sub);
+                    else subs.push(NoArchivedSubjects.noArchivedSubjects[i]);
+                NoArchivedSubjects.updateNoArchivedSubjects(subs);
+                props.setNoArchivedSub(subs);
             }
-            else reject();
-        }).then((result) => {
-            props.setNoArchivedSub(result);
-            return true;
-        }).catch(() => {
-            return false;
-        })
+        })();
     }
 
     function getSubData() {
@@ -133,25 +169,33 @@ function Subject(props) {
                                 ···
                             </div>
                             <ul className={`dropdown-menu`}>
-                                <li className={`dropdown-item`}
-                                    id={'edi-' + props.id}
-                                    type="button"
-                                    data-bs-toggle="modal"
-                                    data-bs-target={"#editSubject" + index}
-                                    onClick={() => {
-                                        setSubData(getSubData);
-                                    }}
-                                >
-                                    编辑
-                                </li>
-                                <li className={`dropdown-item`}
-                                    id={'del-' + props.id}
-                                    type="button"
-                                    data-bs-toggle="modal"
-                                    data-bs-target={"#deleteSubject" + index}
-                                >
-                                    删除
-                                </li >
+                                {(() => {
+                                    if (Util.isTeacher(user_Account.data.identity)) {
+                                        return (
+                                            <>
+                                                <li className={`dropdown-item`}
+                                                    id={'edi-' + props.id}
+                                                    type="button"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target={"#editSubject" + index}
+                                                    onClick={() => {
+                                                        setSubData(getSubData);
+                                                    }}
+                                                >
+                                                    编辑
+                                                </li>
+                                                <li className={`dropdown-item`}
+                                                    id={'del-' + props.id}
+                                                    type="button"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target={"#deleteSubject" + index}
+                                                >
+                                                    删除
+                                                </li >
+                                            </>
+                                        )
+                                    }
+                                })()}
                                 <li className={`dropdown-item`}
                                     id={'arc-' + props.id}
                                     type="button"
@@ -162,12 +206,27 @@ function Subject(props) {
                                 </li>
                             </ul>
                             {/* 对应操作的模态框显示 */}
-                            <FilingModal data={{
-                                title: "要删除此课程吗？",
-                                id: "deleteSubject" + index
-                            }}
-                                command={removeSubject}
-                            />
+                            {(() => {
+                                if (Util.isTeacher(user_Account.data.identity)) {
+                                    return (
+                                        <>
+                                            <FilingModal data={{
+                                                title: "要删除此课程吗？",
+                                                id: "deleteSubject" + index
+                                            }}
+                                                command={removeSubject}
+                                            />
+                                            <FilingModal data={{
+                                                title: "课程编辑",
+                                                id: "editSubject" + index
+                                            }} sub={subData}
+                                                handleInputChange={handleInputChange}
+                                                command={editSubject}
+                                            />
+                                        </>
+                                    )
+                                }
+                            })()}
                             <FilingModal data={{
                                 title: "要归档此课程吗？",
                                 id: "filingSubject" + index
@@ -176,13 +235,6 @@ function Subject(props) {
                                     arc: archive,
                                     arcAll: archiveAll
                                 }}
-                            />
-                            <FilingModal data={{
-                                title: "课程编辑",
-                                id: "editSubject" + index
-                            }} sub={subData}
-                                handleInputChange={handleInputChange}
-                                command={editSubject}
                             />
                         </span>
 

@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import bootstrap from 'bootstrap/dist/js/bootstrap'
 import PostHomework from '../PostHomework'
 
+//工具模块
+import * as Util from '../Util'
+
 // 课程操作对应的模态框
 const buttonStyles = ["btn-outline-secondary", "btn-outline-primary", "btn-primary"]
 
@@ -127,14 +130,26 @@ const Button = (props) => {
 
 //归档
 const BodyContent = () => {
+    const user_Account = JSON.parse(localStorage.getItem('user_Account'));
+
+    const getContent = () => {
+        if (Util.isTeacher(user_Account.data.identity)) {
+            return (
+                <div className="modal-body">
+                    <p>你可以在“课堂”-“归档管理”中查看此课程</p>
+                    <p>【归档全部】，学生的课程也会一起被归档</p>
+                    <p>【归档自己】，学生的课程不会被归档</p>
+                </div>)
+        } else {
+            return (
+                <div className="modal-body">
+                    <p>你可以在“课堂”-“归档管理”中查看此课程</p>
+                </div>)
+        }
+    }
+
     return (
-        <>
-            <div className="modal-body">
-                <p>你可以在“课堂”-“归档管理”中查看此课程</p>
-                <p>【归档全部】，学生的课程也会一起被归档</p>
-                <p>【归档自己】，学生的课程不会被归档</p>
-            </div>
-        </>
+        getContent()
     );
 }
 
@@ -255,6 +270,8 @@ const BodyCreate = (props) => {
 
 
 function FilingModal(props) {
+    const user_Account = JSON.parse(localStorage.getItem('user_Account'));
+
     return (
         <>
             <div
@@ -288,7 +305,7 @@ function FilingModal(props) {
                             {props.data.id.includes("deleteSubject") && <Button command={props.command} msg='确认删除' buttonStyle={buttonStyles[2]} />}
                             {/* 归档 */}
                             {props.data.id.includes("filingSubject") && <Button command={props.command} msg='归档自己' buttonStyle={buttonStyles[1]} />}
-                            {props.data.id.includes("filingSubject") && <Button command={props.command} msg='归档全部' buttonStyle={buttonStyles[2]} />}
+                            {(props.data.id.includes("filingSubject") && Util.isTeacher(user_Account.data.identity)) && <Button command={props.command} msg='归档全部' buttonStyle={buttonStyles[2]} />}
                             {/* 编辑 */}
                             {props.data.id.includes("editSubject") && <Button command={props.command} index={props.data.id.substring(11)} msg='确认编辑' buttonStyle={buttonStyles[2]} />}
                             {/* 恢复 */}

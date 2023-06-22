@@ -8,38 +8,19 @@ export let archivedSubjects = [
 //更新课程数据
 export function updateArchivedSubjects(data) {
     archivedSubjects = data;
-    console.log(archivedSubjects);
-    // //更新后端
-    // const user_Account = JSON.parse(localStorage.getItem('user_Account'));
-    // let msg;
-    // if (user_Account !== undefined && user_Account !== null) {
-    //     msg = {
-    //         api: 'archiveAll',
-    //         email: user_Account.email,
-    //         archivedSubjects: data
-    //     }
-    //     Send(msg, msg => {
-    //         if (!msg.status) {
-    //             alert('归档出错');
-    //         }
-    //     })
-    // }
 }
 
 //请求归档全部
 export function requestArchiveAll(sub) {
-    const user_Account = JSON.parse(localStorage.getItem('user_Account'));
-    let msg;
-    if (user_Account !== undefined && user_Account !== null) {
-        msg = {
-            api: 'archiveAll',
-            email: user_Account.email,
-            code: sub.code
+    return new Promise((resolve, reject) => {
+        const msg = {
+            api: 'archivesub',
+            sub_id: sub.code
         }
         Send(msg, msg => {
-            if (!msg.status) {
-                alert('归档出错');
-            }
+            if (msg.status) {
+                resolve(msg)
+            } else reject(msg);
         })
-    }
+    });
 }
