@@ -83,7 +83,21 @@ const HomeworkDetailed = (props) => {
     const [reqMemInfo, setReqMemInfo] = useState([]);
     const [reqIndwork, setReqIndwork] = useState([]);
 
-    
+    // 渲染前接收数据
+    useEffect(() => {
+        if (props.subData == null || props.subData == undefined) {
+            return
+        }
+        if (props.homeworkData == null || props.homeworkData == undefined) {
+            return
+        }
+
+        getHomeworkMembers();
+
+
+    }, [])
+
+
     // 发送请求 接收数据
     function getHomeworkMembers() {
         const msg = {
@@ -97,13 +111,20 @@ const HomeworkDetailed = (props) => {
                 console.log('success');
             // 数据接收部分
 
+
         });
     }
-
+    // 处理页面刷新/关闭事件
+    function handleBeforeUnload(event) {
+        event.preventDefault(); // 阻止默认行为
+        // 执行你的逻辑，例如重新执行 getHomeworkMembers
+    }
 
 
     // 接受 已批 未批 未交 人数 数组
     // let nums = [1,1,1];
+
+
     let nums = (props.homeworkData == null || props.homeworkData == undefined) ? [1, 1, 1] : props.homeworkData.interaction;
     // 筛选  ------------------------------------------------------------------------------------
     // 数组 存放每条成绩

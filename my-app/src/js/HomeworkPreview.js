@@ -9,6 +9,11 @@ const WorkPreviewNav = (props) => {
     const [value, setValue] = useState(props.info.grade);
     const navigate = useNavigate();
 
+    //页面刷新，重新加载
+    useEffect(() => {
+
+    }, [])
+
     // 发送该的作业分数
     function sendScore() {
         const msg = {
@@ -41,7 +46,7 @@ const WorkPreviewNav = (props) => {
                 学生留言信息
             </div>
             <div className="collapse shadow-lg" id="collapseExample">
-                <div class="card card-body">
+                <div className="card card-body">
                     Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
                 </div>
             </div>
@@ -84,10 +89,14 @@ export default function HomeworkPreview() {
         filePathL: state.filePath
     }
 
+    const [status, setStatus] = useState(false)
+    const [n, setN] = useState(0)
+
     return (<>
         <div className={`${styles.HomeworkPreview}`}>
             <WorkPreviewNav info={state} />
-            <FileView filePath={state.filePath} />
+            {/* <FileView filePath={state.filePath} /> */}
+            {status && <><div>{n}</div></>}
         </div>
     </>)
 }
