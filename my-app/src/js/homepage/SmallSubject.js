@@ -5,24 +5,47 @@ import bootStrap from 'bootstrap/dist/js/bootstrap'
 //课程信息
 import { noArchivedSubjects, updateNoArchivedSubjects } from '../subject/NoArchivedSubjects'
 import { archivedSubjects, updateArchivedSubjects } from '../subject/ArchivedSubjects'
+import { Send } from '../Connect';
 
 // 归档排序的课程显示组件
 export default function SmallSubject(props) {
     const [index] = useState(Number(props.id.substring(13)));
+    const user_Account = JSON.parse(localStorage.getItem('user_Account'));
 
     //删除课程
     function removeSubject() {
         let subs = archivedSubjects;
-        let data = [];
+        let ids = [];//删除后的未归档课程码
+        let data = [];//删除后的未归档课程
 
         for (let i = 0; i < subs.length; i++) {
-            if (i !== index)
+            if (i !== index) {
                 data.push(subs[i]);
+                ids.push(subs[i].code);
+            }
         }
 
-        console.log(data);
-        updateArchivedSubjects(data);
-        props.setArchivedSub(data)
+        //更新后端，成功则更新前端
+        const msg = {
+            api: 'updateuserinfo',
+            user: {
+                email: user_Account.email,
+                name: user_Account.data.name,
+                archived_subject_ids: ids,
+                unarchived_subject_ids: user_Account.data.unarchived_subject_ids
+            }
+        }
+        Send(msg, res => {
+            if (res.status) {
+                //更新前端
+                user_Account.data.archived_subject_ids = ids;
+                localStorage.setItem('user_Account', JSON.stringify(user_Account));
+                updateArchivedSubjects(data);
+                props.setArchivedSub(data)
+            } else {
+                console.log(res.errcode);
+            }
+        })
     }
 
     //恢复课程
@@ -32,15 +55,45 @@ export default function SmallSubject(props) {
         //获取归档的课程
         let data = archivedSubjects;
 
+        //新未归档ids
+        let newNoArchivedSub_ids = [];
+        //新归档ids
+        let newArchivedSub_ids = [];
+
         //恢复归档课程
         subs[subs.length] = data[index];
+        for (let i in subs) {
+            newNoArchivedSub_ids.push(subs[i].code);
+        }
+        data.splice(index, 1);
+        for (let i in data) {
+            newArchivedSub_ids.push(data[i].code);
+        }
 
-        //更新未归档课程
-        updateNoArchivedSubjects(subs)
-        props.setNoArchivedSub(subs)
+        //更新后端，成功的话更新前端
+        const msg = {
+            api: 'updateuserinfo',
+            user: {
+                email: user_Account.email,
+                name: user_Account.data.name,
+                archived_subject_ids: newArchivedSub_ids,
+                unarchived_subject_ids: newNoArchivedSub_ids
+            }
+        }
+        Send(msg, res => {
+            if (res.status) {
+                //更新前端
+                user_Account.data.archived_subject_ids = newArchivedSub_ids;
+                user_Account.data.unarchived_subject_ids = newNoArchivedSub_ids;
+                localStorage.setItem('user_Account', JSON.stringify(user_Account));
+                updateNoArchivedSubjects([...subs]);
+                props.setNoArchivedSub([...subs]);
+                updateArchivedSubjects([...data]);
+                props.setArchivedSub([...data]);
+            }
+        })
 
-        //删除归档课程
-        removeSubject();
+
     }
 
 

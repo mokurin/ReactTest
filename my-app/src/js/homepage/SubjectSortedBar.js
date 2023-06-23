@@ -4,39 +4,33 @@ import styles from '../../css/Main.module.css'
 
 //课程排序的课程元素
 export default function SubjectSortedBar(props) {
+    const { noArchivedSub, setNoArchivedSub } = props;
+    const index = Number(props.id.substring(5));
+
     return (
         <>
             <div className={`${styles.draggableSubject} text-truncate`} draggable="true"
                 id={props.id}
                 onDragStart={(e) => {
-                    e.dataTransfer.setData("Text", e.target.id);
+                    e.dataTransfer.setData("Index", Number(e.target.id.substring(5)));
                 }}
                 onDragOver={(e) => {
                     e.preventDefault()
                 }}
                 onDrop={(e) => {
-                    let node = e.target;//目的地元素
-                    //拖到字的情况
-                    if (e.target.className === styles.smallSubjectTitle ||
-                        e.target.className === styles.smallSubjectDot)
-                        node = e.target.parentNode;
-
                     e.preventDefault()
-                    let id = e.dataTransfer.getData('Text');
-                    let pre = document.querySelector("#" + id);//拖动的元素
-                    let table = document.querySelector("." + styles.myModalBodySorted);//整个表
 
-                    // 目标元素
-                    let rect = node.getBoundingClientRect()
-                    let centerY = rect.y + rect.height / 2
-                    //拖动元素
-                    let mouseY = e.clientY
+                    //获取拖动元素和目标元素的index值
+                    let preIndex = e.dataTransfer.getData('Index');
+                    let nodeIndex = index;
 
-                    if (mouseY < centerY) {
-                        table.insertBefore(pre, node)
-                    } else {
-                        table.insertBefore(pre, node.nextSibling)
-                    }
+                    //进行交换
+                    let newArray = [...noArchivedSub];
+                    let temp = newArray[preIndex];
+                    newArray[preIndex] = newArray[nodeIndex];
+                    newArray[nodeIndex] = temp;
+                    //更新noArchivedSub数组
+                    setNoArchivedSub(newArray);
                 }
                 }>
                 <div className={`${styles.smallSubjectDot}`}></div>

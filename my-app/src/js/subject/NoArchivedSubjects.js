@@ -7,21 +7,6 @@ export let noArchivedSubjects = [];
 //更新所有课程
 export function updateNoArchivedSubjects(data) {
     noArchivedSubjects = data;
-    // //更新后端
-    // const user_Account = JSON.parse(localStorage.getItem('user_Account'));
-    // let msg;
-    // if (user_Account !== undefined && user_Account !== null) {
-    //     msg = {
-    //         api: 'update-noArchivedSubjects',
-    //         email: user_Account.email,
-    //         noArchivedSubjects: data
-    //     }
-    //     Send(msg, msg => {
-    //         if (!msg.status) {
-    //             alert(msg.errcode);
-    //         }
-    //     })
-    // }
 }
 
 //添加课程

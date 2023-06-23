@@ -8,6 +8,7 @@ import * as ArchivedSubjects from '../subject/ArchivedSubjects'
 import { getAllSubs } from '../subject/SubjectInfo'
 //工具模块
 import * as Util from '../Util'
+import { Send } from '../Connect';
 
 
 //课程组件
@@ -43,23 +44,52 @@ function Subject(props) {
 
     //归档自己
     function archive() {
-        (async()=>{
-
-        })();
         //获取未归档课程
-        let subs = NoArchivedSubjects.noArchivedSubjects;
-        //获取归档的课程
-        let data = ArchivedSubjects.archivedSubjects;
+        let noArchivedSubs = NoArchivedSubjects.noArchivedSubjects;
+        //新归档课程列表
+        let newArchivedSubs = ArchivedSubjects.archivedSubjects;
 
         //添加新归档课程
-        data[data.length] = subs[index]
+        newArchivedSubs[newArchivedSubs.length] = noArchivedSubs[index]
 
-        //更新归档课程
-        ArchivedSubjects.updateArchivedSubjects(data)
-        props.setArchivedSub(data)
+        let newNoArchivedSubs = [];//新未归档课程列表
+        let newNoArchivedSubs_ids = [];//新未归档课程码列表
+        for (let i = 0; i < noArchivedSubs.length; i++)
+            if (i !== index) {
+                newNoArchivedSubs.push(noArchivedSubs[i]);
+                newNoArchivedSubs_ids.push(noArchivedSubs[i].code);
+            }
 
-        //删除未归档课程
-        // removeSubject();
+        let newArchivedSubs_ids = [];//新归档课程码列表
+        for (let i = 0; i < newArchivedSubs.length; i++)
+            newArchivedSubs_ids[i] = newArchivedSubs[i].code;
+
+        //更新后端，成功的话更新前端
+        const msg = {
+            api: 'updateuserinfo',
+            user: {
+                email: user_Account.email,
+                name: user_Account.data.name,
+                archived_subject_ids: newArchivedSubs_ids,
+                unarchived_subject_ids: newNoArchivedSubs_ids
+            }
+        }
+        Send(msg, res => {
+            if (res.status) {
+                //更新拍好后的顺序
+                user_Account.data.unarchived_subject_ids = newNoArchivedSubs_ids;
+                user_Account.data.archived_subject_ids = newArchivedSubs_ids;
+                localStorage.setItem('user_Account', JSON.stringify(user_Account));
+                //更新归档课程
+                ArchivedSubjects.updateArchivedSubjects(newArchivedSubs);
+                props.setArchivedSub(newArchivedSubs);
+                //更新未归档课程
+                NoArchivedSubjects.updateNoArchivedSubjects(newNoArchivedSubs);
+                props.setNoArchivedSub(newNoArchivedSubs);
+            } else {
+                console.log(res.errcode);
+            }
+        })
     }
 
     //归档全部

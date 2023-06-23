@@ -24,43 +24,21 @@ export default function SubjectDetailedInfo(props) {
     const s = location.state;
     const subData = (s !== null && s !== undefined) ? s.subData : null;//课程数据
     const user_Account = JSON.parse(localStorage.getItem('user_Account'));
-    const [allHomeworkInfo, setAllHomeworkInfo] = useState([
-        {
-            homeworkName: '1',
-            homeworkIntroduce: 'asiudyqawui',
-            deadline: Date.now(),
-            maxGrade: 100,
-            interaction: [1, 2, 3]
-        },
-        {
-            homeworkName: '2',
-            homeworkIntroduce: 'asiudyqawui',
-            deadline: Date.now(),
-            maxGrade: 100,
-            interaction: [3, 2, 3]
-        },
-        {
-            homeworkName: '3',
-            homeworkIntroduce: 'asiudyqawui',
-            deadline: Date.now(),
-            maxGrade: 100,
-            interaction: [5, 6, 7]
-        },
-    ]);
+    const [allHomeworkInfo, setAllHomeworkInfo] = useState([]);
 
     // 页面初始化
     useEffect(() => {
         if (user_Account !== null && user_Account !== undefined) {
             if (subData != null) {
-                // RefreshHomeworks();
+                RefreshHomeworks();
             }
             else {
                 //返回主页
-                // navigate('/Main');
+                navigate('/Main');
             }
         } else {
             //返回主页
-            // navigate('/Main');
+            navigate('/Main');
         }
     }, [])
 
@@ -120,8 +98,7 @@ export default function SubjectDetailedInfo(props) {
                         {infoButton("成员", subData !== null ? subData.data.student_emails.length : '', jumpToMngMem)}
                     </div>
                 </div>
-                {/* Util.isTeacher(user_Account.data.identity) */}
-                {Util.isTeacher('t') &&
+                {Util.isTeacher(user_Account.data.identity) &&
                     <div className={`${styles.subjectInfoPageHeaderRight}`}>
                         <InteractionTool name={"发布作业"} nums={allHomeworkInfo.length} />
                     </div>
@@ -136,7 +113,7 @@ export default function SubjectDetailedInfo(props) {
                 {navButton("公告")}
             </div>
             <div className={`${styles.homeworkTable}`}>
-                {Util.isTeacher('t') && <PostHomework subData={subData} isEdit={false} RefreshHomeworks={RefreshHomeworks} />}
+                {Util.isTeacher(user_Account.data.identity) && <PostHomework subData={subData} isEdit={false} RefreshHomeworks={RefreshHomeworks} />}
                 <HomeworkItems subData={subData} setAllHomeworkInfo={setAllHomeworkInfo} allHomeworkInfo={allHomeworkInfo} />
             </div>
         </div>

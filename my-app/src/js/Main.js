@@ -173,8 +173,9 @@ function Main(props) {
                             data-bs-toggle="modal"
                             data-bs-target="#subjectSorted"
                             onClick={() => {
-                                setNoArchivedSub(noArchivedSubjects);
-                                setArchivedSub(archivedSubjects);
+                                console.log(noArchivedSub);
+                                // setNoArchivedSub([...noArchivedSubjects]);
+                                // setArchivedSub([...archivedSubjects]);
                             }}
                         >
                             <img src={Sort} alt="" />
@@ -250,7 +251,6 @@ function Main(props) {
                 {/* 课程框 */}
                 <div className={styles.subjects}>
                     {/* 所有课程 */}
-                    {/* {subjectItems} */}
                     <SubjectItems setNoArchivedSub={setNoArchivedSub} noArchivedSub={noArchivedSub}
                         archivedSub={archivedSub} setArchivedSub={setArchivedSub} />
 

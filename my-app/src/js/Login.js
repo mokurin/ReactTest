@@ -15,11 +15,11 @@ export default function Login(props) {
     const navigate = useNavigate();
     const location = useLocation();
     const s = location.state;
+    // localStorage.clear('user_Account');
     const user_Account = JSON.parse(localStorage.getItem('user_Account'));
 
     //加载内容
     useEffect(() => {
-        // localStorage.clear('user_Account');
         console.log(user_Account);
         if (s === null) {
             if (user_Account !== undefined && user_Account !== null)

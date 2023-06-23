@@ -2,8 +2,7 @@ import subjectInfo from '../subject/SubjectInfo'
 import { Send } from '../Connect'
 
 //归档课程
-export let archivedSubjects = [
-];
+export let archivedSubjects = [];
 
 //更新课程数据
 export function updateArchivedSubjects(data) {

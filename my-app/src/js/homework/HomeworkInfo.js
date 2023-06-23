@@ -23,8 +23,9 @@ export const HomeworkInfo = (props) => {
 
     //单击作业
     function handleNav(e) {
-        const parentNode = document.getElementById('homeworkMore' + index);
-        if (!parentNode.contains(e.target)) {
+        const parentNode1 = document.getElementById('homeworkMore' + index);
+        const parentNode2 = document.getElementById('homeworkAnnex' + index);
+        if (!parentNode1.contains(e.target) && (parentNode2 === null || !parentNode2.contains(e.target))) {
             //跳转作业详情页
             navigate('/HomeworkRating', {
                 state: {
@@ -73,7 +74,7 @@ export const HomeworkInfo = (props) => {
                         个人作业
                     </div>
                 </div>
-                {Util.isTeacher('t') &&
+                {Util.isTeacher(user_Account.data.identity) &&
                     <div id={'homeworkMore' + index}>
                         <div className={`${styles.homeworkInfoHeaderRight}`}
                             type="button"
@@ -128,7 +129,7 @@ export const HomeworkInfo = (props) => {
                     </div>
                 </div>
                 <div className={`${styles.homeworkMainInfoRight}`}>
-                    {Util.isTeacher('t') ?
+                    {Util.isTeacher(user_Account.data.identity) ?
                         <div className={`${styles.homeworkSubmissionInfo}`}>
                             <InteractionTool name={'已批'} nums={interaction[0]} />
                             <InteractionTool name={'未批'} nums={interaction[1]} />
@@ -140,8 +141,8 @@ export const HomeworkInfo = (props) => {
                         </div>}
                 </div>
             </div>
-            {Util.isTeacher('t') &&
-                <div className={`${styles.homeworkAnnex}`}>
+            {Util.isTeacher(user_Account.data.identity) &&
+                <div id={'homeworkAnnex' + index} className={`${styles.homeworkAnnex}`}>
                     <FileItems index={index} filePaths={filePaths} />
                 </div>
             }

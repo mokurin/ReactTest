@@ -26,7 +26,7 @@ export default function FileItems(props) {
                 const filename = filePath.split('~')[1];
                 const fileType = filename.split('.')[filename.split('.').length - 1];
                 let icon = (fileType in icons) ? icons[fileType] : icon_file;
-                return <File filename={filename} icon={icon} key={index} id={`subject${props.index}-${index}`} />;
+                return <File filePath={filePath} filename={filename} icon={icon} key={index} id={`subject${props.index}-${index}`} parentIndex={props.index} index={index} />;
             }
         )
         return items;

@@ -1,30 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '../../css/Main.module.css'
 import { noArchivedSubjects, updateNoArchivedSubjects } from '../subject/NoArchivedSubjects'
 //组件
 import SubjectSortedBarItems from '../homepage/SubItems/SubjectSortedBarItems'
 import SmallSubjectItems from '../homepage/SubItems/SmallSubjectItems'
+import { Send } from '../Connect';
 
 // 课程排序 和 归档管理 模态框（相互切换）
 function SubjectAction(props) {
     const { setNoArchivedSub, noArchivedSub, archivedSub, setArchivedSub } = props
-    // const [noArchivedSub, setNoArchivedSub] = useState(props.noArchivedSub);
-    // const [archivedSub, setArchivedSub] = useState(props.archivedSub);
+    const user_Account = JSON.parse(localStorage.getItem('user_Account'));
 
+
+    //排序内容
+    const [sortedContent, setSortedContent] = useState(noArchivedSub);
+    //刷新排序内容
+    useEffect(() => {
+        setSortedContent(noArchivedSub)
+    }, [noArchivedSub]);
     //确认排序
     const sortedOK = () => {
-        let subs = document.getElementById('sortedTable').childNodes;
-        let subsSorted = [];// 排序后的列表
-        let subjects = noArchivedSubjects;// 所有课程
+        let subsSorted_ids = [];// 排序后的课程码列表
 
-        for (let i = 0; i < subs.length; i++) {
-            let index = Number(subs[i].id.substring(5));
-            subsSorted[i] = subjects[index];
+        for (let i = 0; i < sortedContent.length; i++) {
+            subsSorted_ids[i] = sortedContent[i].code;
         }
 
-        //更新拍好后的顺序
-        updateNoArchivedSubjects(subsSorted);
-        props.setNoArchivedSub(subsSorted);
+        //更新后端,成功后更新前端
+        const msg = {
+            api: 'updateuserinfo',
+            user: {
+                email: user_Account.email,
+                name: user_Account.data.name,
+                archived_subject_ids: user_Account.data.archived_subject_ids,
+                unarchived_subject_ids: subsSorted_ids
+            }
+        }
+        Send(msg, res => {
+            if (res.status) {
+                //更新拍好后的顺序
+                user_Account.data.unarchived_subject_ids = subsSorted_ids;
+                localStorage.setItem('user_Account', JSON.stringify(user_Account));
+                updateNoArchivedSubjects(sortedContent);
+                props.setNoArchivedSub(sortedContent);
+            } else {
+                console.log(res.errcode);
+            }
+        });
     }
 
     return (
@@ -39,7 +61,7 @@ function SubjectAction(props) {
                 <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                     <div className={`modal-content ${styles.modalHeight}`}>
                         <div className={`${styles.SubjectActionHeader} shadow`}>
-                            <div className={styles.subjectSorted}
+                            <div className={`${styles.subjectSorted} ${styles.selected}`}
                                 data-bs-target="#subjectSorted"
                                 data-bs-toggle="modal"
                             >
@@ -60,8 +82,7 @@ function SubjectAction(props) {
                         <div className="modal-body">
                             <div className={`${styles.myModalBodySorted} shadow rounded`} id='sortedTable'>
                                 {/* 排序内容显示 */}
-                                <SubjectSortedBarItems setNoArchivedSub={setNoArchivedSub}
-                                    noArchivedSub={noArchivedSub} />
+                                <SubjectSortedBarItems noArchivedSub={sortedContent} setNoArchivedSub={setSortedContent} />
                             </div>
                         </div>
                         {/* 确认排序按钮 */}
@@ -76,7 +97,7 @@ function SubjectAction(props) {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
             {/* 归档管理 */}
             <div
                 className="modal"
@@ -92,7 +113,7 @@ function SubjectAction(props) {
                                 data-bs-toggle="modal">
                                 课程排序
                             </div>
-                            <div className={styles.subjectManage}
+                            <div className={`${styles.subjectManage} ${styles.selected}`}
                                 data-bs-target="#subjectManage"
                                 data-bs-toggle="modal">
                                 归档管理
@@ -115,7 +136,7 @@ function SubjectAction(props) {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         </>
     );
 }
