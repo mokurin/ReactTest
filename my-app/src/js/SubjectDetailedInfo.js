@@ -24,21 +24,43 @@ export default function SubjectDetailedInfo(props) {
     const s = location.state;
     const subData = (s !== null && s !== undefined) ? s.subData : null;//课程数据
     const user_Account = JSON.parse(localStorage.getItem('user_Account'));
-    const [allHomeworkInfo, setAllHomeworkInfo] = useState([]);
+    const [allHomeworkInfo, setAllHomeworkInfo] = useState([
+        {
+            homeworkName: '1',
+            homeworkIntroduce: 'asiudyqawui',
+            deadline: Date.now(),
+            maxGrade: 100,
+            interaction: [1, 2, 3]
+        },
+        {
+            homeworkName: '2',
+            homeworkIntroduce: 'asiudyqawui',
+            deadline: Date.now(),
+            maxGrade: 100,
+            interaction: [3, 2, 3]
+        },
+        {
+            homeworkName: '3',
+            homeworkIntroduce: 'asiudyqawui',
+            deadline: Date.now(),
+            maxGrade: 100,
+            interaction: [5, 6, 7]
+        },
+    ]);
 
     // 页面初始化
     useEffect(() => {
         if (user_Account !== null && user_Account !== undefined) {
             if (subData != null) {
-                RefreshHomeworks();
+                // RefreshHomeworks();
             }
             else {
                 //返回主页
-                navigate('/Main');
+                // navigate('/Main');
             }
         } else {
             //返回主页
-            navigate('/Main');
+            // navigate('/Main');
         }
     }, [])
 
@@ -68,7 +90,7 @@ export default function SubjectDetailedInfo(props) {
                         console.log('新课程数据');
                         console.log(subData.data);
                         resolve();
-                    }else{
+                    } else {
                         console.log(res.errcode);
                     }
                 })
@@ -95,7 +117,7 @@ export default function SubjectDetailedInfo(props) {
                     </div>
                     <div className={`${styles.headerleftActions}`}>
                         {infoButton("加课码", subData !== null ? subData.code : '')}
-                        {infoButton("成员", subData.data.student_emails.length, jumpToMngMem)}
+                        {infoButton("成员", subData !== null ? subData.data.student_emails.length : '', jumpToMngMem)}
                     </div>
                 </div>
                 {Util.isTeacher(user_Account.data.identity) &&
