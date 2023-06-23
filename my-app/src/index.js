@@ -39,8 +39,6 @@ ReactDOM.createRoot(document.getElementById("root")).render((
       <Route path='/IndividualSubjectCheck' element={<IndividualSubjectCheck />} />
       {/* 提交作业页 */}
       <Route path='/SummitHomework' element={<SubmitHomework />} />
-      {/* 作业批改页 */}
-      <Route path='/HomeworkRating' element={<HomeworkRating />} />
       {/* 作业查看页 */}
       <Route path='/HomeworkPreview' element={<HomeworkPreview />} />
     </Routes>
