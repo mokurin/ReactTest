@@ -120,7 +120,8 @@ export default function SubjectDetailedInfo(props) {
                         {infoButton("成员", subData !== null ? subData.data.student_emails.length : '', jumpToMngMem)}
                     </div>
                 </div>
-                {Util.isTeacher(user_Account.data.identity) &&
+                {/* Util.isTeacher(user_Account.data.identity) */}
+                {Util.isTeacher('t') &&
                     <div className={`${styles.subjectInfoPageHeaderRight}`}>
                         <InteractionTool name={"发布作业"} nums={allHomeworkInfo.length} />
                     </div>
@@ -135,7 +136,7 @@ export default function SubjectDetailedInfo(props) {
                 {navButton("公告")}
             </div>
             <div className={`${styles.homeworkTable}`}>
-                {Util.isTeacher(user_Account.data.identity) && <PostHomework subData={subData} isEdit={false} RefreshHomeworks={RefreshHomeworks} />}
+                {Util.isTeacher('t') && <PostHomework subData={subData} isEdit={false} RefreshHomeworks={RefreshHomeworks} />}
                 <HomeworkItems subData={subData} setAllHomeworkInfo={setAllHomeworkInfo} allHomeworkInfo={allHomeworkInfo} />
             </div>
         </div>

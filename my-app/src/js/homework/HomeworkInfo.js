@@ -73,7 +73,7 @@ export const HomeworkInfo = (props) => {
                         个人作业
                     </div>
                 </div>
-                {Util.isTeacher(user_Account.data.identity) &&
+                {Util.isTeacher('t') &&
                     <div id={'homeworkMore' + index}>
                         <div className={`${styles.homeworkInfoHeaderRight}`}
                             type="button"
@@ -128,7 +128,7 @@ export const HomeworkInfo = (props) => {
                     </div>
                 </div>
                 <div className={`${styles.homeworkMainInfoRight}`}>
-                    {Util.isTeacher(user_Account.data.identity) ?
+                    {Util.isTeacher('t') ?
                         <div className={`${styles.homeworkSubmissionInfo}`}>
                             <InteractionTool name={'已批'} nums={interaction[0]} />
                             <InteractionTool name={'未批'} nums={interaction[1]} />
@@ -140,7 +140,7 @@ export const HomeworkInfo = (props) => {
                         </div>}
                 </div>
             </div>
-            {Util.isTeacher(user_Account.data.identity) &&
+            {Util.isTeacher('t') &&
                 <div className={`${styles.homeworkAnnex}`}>
                     <FileItems index={index} filePaths={filePaths} />
                 </div>

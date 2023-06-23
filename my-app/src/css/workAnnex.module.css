@@ -1,0 +1,9 @@
+.workAnnex{
+    box-sizing: border-box;
+    margin: 6px 15px;
+    font-size: 20px;
+    text-align: center;
+}
+.workAnnex>img{
+    width: 60px;
+}
