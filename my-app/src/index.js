@@ -33,12 +33,12 @@ ReactDOM.createRoot(document.getElementById("root")).render((
       <Route path='/Main' element={<Main />} />
       {/* 课程详情页 */}
       <Route path='/SubjectInfo' element={<SubjectDetailedInfo />} />
-      {/* 作业批改详情页 */}
-      <Route path='/HomeworkRating' element={<HomeworkRating />} />
       {/* 课程成员页 */}
       <Route path='/IndividualSubjectCheck' element={<IndividualSubjectCheck />} />
       {/* 提交作业页 */}
-      <Route path='/SummitHomework' element={<SubmitHomework />} />
+      <Route path='/SubmitHomework' element={<SubmitHomework />} />
+      {/* 作业批改详情页 */}
+      <Route path='/HomeworkRating' element={<HomeworkRating />} />
       {/* 作业查看页 */}
       <Route path='/HomeworkPreview' element={<HomeworkPreview />} />
     </Routes>

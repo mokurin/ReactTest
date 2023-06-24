@@ -296,8 +296,9 @@ const HomeworkDetailed = (props) => {
 export default function HomeworkRating(props) {
     const location = useLocation();
     const state = (location.state == null || location.state === undefined) ? "" : location.state;;
-    const subData = (state == null || state === undefined) ? null : state.subData;
-    const homeworkData = (state == null || state === undefined) ? null : state.homeworkData;
+    const subData = (state == null || state === undefined) ? null : state.subData;//课程数据
+    const homeworkData = (state == null || state === undefined) ? null : state.homeworkData;//作业数据
+    const user_Account = JSON.parse(localStorage.getItem('user_Account'));//用户数据
 
     return (<>
         <SubjectCheckNav subData={subData} homeworkData={homeworkData} action="学生作业" />

@@ -147,7 +147,7 @@ export const navButton = (name, isSelected) => {
 }
 
 //作业构造器
-export const HomeworkCreate = (homeworkName, homeworkIntroduce, deadline, maxGrade, interaction, data) => {
+export const HomeworkCreator = (homeworkName, homeworkIntroduce, deadline, maxGrade, interaction, data) => {
     return {
         homeworkName: homeworkName,
         homeworkIntroduce: homeworkIntroduce,
@@ -183,7 +183,7 @@ export const getAllHomework = (subData) => {
                 const res = await getHomework(subData.data.homework_ids[id])
                 if (res.status) {
                     const hw = res.homework;
-                    homeworks.push(HomeworkCreate(hw.title, hw.desc, hw.deadline, hw.max_score,
+                    homeworks.push(HomeworkCreator(hw.title, hw.desc, hw.deadline, hw.max_score,
                         [hw.grade_user_emails.length, hw.submitted_emails.length - hw.grade_user_emails.length,
                         subData.data.student_emails.length - hw.submitted_emails.length], hw));
                     //已批、未批、未交

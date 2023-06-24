@@ -153,10 +153,10 @@ export const SubjectCheckMainMembers = (props) => {
 
     function searchItem(match) {
         listItems.forEach(item => {
-            if(item.querySelector("#stuNum").innerHTML.includes(match) || item.querySelector("#stuName").innerHTML.includes(match)){
+            if (item.querySelector("#stuNum").innerHTML.includes(match) || item.querySelector("#stuName").innerHTML.includes(match)) {
                 item.style.display = "flex"
             }
-            else{
+            else {
                 item.style.display = "none"
             }
         })
@@ -259,7 +259,7 @@ export const SubjectMemberInfo = (props) => {
         // 后端部分
 
 
-        
+
     }
     return (<>
         <div className={`${styles.SubjectMemberInfo} shadow-sm`}>
@@ -331,6 +331,7 @@ export const SubjectTeacherInfo = (props) => {
 export default function IndividualSubjectCheck(props) {
     const location = useLocation();
     const subjectData = (location.state == null || location.state === undefined) ? "" : location.state;
+    const user_Account = JSON.parse(localStorage.getItem('user_Account'));
     console.log(typeof (subjectData.name));
 
     return (<>

@@ -227,14 +227,3 @@ export default function PostHomework(props) {
         </div>
     )
 }
-
-
-function createHomework(name, introduce, deadline, maxGrade, interaction) {
-    return {
-        homeworkName: name,
-        homeworkIntroduce: introduce,
-        deadline: deadline,
-        maxGrade: maxGrade,
-        interaction: interaction
-    }
-}

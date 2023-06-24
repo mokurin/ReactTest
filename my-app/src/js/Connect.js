@@ -1,4 +1,4 @@
-const url = "ws://192.168.137.33:8080";
+const url = "ws://192.168.70.110:8080";
 const socket = new WebSocket(url);
 let statusArr = ['正在连接', '已建立连接', '正在关闭连接', '已关闭连接',]
 const task_queue = [];//处理主动请求后的返回的回调队列

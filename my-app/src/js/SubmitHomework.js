@@ -203,9 +203,14 @@ const SubmitHomeworkMain = (props) => {
 }
 
 export default function SubmitHomework(props) {
+    const location = useLocation();
+    const state = (location.state == null || location.state === undefined) ? "" : location.state;;
+    const subData = (state == null || state === undefined) ? null : state.subData;//课程数据
+    const homeworkData = (state == null || state === undefined) ? null : state.homeworkData;//作业数据
+    const user_Account = JSON.parse(localStorage.getItem('user_Account'));//用户数据
+
     return (<>
         <SubjectCheckNav action="提交作业" />
         <SubmitHomeworkMain />
-
     </>)
 }

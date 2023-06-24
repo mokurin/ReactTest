@@ -15,7 +15,7 @@ import FileItems from '../files/FIleItems'
 // 单个作业
 export const HomeworkInfo = (props) => {
     const [isOK, setIsOK] = useState(false);
-    const { homeworkName, homeworkIntroduce, deadline, maxGrade, interaction } = props.data;
+    const { homeworkName, homeworkIntroduce, deadline, maxGrade, interaction } = props.homeworkData;
     const { id, updateHomeworkInfo, delHomeworkInfo, allHomeworkInfo, filePaths } = props;
     const index = Number(id.substring(8));
     const navigate = useNavigate();
@@ -30,10 +30,20 @@ export const HomeworkInfo = (props) => {
             navigate('/HomeworkRating', {
                 state: {
                     subData: props.subData,
-                    homeworkData: props.data
+                    homeworkData: props.homeworkData
                 }
             })
         }
+    }
+
+    //跳转提交作业页面
+    const handleSubmitHomework = () => {
+        navigate('/SubmitHomework', {
+            state: {
+                subData: props.subData,
+                homeworkData: props.homeworkData
+            }
+        })
     }
 
     //删除当前作业
@@ -41,7 +51,7 @@ export const HomeworkInfo = (props) => {
         delHomeworkInfo(index);
     }
 
-    const [editHomework, setEditHomework] = useState(props.data);
+    const [editHomework, setEditHomework] = useState(props.homeworkData);
     function handleInputChange(e) {
         const value = e.target.value;
         const id = e.target.id;
@@ -61,10 +71,12 @@ export const HomeworkInfo = (props) => {
                 resolve();
             }).then(() => {
                 console.log(allHomeworkInfo);
-                console.log(props.data);
+                console.log(props.homeworkData);
             })
         }
     }, [isOK])
+
+
 
     return (<>
         <div onClick={handleNav} className={`${styles.homeworkInfo} shadow`}>
@@ -89,7 +101,7 @@ export const HomeworkInfo = (props) => {
                                 data-bs-toggle="modal"
                                 data-bs-target={"#editHomework" + index}
                                 onClick={() => {
-                                    setEditHomework(props.data);
+                                    setEditHomework(props.homeworkData);
                                 }}
                             >
                                 编辑
@@ -137,7 +149,7 @@ export const HomeworkInfo = (props) => {
                         </div>
                         :
                         <div className={`${styles.homeworkSubmitted}`}>
-                            <button className={`btn btn-primary`}>上传作业</button>
+                            <button onClick={handleSubmitHomework} className={`btn btn-primary`}>上传作业</button>
                         </div>}
                 </div>
             </div>
