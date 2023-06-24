@@ -10,7 +10,7 @@ import * as Util from '../Util'
 import InteractionTool from './InteractionTool'
 import FilingModal from '../homepage/FilingModal'
 import { useNavigate } from 'react-router';
-import FileItems from '../files/FileItems';
+import FileItems from '../files/FIileItems';
 import { Send } from '../Connect';
 
 // 单个作业
