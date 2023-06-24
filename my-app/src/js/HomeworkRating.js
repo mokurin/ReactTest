@@ -16,8 +16,12 @@ import { Send } from './Connect'
 
 //单个 作业人员
 const HomeworkMemberInfo = (props) => {
-    console.log("aaaa");
-    console.log(props);
+    console.log("aaaaaaaaaaa");
+    console.log(props.work.score);
+    //             annexfilepaths: "",
+    //             comments: "",
+    //             graded: false,
+    //             score: ""
     const navigate = useNavigate()
 
     return (<>
@@ -30,7 +34,7 @@ const HomeworkMemberInfo = (props) => {
                     {props.info.name}
                 </div>
                 <div className={`text-truncate`} id="isSumitted">
-                    {props.workData.annexfilepaths.length == 0 ? "未交" : (props.workData.graded ? props.workData.score : "未批")}
+                    {props.work.annexfilepaths.length == 0 ? "未交" : (props.work.graded ? props.work.score : "未批")}
                 </div>
             </div>
             <button className={`btn btn-outline-secondary btn-sm ${styles.checkThisHomework}`}
