@@ -19,7 +19,7 @@ const WorkPreviewNav = (props) => {
         const msg = {
             api: 'gradework',
             user_email: props.info.email,                                           //学生ID
-            work_id: "",                                                            //作业ID
+            work_id: props.info.workid,                                                            //作业ID
             grade: document.getElementById("score").value                               //分数
         }
         Send(msg, (msg) => {
