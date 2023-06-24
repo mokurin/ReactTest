@@ -10,13 +10,14 @@ import * as Util from '../Util'
 import InteractionTool from './InteractionTool'
 import FilingModal from '../homepage/FilingModal'
 import { useNavigate } from 'react-router';
-import FileItems from '../files/FIleItems'
+import FileItems from '../files/FileItems'
+import { Send } from '../Connect';
 
 // 单个作业
 export const HomeworkInfo = (props) => {
     const [isOK, setIsOK] = useState(false);
-    const { homeworkName, homeworkIntroduce, deadline, maxGrade, interaction } = props.homeworkData;
-    const { id, updateHomeworkInfo, delHomeworkInfo, allHomeworkInfo, filePaths } = props;
+    const { homeworkName, homeworkIntroduce, deadline, maxGrade, interaction, data } = props.homeworkData;
+    const { id, allHomeworkInfo, subData, RefreshHomeworks } = props;
     const index = Number(id.substring(8));
     const navigate = useNavigate();
     const user_Account = JSON.parse(localStorage.getItem('user_Account'));
@@ -27,8 +28,8 @@ export const HomeworkInfo = (props) => {
             const parentNode1 = document.getElementById('homeworkMore' + index);//三个点更多功能
             const parentNode2 = document.getElementById('homeworkAnnex' + index);//点击作业附件框内
             const parentNode3 = document.getElementById('submitHomeworkBt' + index)//提交作业按钮
-            if (((!parentNode1 && !parentNode2 && parentNode3) && (parentNode1 === null || !parentNode1.contains(e.target)) && (parentNode2 === null || !parentNode2.contains(e.target)))
-                || ((parentNode1 && parentNode2 && !parentNode3) && (parentNode3 === null || !parentNode3.contains(e.target)))) {
+            if (((!parentNode1 && !parentNode2 && parentNode3 == null) && (parentNode1 === null || !parentNode1.contains(e.target)) && (parentNode2 === null || !parentNode2.contains(e.target)))
+                || ((parentNode1 == null && parentNode2 == null && !parentNode3) && (parentNode3 === null || !parentNode3.contains(e.target)))) {
                 //跳转作业详情页
                 navigate('/HomeworkRating', {
                     state: {
@@ -52,34 +53,25 @@ export const HomeworkInfo = (props) => {
 
     //删除当前作业
     function delHomework() {
-        delHomeworkInfo(index);
+        const msg = {
+            api: 'delhomework',
+            work_id: data.id,
+            sub_id: subData.code
+        };
+        (async () => {
+            const res = await new Promise((resolve, reject) => {
+                Send(msg, res => {
+                    resolve(res);
+                })
+            });
+            if (res.status) {
+                RefreshHomeworks();
+            }
+        })();
+
     }
 
     const [editHomework, setEditHomework] = useState(props.homeworkData);
-    function handleInputChange(e) {
-        const value = e.target.value;
-        const id = e.target.id;
-        setEditHomework(prevState => {
-            return {
-                ...prevState,
-                [id]: value
-            }
-        });
-    }
-
-    useEffect(() => {
-        //当isOK为true时，保存编辑后的信息
-        if (isOK) {
-            new Promise((resolve, reject) => {
-                updateHomeworkInfo(index, editHomework);
-                resolve();
-            }).then(() => {
-                console.log(allHomeworkInfo);
-                console.log(props.homeworkData);
-            })
-        }
-    }, [isOK])
-
 
 
     return (<>
@@ -105,7 +97,8 @@ export const HomeworkInfo = (props) => {
                                 data-bs-toggle="modal"
                                 data-bs-target={"#editHomework" + index}
                                 onClick={() => {
-                                    setEditHomework(props.homeworkData);
+                                    console.log(props.homeworkData);
+                                    setEditHomework({ ...props.homeworkData });
                                 }}
                             >
                                 编辑
@@ -124,8 +117,9 @@ export const HomeworkInfo = (props) => {
                             title: "作业编辑",
                             id: "editHomework" + index
                         }} homeworkDetailsData={editHomework}
-                            handleInputChange={handleInputChange}
                             setIsOK={setIsOK}
+                            isOK={isOK}
+                            RefreshHomeworks={props.RefreshHomeworks}
                         />
                         <FilingModal data={{
                             title: "要删除此作业吗？",
@@ -159,7 +153,7 @@ export const HomeworkInfo = (props) => {
             </div>
             {Util.isTeacher(user_Account.data.identity) &&
                 <div id={'homeworkAnnex' + index} className={`${styles.homeworkAnnex}`}>
-                    <FileItems index={index} filePaths={filePaths} />
+                    <FileItems index={index} filePaths={data.annex_file_paths} />
                 </div>
             }
             <div className={`${styles.homeworkDeadline}`}>
