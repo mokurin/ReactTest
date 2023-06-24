@@ -37,7 +37,7 @@ export function Send(msg, callback) {
 }
 
 //连接后运行
-export function afterOpen(callback) {
+export function afterOpen(callback, outTimeCallback) {
     (async () => {
         let outTime = 0;
         while (socket.readyState !== socket.OPEN && outTime < 3000) {
@@ -47,5 +47,6 @@ export function afterOpen(callback) {
 
         if (outTime < 3000)
             callback();
+        else outTimeCallback();
     })();
 }

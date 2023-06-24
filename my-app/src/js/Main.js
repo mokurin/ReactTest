@@ -64,6 +64,9 @@ function Main(props) {
                         alert(msg.errcode);
                     }
                 })
+            }, () => {
+                //连接超时则加载到登录页面
+                navigate('/Login');
             });
         } else {
             //未登录则加载到登录页面
