@@ -15,4 +15,9 @@
     border-radius: 5px;
     width: 100%;
     background-color: rgb(170, 170, 170);
+    display: none
+}
+
+.progressBarIn {
+    background-color: #3385d6;
 }
