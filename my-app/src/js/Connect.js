@@ -39,12 +39,13 @@ export function Send(msg, callback) {
 //连接后运行
 export function afterOpen(callback) {
     (async () => {
-        let time = 0;
-        while (socket.readyState !== socket.OPEN && time < 3000) {
+        let outTime = 0;
+        while (socket.readyState !== socket.OPEN && outTime < 3000) {
             await new Promise(resolve => setTimeout(resolve(), 1));
-            time++;
+            outTime++;
         }
 
-        callback();
+        if (outTime < 3000)
+            callback();
     })();
 }
