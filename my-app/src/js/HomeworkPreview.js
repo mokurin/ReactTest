@@ -6,9 +6,9 @@ import { Send } from './Connect'
 import icon_back from '../img/arrow-left.svg'
 
 const WorkPreviewNav = (props) => {
-    const [value, setValue] = useState(props.info.grade);
+    const [value, setValue] = useState(props.info.annexFile.score);
     const navigate = useNavigate();
-
+    console.log(props);
     //页面刷新，重新加载
     useEffect(() => {
 
@@ -17,11 +17,10 @@ const WorkPreviewNav = (props) => {
     // 发送该的作业分数
     function sendScore() {
         const msg = {
-            api: 'workrating',
-            sumitter_email: "",                     //学生ID
-            homework_id: "",                        //作业ID
-            graded: true,                           //是否批阅
-            score: ""                               //分数
+            api: 'gradework',
+            user_email: props.info.email,                                           //学生ID
+            work_id: "",                                                            //作业ID
+            grade: document.getElementById("score").value                               //分数
         }
         Send(msg, (msg) => {
             if (msg.status)
@@ -47,13 +46,18 @@ const WorkPreviewNav = (props) => {
             </div>
             <div className="collapse shadow-lg" id="collapseExample">
                 <div className="card card-body">
-                    Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+                    {props.comments}
                 </div>
             </div>
         </div>
         <div className={`${styles.workPreviewNav}`}>
-            <div>打分</div>
-            <input type="number" className="form-control" id="staticEmail" placeholder="请输入分数"
+            <div><button className='btn btn-outline-primary btn-sm'
+                onClick={() => {
+                    console.log(props.info.email);
+                    console.log(document.getElementById("score").value);
+                }}
+            >确认打分</button></div>
+            <input type="number" className="form-control" id="score" placeholder="请输入分数"
                 min={0}
                 max={100}
                 value={value}
@@ -74,29 +78,47 @@ const WorkPreviewNav = (props) => {
 function FileView() {
     const docs = [
         // { uri: ["url1 ","url2 ",] },                               //服务器文件?
-        { uri: require("../file/sqlDetail.pdf") }    // 本地文件
+        { uri: require("../file/sqlDetail.pdf") }                     // 本地文件
     ];
 
     return <DocViewer documents={docs} pluginRenderers={DocViewerRenderers} />;
 }
 
+const ShowFiles = (props) => {
+    const annexFile = props.annexFile
+
+    return (<>
+        <div className={`fs-1 ${styles.filePath} rounded shadow`}>
+            {annexFile.annexfilepaths}
+        </div>
+    </>)
+}
+
+
 export default function HomeworkPreview() {
     const location = useLocation();
-    const state = (location.state == null || location.state == undefined) ? "" : location.state
-
-    let info = {
-        maxGrade: state.maxGrade,
-        filePathL: state.filePath
+    //静态数据
+    let staticData = {
+        maxGrade: "100",
+        annexFile: {
+            annexfilepaths: "[AAA,BBB,CCC]",
+            comments: "作业留言：ABCDEFG",
+            graded: false,
+            score: "80"
+        },
+        email: "xxx@qq.com",
+        workid:"1"
     }
 
+    const state = (location.state == null || location.state == undefined) ? staticData : location.state
+
     const [status, setStatus] = useState(false)
-    const [n, setN] = useState(0)
 
     return (<>
         <div className={`${styles.HomeworkPreview}`}>
-            <WorkPreviewNav info={state} />
-            {/* <FileView filePath={state.filePath} /> */}
-            {status && <><div>{n}</div></>}
+            <WorkPreviewNav info={state} comments={state.annexFile.comments} />
+            {/* <FileView filePath={state.annexFile} /> */}
+            <ShowFiles annexFile={state.annexFile} />
         </div>
     </>)
 }
