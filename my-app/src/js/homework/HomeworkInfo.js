@@ -23,18 +23,20 @@ export const HomeworkInfo = (props) => {
 
     //单击作业
     function handleNav(e) {
-        const parentNode1 = document.getElementById('homeworkMore' + index);//三个点更多功能
-        const parentNode2 = document.getElementById('homeworkAnnex' + index);//点击作业附件框内
-        const parentNode3 = document.getElementById('submitHomeworkBt' + index)//提交作业按钮
-        if (((parentNode1 !== null && parentNode2 !== null && parentNode3 === null) && (parentNode1 === null || !parentNode1.contains(e.target)) && (parentNode2 === null || !parentNode2.contains(e.target)))
-            || ((parentNode1 === null && parentNode2 === null && parentNode3 !== null) && (parentNode3 === null || !parentNode3.contains(e.target)))) {
-            //跳转作业详情页
-            navigate('/HomeworkRating', {
-                state: {
-                    subData: props.subData,
-                    homeworkData: props.homeworkData
-                }
-            })
+        if (Util.isTeacher(user_Account.data.identity)) {
+            const parentNode1 = document.getElementById('homeworkMore' + index);//三个点更多功能
+            const parentNode2 = document.getElementById('homeworkAnnex' + index);//点击作业附件框内
+            const parentNode3 = document.getElementById('submitHomeworkBt' + index)//提交作业按钮
+            if (((!parentNode1 && !parentNode2 && parentNode3) && (parentNode1 === null || !parentNode1.contains(e.target)) && (parentNode2 === null || !parentNode2.contains(e.target)))
+                || ((parentNode1 && parentNode2 && !parentNode3) && (parentNode3 === null || !parentNode3.contains(e.target)))) {
+                //跳转作业详情页
+                navigate('/HomeworkRating', {
+                    state: {
+                        subData: props.subData,
+                        homeworkData: props.homeworkData
+                    }
+                })
+            }
         }
     }
 
