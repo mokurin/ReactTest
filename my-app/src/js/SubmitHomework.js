@@ -61,7 +61,6 @@ const SubmitHomeworkMain = (props) => {
     const s = location.state;
     const email = (s !== null && s !== undefined) ? s.email : '';
 
-
     //文件上传
     const handleUploadFiles = () => {
         // 把文件切成块
@@ -120,9 +119,9 @@ const SubmitHomeworkMain = (props) => {
     // 发送留言
     function submitMessage() {
         const msg = {
-            api: '',
-            email: email,
-            message: message
+            api: 'subwork',
+            homework: { work_id: props.homeworkData.data.id, comments: message },
+            annex_files: [],
         }
         Send(msg, (msg) => {
             if (msg.status)
@@ -210,7 +209,7 @@ export default function SubmitHomework(props) {
     const user_Account = JSON.parse(localStorage.getItem('user_Account'));//用户数据
 
     return (<>
-        <SubjectCheckNav action="提交作业" />
+        <SubjectCheckNav action="提交作业" subData={subData} homeworkData={homeworkData} />
         <SubmitHomeworkMain />
     </>)
 }
