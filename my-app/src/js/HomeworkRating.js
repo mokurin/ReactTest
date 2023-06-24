@@ -16,8 +16,8 @@ import { Send } from './Connect'
 
 //单个 作业人员
 const HomeworkMemberInfo = (props) => {
-    console.log("aaaaaaaaaaa");
-    console.log(props.work.score);
+    // console.log("aaaaaaaaaaa");
+    // console.log(props.work.score);
     //             annexfilepaths: "",
     //             comments: "",
     //             graded: false,
