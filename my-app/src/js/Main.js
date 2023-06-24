@@ -135,8 +135,8 @@ function Main(props) {
                     user_Account.data.archived_subject_ids);//重新获取所有信息
 
                 document.getElementById('joinTip').innerHTML = '加入成功';
-            }
-            document.getElementById('joinTip').innerHTML = res.errcode;
+            } else
+                document.getElementById('joinTip').innerHTML = res.errcode;
         })();
     }
 
