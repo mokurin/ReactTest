@@ -30,7 +30,7 @@ const HomeworkMemberInfo = (props) => {
                     {props.info.name}
                 </div>
                 <div className={`text-truncate`} id="isSumitted">
-                    {props.workData == undefined ? "未交" : (props.workData.graded ? props.workData.score : "未批")}
+                    {props.workData.annexfilepaths.length == 0 ? "未交" : (props.workData.graded ? props.workData.score : "未批")}
                 </div>
             </div>
             <button className={`btn btn-outline-secondary btn-sm ${styles.checkThisHomework}`}
