@@ -121,7 +121,7 @@ export const SubjectCheckMainMembers = (props) => {
 
     }
     useEffect(() => {
-        if (status) {
+        if (!status) {
             addItems()
         }
     }, [status])
