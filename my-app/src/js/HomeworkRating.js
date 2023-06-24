@@ -16,9 +16,9 @@ import { Send } from './Connect'
 
 //单个 作业人员
 const HomeworkMemberInfo = (props) => {
-    // console.log("aaaaaaaaaaa");
-    // console.log(props.work.score);
+    // console.log(props.work);
     //             annexfilepaths: "",
+    //             annexfilepaths
     //             comments: "",
     //             graded: false,
     //             score: ""
@@ -34,7 +34,7 @@ const HomeworkMemberInfo = (props) => {
                     {props.info.name}
                 </div>
                 <div className={`text-truncate`} id="isSumitted">
-                    {props.work.annexfilepaths.length == 0 ? "未交" : (props.work.graded ? props.work.score : "未批")}
+                    {(props.work == null || props.work.filepaths.length == 0) ? "未交" : (props.work.graded ? props.work.score : "未批")}
                 </div>
             </div>
             <button className={`btn btn-outline-secondary btn-sm ${styles.checkThisHomework}`}
@@ -48,7 +48,12 @@ const HomeworkMemberInfo = (props) => {
                     }
 
                     navigate("/HomeworkPreview", {
-                        state: { maxGrade: props.maxGrade, annexFile: props.workData, email: props.email, workid: props.workid }
+                        state: {
+                            maxGrade: props.maxGrade,   //最大成绩
+                            annexFile: props.work,      //学生附件
+                            email: props.email,         //学生email
+                            workid: props.workid        //作业id
+                        }
                     })
                 }}>
                 进入批阅
@@ -117,7 +122,6 @@ const HomeworkDetailed = (props) => {
         event.preventDefault(); // 阻止默认行为
         // 执行你的逻辑，例如重新执行 getHomeworkMembers
     }
-
 
     // 接受 已批 未批 未交 人数 数组
     let nums = (props.homeworkData == null || props.homeworkData == undefined) ? [1, 1, 1] : props.homeworkData.interaction;
@@ -222,7 +226,7 @@ const HomeworkDetailed = (props) => {
             let temp = [];
             //初始未交作业
             const workInfo = {
-                annexfilepaths: "",
+                filepaths: [],
                 comments: "",
                 graded: false,
                 score: ""
@@ -242,7 +246,7 @@ const HomeworkDetailed = (props) => {
                                 resolve();
                         }
                         else {
-                            temp.push({...workInfo})
+                            temp.push({ ...workInfo })
                             console.log(msg.errcode);
                             if (i == stuMembers.length - 1)
                                 resolve();

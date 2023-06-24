@@ -237,11 +237,14 @@ const SubmitHomeworkMain = (props) => {
                             onClick={(e) => {
                                 const toastLiveExample = document.getElementById('liveToast')
                                 const toast = new bootstrap.Toast(toastLiveExample, { delay: 1000 })
-                                // 上传文件为空
-                                if (fileList.length === 0) {
-                                    toast.show()
-                                    return;
-                                }
+
+                                // // 上传文件为空
+                                // if (fileList.length === 0) {
+                                //     toast.show()
+                                //     return;
+                                // }
+
+
                                 setTime(e.target);
                                 submitHomework();
                             }}

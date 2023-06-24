@@ -8,6 +8,7 @@ import icon_back from '../img/arrow-left.svg'
 const WorkPreviewNav = (props) => {
     const [value, setValue] = useState(props.info.annexFile.score);
     const navigate = useNavigate();
+    console.log("bbbbbbb");
     console.log(props);
     //页面刷新，重新加载
     useEffect(() => {
@@ -20,7 +21,7 @@ const WorkPreviewNav = (props) => {
             api: 'gradework',
             user_email: props.info.email,                                           //学生ID
             work_id: props.info.workid,                                                            //作业ID
-            grade: document.getElementById("score").value                               //分数
+            grade: Number(document.getElementById("score").value)                               //分数
         }
         Send(msg, (msg) => {
             if (msg.status)
@@ -78,7 +79,7 @@ const WorkPreviewNav = (props) => {
 
 function FileView() {
     const docs = [
-        // { uri: ["url1 ","url2 ",] },                               //服务器文件?
+        // { uri: ["url1 ","url2 ",] },                               //服务器文件
         { uri: require("../file/sqlDetail.pdf") }                     // 本地文件
     ];
 
@@ -89,8 +90,8 @@ const ShowFiles = (props) => {
     const annexFile = props.annexFile
 
     return (<>
-        <div className={`fs-1 ${styles.filePath} rounded shadow`}>
-            {annexFile.annexfilepaths}
+        <div className={`fs-5 ${styles.filePath} rounded shadow`}>
+            {annexFile.filepaths}
         </div>
     </>)
 }
@@ -112,7 +113,7 @@ export default function HomeworkPreview() {
     }
 
     const state = (location.state == null || location.state == undefined) ? staticData : location.state
-
+    console.log(state);
     const [status, setStatus] = useState(false)
 
     return (<>

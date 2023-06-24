@@ -14,6 +14,7 @@ socket.onopen = () => {
         const msg = JSON.parse(jsonString.data);
         console.log('接收内容：');
         console.log(msg);
+        console.log(msg.type === "csc");
         if (msg.type === "csc") {//向服务器请求后的返回
             task_queue.shift()(msg);
         } else { // 服务器主动发送的数据
