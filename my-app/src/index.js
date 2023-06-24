@@ -19,7 +19,6 @@ import IndividualSubjectCheck from './js/IndividualSubjectCheck'; //课程成员
 import SubmitHomework from './js/SubmitHomework'; //学生提交作业
 import HomeworkRating from './js/HomeworkRating';
 import HomeworkPreview from './js/HomeworkPreview';
-import Test from './js/Test'
 
 
 ReactDOM.createRoot(document.getElementById("root")).render((

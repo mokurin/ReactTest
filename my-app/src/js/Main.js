@@ -257,7 +257,7 @@ function Main(props) {
 
                     {/* 创建课程 */}
                     {(() => {
-                        if (Util.isTeacher(user_Account.data.identity)) {
+                        if (Util.isTeacher((user_Account) ? 's' : user_Account.data.identity)) {
                             return (
                                 <>
                                     <div className={`${styles.subject} ${styles.no_select} shadow`}
