@@ -65,8 +65,6 @@ export default function SubjectDetailedInfo(props) {
                 Send(msg, res => {
                     if (res.status) {
                         subData.data = res.subject;
-                        console.log('新课程数据');
-                        console.log(subData.data);
                         resolve();
                     } else {
                         console.log(res.errcode);
@@ -114,7 +112,7 @@ export default function SubjectDetailedInfo(props) {
             </div>
             <div className={`${styles.homeworkTable}`}>
                 {Util.isTeacher(user_Account.data.identity) && <PostHomework subData={subData} isEdit={false} RefreshHomeworks={RefreshHomeworks} />}
-                <HomeworkItems subData={subData} setAllHomeworkInfo={setAllHomeworkInfo} allHomeworkInfo={allHomeworkInfo} />
+                <HomeworkItems RefreshHomeworks={RefreshHomeworks} subData={subData} setAllHomeworkInfo={setAllHomeworkInfo} allHomeworkInfo={allHomeworkInfo} />
             </div>
         </div>
     </>);

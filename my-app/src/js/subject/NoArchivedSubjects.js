@@ -56,8 +56,6 @@ export function updateSubject(sub) {
                 term: sub.createdTime,
                 title: sub.name,
                 klass_ids: sub.class.split(','),
-                teacher_emails: sub.data.teacher_emails,
-                student_emails: sub.data.student_emails,
                 homework_ids: sub.data.homework_ids
             }
         }

@@ -1,6 +1,6 @@
 import React from 'react';
 //组件
-import File from '../files/MiniMap'
+import File from './MiniMap'
 //图标
 import icon_word from '../../img/file-earmark-word.svg'
 import icon_PDF from '../../img/file-earmark-pdf.svg'

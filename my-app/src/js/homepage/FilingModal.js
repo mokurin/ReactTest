@@ -213,7 +213,8 @@ const BodyEdit = (props) => {
         </form>)
     } else if (props.mode === 'editHomework') {
         content = (
-            <PostHomework homeworkDetailsData={props.homework} isEdit={true} handleInputChange={props.handleInputChange} />
+            <PostHomework RefreshHomeworks={props.RefreshHomeworks} isOK={props.isOK}
+                homeworkDetailsData={props.homework} isEdit={true} />
         )
     }
     return (
@@ -297,7 +298,7 @@ function FilingModal(props) {
 
                         {props.data.id.includes("filingSubject") && <BodyContent />}
                         {props.data.id.includes("editSubject") && <BodyEdit mode={'editSubject'} handleInputChange={props.handleInputChange} sub={props.sub} index={props.data.id.substring(11)} />}
-                        {props.data.id.includes("editHomework") && <BodyEdit mode={'editHomework'} handleInputChange={props.handleInputChange} homework={props.homeworkDetailsData} index={props.data.id.substring(12)} />}
+                        {props.data.id.includes("editHomework") && <BodyEdit RefreshHomeworks={props.RefreshHomeworks} isOK={props.isOK} mode={'editHomework'} homework={props.homeworkDetailsData} index={props.data.id.substring(12)} />}
                         {props.data.id.includes("createSubject") && <BodyCreate handleInputChange={props.handleInputChange} />}
 
                         <div className="modal-footer">

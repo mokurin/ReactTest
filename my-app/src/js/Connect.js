@@ -40,7 +40,7 @@ export function Send(msg, callback) {
 export function afterOpen(callback, outTimeCallback) {
     (async () => {
         let outTime = 0;
-        while (socket.readyState !== socket.OPEN && outTime < 3000) {
+        while (socket.readyState !== socket.OPEN && outTime < 5000) {
             await new Promise(resolve => setTimeout(resolve(), 1));
             outTime++;
         }

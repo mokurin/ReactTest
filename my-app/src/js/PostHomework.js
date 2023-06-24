@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useImperativeHandle, useState } from 'react';
 
 // css引用
 import styles from '../css/PostHomework.module.css'
 
 import { Upload } from 'antd';
 import { Send } from './Connect'
-import { useLocation } from 'react-router';
 import { getTime, formatTimestamp } from './Util'
 
 
 //发布作业组件
 export default function PostHomework(props) {
-    const { subData, fileListData, homeworkDetailsData, isEdit, handleInputChange, RefreshHomeworks } = props;
+    const { isOK, subData, homeworkDetailsData, isEdit, RefreshHomeworks } = props;
     const [fileList, setFileList] = useState([]);
     const [homeworkDetails, setHomeworkDetails] = useState((homeworkDetailsData === null || homeworkDetailsData === undefined) ?
         {
@@ -21,7 +20,32 @@ export default function PostHomework(props) {
             maxGrade: '',
             fileNames: [],
             interaction: [0, 0, 0]
-        } : homeworkDetailsData)
+        } : homeworkDetailsData);
+
+    useEffect(() => {
+        resetFileList();
+    }, []);
+
+    //重置文件列表
+    function resetFileList() {
+        let fileListData = [];
+        if ((homeworkDetailsData !== null && homeworkDetailsData !== undefined))
+            fileListData = homeworkDetailsData.data.annex_file_paths;
+        let filenames = [];
+        for (let i = 0; i < fileListData.length; i++) {
+            filenames.push({
+                name: fileListData[i].split('~')[1]
+            })
+        }
+        setFileList(filenames);
+    }
+
+    useEffect(() => {
+        if (isEdit) {
+            setHomeworkDetails({ ...homeworkDetailsData });
+            resetFileList();
+        }
+    }, [homeworkDetailsData])
 
     //更改上传的文件列表
     const handleFilesChange = ({ fileList }) => {
@@ -43,6 +67,11 @@ export default function PostHomework(props) {
             for (let i = 0; i < fileList.length; i++) {
                 // 把文件切成块
                 const file = fileList[i].originFileObj;
+                if (file === undefined) {
+                    if (i !== fileList.length - 1)
+                        continue;
+                    else resolve();
+                }
                 const chunkSize = 1024 * 1024; // 1MB
                 const chunks = Math.ceil(file.size / chunkSize);
                 console.log('总块数：' + chunks);
@@ -102,17 +131,29 @@ export default function PostHomework(props) {
     //上传作业信息
     function handleUploadHomeworkInfo() {
         if (isEdit) {//编辑作业
-            const msg = {
-                api: '',
-                homeworkName: homeworkDetails.homeworkName,
-                homeworkIntroduce: homeworkDetails.homeworkIntroduce,
-                deadline: homeworkDetails.deadline,
-                maxGrade: homeworkDetails.maxGrade
+            homeworkDetails.fileNames = [];
+            for (let i = 0; i < fileList.length; i++) {
+                homeworkDetails.fileNames[i] = {
+                    filename: (fileList[i].originFileObj === undefined) ? fileList[i].name : fileList[i].originFileObj.name,
+                    filesize: (fileList[i].originFileObj === undefined) ? 0 : fileList[i].originFileObj.size
+                };
             }
-            Send(msg, (msg) => {
-                if (msg.status)
-                    console.log('upload homeworkInfo finished');
-            });
+            const msg = {
+                api: 'updateworkinfo',
+                homework: {
+                    id: homeworkDetailsData.data.id,
+                    title: homeworkDetails.homeworkName,
+                    desc: homeworkDetails.homeworkIntroduce,
+                    deadline: homeworkDetails.deadline,
+                    max_score: homeworkDetails.maxGrade,
+                    annex_files: homeworkDetails.fileNames,
+                }
+            }
+            return new Promise((resolve, reject) => {
+                Send(msg, (msg) => {
+                    resolve(msg);
+                });
+            })
         } else {//创建作业
             homeworkDetails.fileNames = [];
             for (let i = 0; i < fileList.length; i++) {
@@ -140,26 +181,37 @@ export default function PostHomework(props) {
         }
     }
 
-    function getFileList() {
-        //请求文件列表（文件名、文件大小）
-
-    }
+    useEffect(() => {
+        //当isOK为true时，保存编辑后的信息
+        if (isOK) {
+            (async () => {
+                await submitHomework();
+                // saveEdit();
+            })();
+        }
+    }, [isOK]);
 
     //提交作业
-    function submitHomework() {
-        (async () => {
-            //提交作业信息
-            const res = await handleUploadHomeworkInfo();
-            if (res.status) {
-                if (fileList.length !== 0)
-                    await handleUploadFiles(res.filepaths);
-            }
+    const submitHomework = () => {
+        return new Promise((resolve, reject) => {
+            (async () => {
+                //提交作业信息
+                const res = await handleUploadHomeworkInfo();
+                if (res.status) {
+                    if (fileList.length !== 0) {
+                        //上传作业
+                        await handleUploadFiles(res.filepaths);
+                    }
+                }
 
-            //刷新作业
-            RefreshHomeworks();
-            //重置作业发布框
-            reset();
-        })();
+                //刷新作业
+                RefreshHomeworks();
+                if (!isEdit)
+                    //重置作业发布框
+                    reset();
+                resolve();
+            })();
+        })
     }
 
     //输入框变化
@@ -172,9 +224,6 @@ export default function PostHomework(props) {
                 [id]: id === 'deadline' ? getTime(value) : value
             }
         })
-        if (handleInputChange !== undefined && handleInputChange !== null) {
-            handleInputChange(e);
-        }
     }
 
     //重置内容
