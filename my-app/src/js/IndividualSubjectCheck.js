@@ -43,6 +43,7 @@ function checkedAll() {
 }
 // 批量删除
 function deletedMembers(e) {
+    
     let membersChecked = document.getElementsByClassName(styles.individualMember)
 
     if (membersChecked) {
@@ -366,7 +367,7 @@ export const SubjectTeacherInfo = (props) => {
                     {props.status == "c" ? "管理员" : "助教管理员"}
                 </div>
             </div>
-            {Util.isTeacher(user_Account.data.identity) &&
+            {/* {Util.isTeacher(user_Account.data.identity) &&
                 <button className={`btn btn-outline-secondary btn-sm ${styles.deleteThisMember}`} id='techerDeleted'
                     onClick={(e) => {
                         if (document.getElementsByClassName(styles.teacherMemberInfo).length == 1)
@@ -376,7 +377,7 @@ export const SubjectTeacherInfo = (props) => {
                         deleteSelf(e)
                     }}
                 >删除</button>
-            }
+            } */}
         </div>
     </>)
 }
