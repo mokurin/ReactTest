@@ -16,19 +16,21 @@ import { Send } from './Connect'
 
 //单个 作业人员
 const HomeworkMemberInfo = (props) => {
-    const navigate = useNavigate();
+    console.log("aaaa");
+    console.log(props);
+    const navigate = useNavigate()
 
     return (<>
         <div className={`${styles.homeworkMemberInfo} shadow-sm`}>
             <div className='fs-5'>
                 <div className={`text-truncate`}>
-                    {props.info.stuNum}
+                    {props.info.id}
                 </div >
                 <div className={`text-truncate`}>
-                    {props.info.stuName}
+                    {props.info.name}
                 </div>
                 <div className={`text-truncate`} id="isSumitted">
-                    {props.info.submittedHW.length != 0 ? (props.info.grade.length != 0 ? props.info.grade + "/" + props.maxGrade : "未批") : "未交"}
+                    {props.workData == undefined ? "未交" : (props.workData.graded ? props.workData.score : "未批")}
                 </div>
             </div>
             <button className={`btn btn-outline-secondary btn-sm ${styles.checkThisHomework}`}
@@ -42,10 +44,9 @@ const HomeworkMemberInfo = (props) => {
                     }
 
                     navigate("/HomeworkPreview", {
-                        state: { maxGrade: props.maxGrade, filePath: props.info.submittedHW, grade: props.info.grade }
+                        state: { maxGrade: props.maxGrade, annexFile: props.workData, email: props.email, workid: props.workid }
                     })
-                }}
-            >
+                }}>
                 进入批阅
             </button>
         </div>
@@ -79,10 +80,6 @@ const HomeworkDetailed = (props) => {
         }
     }, [condition])
 
-    // 所有学生及其作业
-    const [reqMemInfo, setReqMemInfo] = useState([]);
-    const [reqIndwork, setReqIndwork] = useState([]);
-
     // 渲染前接收数据
     useEffect(() => {
         if (props.subData == null || props.subData == undefined) {
@@ -93,10 +90,7 @@ const HomeworkDetailed = (props) => {
         }
 
         getHomeworkMembers();
-
-
     }, [])
-
 
     // 发送请求 接收数据
     function getHomeworkMembers() {
@@ -122,9 +116,6 @@ const HomeworkDetailed = (props) => {
 
 
     // 接受 已批 未批 未交 人数 数组
-    // let nums = [1,1,1];
-
-
     let nums = (props.homeworkData == null || props.homeworkData == undefined) ? [1, 1, 1] : props.homeworkData.interaction;
     // 筛选  ------------------------------------------------------------------------------------
     // 数组 存放每条成绩
@@ -153,7 +144,7 @@ const HomeworkDetailed = (props) => {
             item.style.display = 'flex';
         });
     }
-    //所有成员成绩--------------------------------------------------------------------------------
+    //静态数据  所有成员成绩--------------------------------------------------------------------------------
     let allMemGrades = [{
         stuNum: "11111111",
         stuName: "许宏涛",
@@ -178,17 +169,6 @@ const HomeworkDetailed = (props) => {
         grade: "",
         comment: ""
     }];
-
-    // 单条学生作业信息
-    let stuGrade = {
-        stuNum: "",                     //学号
-        stuName: "",                    //学生名字
-        submittedHW: "",                //作业 文件
-        isGraded: "",                   //是否批阅
-        grade: "",                      //成绩   
-        comment: ""                     //留言
-    }
-
     // 作业信息
     let hwInfo = {
         has_graded: nums[0],                                  //已交成员
@@ -197,15 +177,102 @@ const HomeworkDetailed = (props) => {
         max_score: (props.homeworkData == null || props.homeworkData == undefined) ? 100 : props.homeworkData.maxGrade                                         //满分值
     }
 
+    //学生成员邮箱
+    const stuMembers = props.subData.data.student_emails;
+    // 学生信息
+    const [stuMems, setStuMems] = useState([]);
+    // 作业信息
+    const [workData, setWorkData] = useState([]);
+
+    function getSubMem() {
+        let temp = [];
+
+        (async () => {
+            await new Promise((resolve, reject) => {
+                for (let i = 0; i < stuMembers.length; i++) {
+                    const msg = {
+                        api: "requserinfo",
+                        email: stuMembers[i],
+                    }
+                    Send(msg, (msg) => {
+                        if (msg.status) {
+                            console.log("请求成功");
+                            temp.push(msg.userdata)
+                            if (i == stuMembers.length - 1)
+                                resolve();
+                        }
+                        else {
+                            console.log(msg.errcode);
+                        }
+                    })
+
+                }
+            });
+
+            setStuMems(temp)
+        })();
+    }
+
+    function getWorkData() {
+        (async () => {
+            let temp = [];
+            //初始未交作业
+            const workInfo = {
+                annexfilepaths: "",
+                comments: "",
+                graded: false,
+                score: ""
+            };
+            await new Promise((resolve, reject) => {
+                for (let i = 0; i < stuMembers.length; i++) {
+                    const msg = {
+                        api: "reqsubedworkinfo",
+                        work_id: props.homeworkData.data.id,
+                        user_email: stuMembers[i],
+                    }
+                    Send(msg, (msg) => {
+                        if (msg.status) {
+                            console.log("所有作业请求成功");
+                            temp.push(msg.workinfo)
+                            if (i == stuMembers.length - 1)
+                                resolve();
+                        }
+                        else {
+                            temp.push({...workInfo})
+                            console.log(msg.errcode);
+                            if (i == stuMembers.length - 1)
+                                resolve();
+                        }
+                    })
+
+                }
+
+            });
+
+            setWorkData(temp)
+        })();
+    }
+
+    useEffect(() => {
+        getSubMem();
+        getWorkData()
+    }, [])
+
+    useEffect(() => {
+        console.log("----------------------------");
+        console.log(workData);
+    }, [workData])
+
+
     //分隔线---------------------------------------------------------
     // 渲染成员
     function renderMembers() {
         let list = []
-        for (let i = 0; i < nums.length; i++) {
-            for (let j = 0; j < nums[i]; j++) {
-                list.push(<HomeworkMemberInfo info={allMemGrades[i]} maxGrade={hwInfo.max_score} key={`person${i}${j}`} />)
-            }
+
+        for (let i = 0; i < stuMems.length; i++) {
+            list.push(<HomeworkMemberInfo info={stuMems[i]} work={workData[i]} maxGrade={hwInfo.max_score} email={stuMembers[i]} key={i} workid={props.homeworkData.data.id} />)
         }
+
         const memberComponents = list.map(component => component)
         return memberComponents
     }
@@ -277,7 +344,7 @@ const HomeworkDetailed = (props) => {
                 <div className={``}>
                     <button className={`btn btn-outline-secondary btn-lg`}
                         onClick={(e) => {
-                            renderMembers();
+                            // renderMembers();
 
                             //发送消息
 

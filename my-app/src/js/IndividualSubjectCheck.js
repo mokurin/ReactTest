@@ -63,16 +63,6 @@ function deletedMembers(e) {
     }
 }
 
-
-//学生信息构建方法
-function createdStuInfo(stuNum, name, eMail) {
-    return {
-        stuNum: stuNum,
-        name: name,
-        eMail: eMail
-    }
-}
-
 //导航栏
 export const SubjectCheckNav = (props) => {
     const navigate = useNavigate()
@@ -109,27 +99,14 @@ export const SubjectCheckNav = (props) => {
 export const SubjectCheckMainMembers = (props) => {
     // 老师成员和学生成员切换
     const [status, setStatus] = useState(true);
+    const { teaMembers, stuMembers, setTeaMember, setStuMembers } = props
 
-    // 老师 学生 数据
-    const [teaMembers, setTeaMember] = useState([]);
-    const [stuMembers, setStuMembers] = useState([]);
+    useEffect(() => {
+    }, [teaMembers])
 
-    // 请求成员
-    function sendScore() {
-        const msg = {
-            api: '',
-        }
-        Send(msg, (msg) => {
-            if (msg.status)
-                console.log('success');
-            // 数据接收部分
 
-        });
-    }
-
-    // ---------- 渲染成员方法 ----------
-
-    // 成员列表
+    //  ----- 检索 -----
+    //  成员列表
     let listItems = []
 
     let stuItems = document.getElementsByClassName(styles.SubjectMemberInfo)
@@ -169,7 +146,6 @@ export const SubjectCheckMainMembers = (props) => {
                 <input type="text" className={`form-control ${styles.subjectMemberInfoSearchInput}`} maxLength="30"
                     placeholder='姓名、学号' id="search"
                     onChange={(e) => {
-                        // console.log(e.target.value);
                         searchItem(e.target.value)
                     }}
                 />
@@ -183,21 +159,39 @@ export const SubjectCheckMainMembers = (props) => {
                         onClick={(e) => {
                             setStatus(false)
                         }}
-                    >教师团队 () {/* 从后端拿数据提前渲染 */} </div>
+                    >教师团队 ({teaMembers.length}) {/* 从后端拿数据提前渲染 */} </div>
                     <div className={`${styles.subjectMemberStudents}`}
                         onClick={(e) => {
                             setStatus(true)
                         }}
-                    >全部学生 () {/* 从后端拿数据提前渲染 */} </div>
+                    >全部学生 ({stuMembers.length}) {/* 从后端拿数据提前渲染 */} </div>
                 </div>
                 {/* 老师 和 学生 显示区域 */}
-                {status ? <StuManaged /> : <TeacherManaged />}
+                {status ? <StuManaged stuMembers={stuMembers} stuMails={props.stuMails} /> : <TeacherManaged teaMembers={teaMembers} teaMails={props.teaMails} />}
             </div>
         </div>
     </>);
 }
 //学生管理区域
 const StuManaged = (props) => {
+    const { stuMembers } = props;
+    const stuMemsEmails = props.stuMails;
+
+    useEffect(() => {
+        // console.log("--------------------------------------------------");
+        // console.log(stuMembers);
+    }, [stuMembers])
+
+    function returnStuELes() {
+        let list = []
+        for (let i = 0; i < stuMembers.length; i++) {
+            list.push(<SubjectMemberInfo info={stuMembers[i]} email={stuMemsEmails[i]} key={i} />)
+        }
+
+        const memberComponents = list.map(component => component)
+        return memberComponents;
+    }
+
     return (<>
         <div className={`${styles.SubjectMemberInfoTable}`}>
             <div className={`${styles.SubjectMemberInfoTableNav}`}>
@@ -223,32 +217,63 @@ const StuManaged = (props) => {
                 {/* <FilingModal data={{ id: "deleteSubject", title: "是否确认删除这些信息?" }} /> */}
             </div>
             <div className={`${styles.SubjectAllMembers}`}>
-                <SubjectMemberInfo info={createdStuInfo("12123020406", "许宏涛", "Yomiger@163.com")} />
+                {returnStuELes()}
+                {/* <SubjectMemberInfo info={createdStuInfo("12123020406", "许宏涛", "Yomiger@163.com")} />
                 <SubjectMemberInfo info={createdStuInfo("12123020401", "宏涛", "Yomiger@163.com")} />
-                <SubjectMemberInfo info={createdStuInfo("12123020402", "许", "Yomiger@163.com")} />
+                <SubjectMemberInfo info={createdStuInfo("12123020402", "许", "Yomiger@163.com")} /> */}
             </div>
         </div>
     </>)
 }
 // 老师显示区域
 const TeacherManaged = (props) => {
+    const { teaMembers } = props;
+    const teaMemEmails = props.teaMails;
+
+
+    useEffect(() => {
+        console.log("--------------------------------------------------");
+        console.log(teaMembers);
+    }, [teaMembers])
+
+    function returnTeaELes() {
+        let list = []
+        for (let i = 0; i < teaMembers.length; i++) {
+            if (i == teaMembers.length - 1)
+                list.push(<SubjectTeacherInfo info={teaMembers[i]} email={teaMemEmails[i]} status="c" key={i} />)
+            else {
+                list.push(<SubjectTeacherInfo info={teaMembers[i]} email={teaMemEmails[i]} status="t" key={i} />)
+            }
+        }
+
+        const memberComponents = list.map(component => component)
+        return memberComponents;
+    }
+
+
     return (<>
         <div className={`${styles.SubjectAllTeachers}`}>
-            <div className={`${styles.SubjectMemberInfoTableNav}`}>
+            {/* <div className={`${styles.SubjectMemberInfoTableNav}`}>
                 <button className={`btn btn-outline-secondary btn-sm ms-2`}>
                     添加 助教/老师
                 </button>
-            </div>
-            <SubjectTeacherInfo />
-            <SubjectTeacherInfo />
-            <SubjectTeacherInfo />
-            <SubjectTeacherInfo />
+            </div> */}
+            {returnTeaELes()}
         </div>
     </>)
 }
 
 //单条学生成员信息
 export const SubjectMemberInfo = (props) => {
+    const location = useLocation();
+    const state = (location.state == null || location.state === undefined) ? "" : location.state;
+
+    //课程数据
+    let subData = state.subData;
+    console.log("-------------------------");
+    console.log(subData.data.id);
+
+
     //删除按钮事件
     function deleteSelf(e) {
         let deletedEle = e.target.parentNode
@@ -256,10 +281,25 @@ export const SubjectMemberInfo = (props) => {
         deletedMember.push(deletedEle)
         deletedEle.remove()
         checkNumsOfChecked()
+
+        document.getElementsByClassName(styles.subjectMemberStudents)[0].innerHTML = "全部学生 (" + document.getElementsByClassName(styles.SubjectMemberInfo).length + ")";
+
+
         // 后端部分
+        const msg = {
+            api: "erasesubmember",
+            sub_id: subData.data.id,
+            user_email: props.email
 
-
-
+        }
+        Send(msg, (msg) => {
+            if (msg.status) {
+                console.log("删除成功");
+            }
+            else {
+                console.log(msg.errcode);
+            }
+        })
     }
     return (<>
         <div className={`${styles.SubjectMemberInfo} shadow-sm`}>
@@ -273,13 +313,13 @@ export const SubjectMemberInfo = (props) => {
                 </div>
                 <img src={ProfilePicture} alt="" />
                 <div className={`text-truncate`} id='stuNum'>
-                    {props.info.stuNum}
+                    {props.info.id}
                 </div >
                 <div className={`text-truncate`} id='stuName'>
                     {props.info.name}
                 </div>
                 <div className={`text-truncate`}>
-                    {props.info.eMail}
+                    {props.email}
                 </div>
             </div>
             <button className={`btn btn-outline-secondary btn-sm ${styles.deleteThisMember}`}
@@ -295,8 +335,10 @@ export const SubjectMemberInfo = (props) => {
 
 //单条老师成员信息
 export const SubjectTeacherInfo = (props) => {
+    const location = useLocation();
+    const state = (location.state == null || location.state === undefined) ? "" : location.state;
 
-    //删除按钮事件
+    //删除按钮事件  
     function deleteSelf(e) {
         let deletedEle = e.target.parentNode
         //删除存放和删除
@@ -310,17 +352,21 @@ export const SubjectTeacherInfo = (props) => {
             <div>
                 <img src={ProfilePicture} alt="" />
                 <div className={`text-truncate`}>
-                    姓名姓名姓
+                    {props.info.name}
                 </div >
                 <div className={`text-truncate`}>
-                    邮箱邮箱邮箱邮箱邮箱邮箱邮箱邮箱邮箱邮箱邮箱
+                    {props.email}
                 </div>
                 <div className={`text-truncate`}>
-                    管理员/助教管理员
+                    {props.status == "c" ? "管理员" : "助教管理员"}
                 </div>
             </div>
             <button className={`btn btn-outline-secondary btn-sm ${styles.deleteThisMember}`} id='techerDeleted'
                 onClick={(e) => {
+                    if (document.getElementsByClassName(styles.teacherMemberInfo).length == 1)
+                        return
+
+
                     deleteSelf(e)
                 }}
             >删除</button>
@@ -330,16 +376,89 @@ export const SubjectTeacherInfo = (props) => {
 
 export default function IndividualSubjectCheck(props) {
     const location = useLocation();
-    const subjectData = (location.state == null || location.state === undefined) ? "" : location.state;
+    const state = (location.state == null || location.state === undefined) ? "" : location.state;
     const user_Account = JSON.parse(localStorage.getItem('user_Account'));
-    console.log(typeof (subjectData.name));
+
+
+    const [stuMems, setStuMems] = useState([]);
+    const [teaMems, setTeaMems] = useState([]);
+
+    //学生成员邮箱
+    const stuMembers = state.subData.data.student_emails;
+    //老师成员邮箱
+    const teaMembers = state.subData.data.teacher_emails.concat(state.subData.data.creator_email)
+
+    function getSubMem() {
+        let temp1 = [];
+        let temp2 = [];
+
+        (async () => {
+            await new Promise((resolve, reject) => {
+                for (let i = 0; i < stuMembers.length; i++) {
+                    const msg = {
+                        api: "requserinfo",
+                        email: stuMembers[i],
+                    }
+                    Send(msg, (msg) => {
+                        if (msg.status) {
+                            console.log("请求成功");
+                            temp1.push(msg.userdata)
+                            if (i == stuMembers.length - 1)
+                                resolve();
+                        }
+                        else {
+                            console.log(msg.errcode);
+                        }
+                    })
+
+                }
+            });
+
+            setStuMems(temp1)
+        })();
+
+
+        (async () => {
+            await new Promise((resolve, reject) => {
+                for (let i = 0; i < teaMembers.length; i++) {
+                    const msg = {
+                        api: "requserinfo",
+                        email: teaMembers[i],
+                    }
+                    Send(msg, (msg) => {
+                        if (msg.status) {
+                            console.log("请求成功");
+                            temp2.push(msg.userdata)
+                            if (i == teaMembers.length - 1)
+                                resolve();
+                        }
+                        else {
+                            console.log(msg.errcode);
+                        }
+                    })
+
+                }
+            });
+
+            setTeaMems(temp2)
+        })();
+    }
+
+    useEffect(() => {
+        getSubMem()
+    }, [])
+
+    useEffect(() => {
+        // console.log("-------------------------");
+        // console.log(stuMems);
+        // console.log(teaMems);
+    }, [stuMems, teaMems])
+
 
     return (<>
         <div className={`${styles.subjectCheckPage}`}>
-            <SubjectCheckNav action="成员" info={{
-                subName: subjectData.name
-            }} />
-            (<SubjectCheckMainMembers />)
+            <SubjectCheckNav action="成员" subData={state.subData} />
+            (<SubjectCheckMainMembers stuMembers={stuMems} setStuMembers={setStuMems} teaMembers={teaMems} setTeaMembers={setTeaMems} stuMails={stuMembers} teaMails={teaMembers} />)
         </div>
     </>)
 }
