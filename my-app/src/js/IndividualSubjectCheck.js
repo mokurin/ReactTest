@@ -155,19 +155,25 @@ export const SubjectCheckMainMembers = (props) => {
             <div className={`${styles.SubjectMemberInfoMain}`}>
                 {/* 左侧边栏区域 */}
                 <div className={`${styles.SubjectMemberInfoActions}`}>
-                    <div className={`${styles.subjectMemberTeachers}`}
+                    <div className={`${styles.subjectMemberTeachers} ${styles.subjectMemberSelected}`}
                         onClick={(e) => {
-                            setStatus(false)
+                            setStatus(true)
+                            e.target.classList.add(styles.subjectMemberSelected);
+                            e.target.nextSibling.classList.remove(styles.subjectMemberSelected)
+                            document.getElementsByClassName(styles.subjectMemberInfoSearchInput)[0].value = ""
                         }}
                     >教师团队 ({teaMembers.length}) {/* 从后端拿数据提前渲染 */} </div>
                     <div className={`${styles.subjectMemberStudents}`}
                         onClick={(e) => {
-                            setStatus(true)
+                            setStatus(false)
+                            e.target.classList.add(styles.subjectMemberSelected);
+                            e.target.previousSibling.classList.remove(styles.subjectMemberSelected)
+                            document.getElementsByClassName(styles.subjectMemberInfoSearchInput)[0].value = ""
                         }}
                     >全部学生 ({stuMembers.length}) {/* 从后端拿数据提前渲染 */} </div>
                 </div>
                 {/* 老师 和 学生 显示区域 */}
-                {status ? <StuManaged stuMembers={stuMembers} stuMails={props.stuMails} /> : <TeacherManaged teaMembers={teaMembers} teaMails={props.teaMails} />}
+                {!status ? <StuManaged stuMembers={stuMembers} stuMails={props.stuMails} /> : <TeacherManaged teaMembers={teaMembers} teaMails={props.teaMails} />}
             </div>
         </div>
     </>);
