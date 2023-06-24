@@ -151,11 +151,9 @@ export const HomeworkInfo = (props) => {
                         </div>}
                 </div>
             </div>
-            {Util.isTeacher(user_Account.data.identity) &&
-                <div id={'homeworkAnnex' + index} className={`${styles.homeworkAnnex}`}>
-                    <FileItems index={index} filePaths={data.annex_file_paths} />
-                </div>
-            }
+            <div id={'homeworkAnnex' + index} className={`${styles.homeworkAnnex}`}>
+                <FileItems index={index} filePaths={data.annex_file_paths} />
+            </div>
             <div className={`${styles.homeworkDeadline}`}>
                 截止日期: {Util.formatTimestamp(deadline)}
             </div>
