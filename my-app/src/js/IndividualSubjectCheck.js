@@ -1,5 +1,5 @@
 import React, { Children, useEffect, useMemo, useState } from 'react';
-
+import * as Util from './Util'
 
 // 组件引用
 import FilingModal from './homepage/FilingModal';
@@ -176,11 +176,8 @@ export const SubjectCheckMainMembers = (props) => {
 const StuManaged = (props) => {
     const { stuMembers } = props;
     const stuMemsEmails = props.stuMails;
+    const user_Account = JSON.parse(localStorage.getItem('user_Account'));
 
-    useEffect(() => {
-        // console.log("--------------------------------------------------");
-        // console.log(stuMembers);
-    }, [stuMembers])
 
     function returnStuELes() {
         let list = []
@@ -207,20 +204,19 @@ const StuManaged = (props) => {
                         )
                     </label>
                 </div>
-                <div className={`${styles.subjectMembersDeleted} btn btn-outline-secondary`}
-                    onClick={(e) => {
-                        deletedMembers(e)
-                    }}
-                >
-                    删除成员
-                </div>
-                {/* <FilingModal data={{ id: "deleteSubject", title: "是否确认删除这些信息?" }} /> */}
+                {
+                    Util.isTeacher(user_Account.data.identity) &&
+                    <div className={`${styles.subjectMembersDeleted} btn btn-outline-secondary`}
+                        onClick={(e) => {
+                            deletedMembers(e)
+                        }}
+                    >
+                        删除成员
+                    </div>
+                }
             </div>
             <div className={`${styles.SubjectAllMembers}`}>
                 {returnStuELes()}
-                {/* <SubjectMemberInfo info={createdStuInfo("12123020406", "许宏涛", "Yomiger@163.com")} />
-                <SubjectMemberInfo info={createdStuInfo("12123020401", "宏涛", "Yomiger@163.com")} />
-                <SubjectMemberInfo info={createdStuInfo("12123020402", "许", "Yomiger@163.com")} /> */}
             </div>
         </div>
     </>)
@@ -267,6 +263,7 @@ const TeacherManaged = (props) => {
 export const SubjectMemberInfo = (props) => {
     const location = useLocation();
     const state = (location.state == null || location.state === undefined) ? "" : location.state;
+    const user_Account = JSON.parse(localStorage.getItem('user_Account'));
 
     //课程数据
     let subData = state.subData;
@@ -322,13 +319,14 @@ export const SubjectMemberInfo = (props) => {
                     {props.email}
                 </div>
             </div>
-            <button className={`btn btn-outline-secondary btn-sm ${styles.deleteThisMember}`}
-                // data-bs-toggle="modal"
-                // data-bs-target="#deleteSubject"
-                onClick={(e) => {
-                    deleteSelf(e)
-                }}
-            >删除</button>
+            {(Util.isTeacher(user_Account.data.identity) &&
+                <button className={`btn btn-outline-secondary btn-sm ${styles.deleteThisMember}`}
+                    // data-bs-toggle="modal"
+                    // data-bs-target="#deleteSubject"
+                    onClick={(e) => {
+                        deleteSelf(e)
+                    }}
+                >删除</button>)}
         </div>
     </>)
 }
@@ -337,6 +335,7 @@ export const SubjectMemberInfo = (props) => {
 export const SubjectTeacherInfo = (props) => {
     const location = useLocation();
     const state = (location.state == null || location.state === undefined) ? "" : location.state;
+    const user_Account = JSON.parse(localStorage.getItem('user_Account'));
 
     //删除按钮事件  
     function deleteSelf(e) {
@@ -361,15 +360,17 @@ export const SubjectTeacherInfo = (props) => {
                     {props.status == "c" ? "管理员" : "助教管理员"}
                 </div>
             </div>
-            <button className={`btn btn-outline-secondary btn-sm ${styles.deleteThisMember}`} id='techerDeleted'
-                onClick={(e) => {
-                    if (document.getElementsByClassName(styles.teacherMemberInfo).length == 1)
-                        return
+            {Util.isTeacher(user_Account.data.identity) &&
+                <button className={`btn btn-outline-secondary btn-sm ${styles.deleteThisMember}`} id='techerDeleted'
+                    onClick={(e) => {
+                        if (document.getElementsByClassName(styles.teacherMemberInfo).length == 1)
+                            return
 
 
-                    deleteSelf(e)
-                }}
-            >删除</button>
+                        deleteSelf(e)
+                    }}
+                >删除</button>
+            }
         </div>
     </>)
 }

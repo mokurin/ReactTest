@@ -55,6 +55,7 @@ const WorkPreviewNav = (props) => {
                 onClick={() => {
                     console.log(props.info.email);
                     console.log(document.getElementById("score").value);
+                    sendScore()
                 }}
             >确认打分</button></div>
             <input type="number" className="form-control" id="score" placeholder="请输入分数"

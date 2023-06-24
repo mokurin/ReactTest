@@ -136,6 +136,8 @@ function Main(props) {
                 localStorage.setItem('user_Account', JSON.stringify(user_Account));
                 await getAllSubs(user_Account.data.unarchived_subject_ids,
                     user_Account.data.archived_subject_ids);//重新获取所有信息
+                setNoArchivedSub(noArchivedSubjects);
+                setArchivedSub(archivedSubjects);
 
                 document.getElementById('joinTip').innerHTML = '加入成功';
             } else

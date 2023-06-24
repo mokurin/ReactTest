@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 
 // 上传文件
@@ -55,47 +55,133 @@ export const UploadFiles = (props) => {
 
 // 整个提交作业区域
 const SubmitHomeworkMain = (props) => {
+    const [msg, setMsg] = useState('');
     const [fileList, setFileList] = useState([]);
     const [message, setMessage] = useState('');
     const location = useLocation();
     const s = location.state;
-    const email = (s !== null && s !== undefined) ? s.email : '';
+    const homeworkData = (s !== null && s !== undefined) ? s.homeworkData : '';
+
 
     //文件上传
-    const handleUploadFiles = () => {
-        // 把文件切成块
-        const file = fileList[0].originFileObj;
-        const chunkSize = 1024 * 1024; // 1MB
-        const chunks = Math.ceil(file.size / chunkSize);
-        let currentChunk = 0;
+    const handleUploadFiles = (filepath) => {
+        return new Promise((resolve, reject) => {
+            for (let i = 0; i < fileList.length; i++) {
+                // 把文件切成块
+                const file = fileList[i].originFileObj;
+                if (file === undefined) {
+                    if (i !== fileList.length - 1)
+                        continue;
+                    else resolve();
+                }
+                const chunkSize = 1024 * 1024; // 1MB
+                const chunks = Math.ceil(file.size / chunkSize);
+                console.log('总块数：' + chunks);
 
-        // 把每一块发给服务端
-        const sendChunk = () => {
-            const start = currentChunk * chunkSize;
-            const end = Math.min((currentChunk + 1) * chunkSize, file.size);
-            const chunk = file.slice(start, end);
+                // 把每一块发给服务端
+                const sendChunk = async (index) => {
+                    const start = index * chunkSize;
+                    console.log('start:' + start);
+                    const end = Math.min((index + 1) * chunkSize, file.size);
+                    console.log('end:' + end);
+                    const chunk = file.slice(start, end);
+                    const buffer = await chunk.arrayBuffer();
+                    const binaryString = new Uint8Array(buffer).reduce((acc, byte) => acc + String.fromCharCode(byte), '');
+                    const base64String = btoa(binaryString);
+
+                    //上传
+                    const msg = {
+                        api: 'upfile',
+                        trunk: {
+                            id: index,
+                            data: base64String
+                        },
+                        filepath: filepath[i]
+                    }
+                    //发送文件
+                    Send(msg, (msg) => {
+                        if (msg.status)
+                            console.log('发送成功id:' + index);
+                        else
+                            console.log('发送失败id:' + index);
+                        //发送失败就重新发送
+                        // sendChunk(index);
+                    });
+
+                    if (index === chunks - 1) {
+                        //结束文件上传
+                        const msg = {
+                            api: 'finishupfile',
+                            filepath: filepath[i]
+                        }
+                        Send(msg, res => {
+                            if (res.status) {
+                                console.log('成功结束文件上传');
+                                resolve();
+                            }
+                        })
+                    }
+                };
+
+                //循环发送每一块文件
+                for (let i = 0; i < chunks; i++)
+                    sendChunk(i);
+            }
+        })
+    };
+
+    // 请求提交作业
+    function submitAll() {
+        return new Promise((resolve, reject) => {
+            //获取文件列表
+            let fileNames = [];
+            for (let i = 0; i < fileList.length; i++) {
+                fileNames.push({
+                    filename: fileList[i].originFileObj.name,
+                    filesize: fileList[i].originFileObj.size
+                });
+            }
             const msg = {
-                // userEmail: props.email,
-                fileName: file.name,
-                fileSize: file.size,
-                fileType: file.type,
-                chunkIndex: currentChunk,
-                chunkCount: chunks,
-                chunk: chunk
+                api: 'subwork',
+                homework: {
+                    work_id: homeworkData.data.id,
+                    comments: message,
+                    annex_files: fileNames
+                }
             }
             Send(msg, (msg) => {
-                if (msg.status)
-                    if (currentChunk < chunks - 1) {
-                        currentChunk++;
-                        sendChunk();
-                    } else {
-                        console.log('upload finished');
-                    }
+                if (msg.status) {
+                    (async () => {
+                        await handleUploadFiles(msg.filepaths);
+                        resolve(true);
+                    })();
+                    console.log('submit finished');
+                } else {
+                    new Promise((resolve, reject) => {
+                        setMsg(msg.errcode);
+                        resolve();
+                    }).then(() => {
+                        const modal = new bootstrap.Modal('#exampleModal');
+                        modal.show();
+                        resolve(false);
+                    })
+                }
             });
-        };
+        })
+    }
 
-        sendChunk();
-    };
+    // 提交作业
+    function submitHomework() {
+        (async () => {
+            const flag = await submitAll();
+
+            if (flag) {
+                //清空文件列表和留言
+                setFileList([]);
+                setMessage("");
+            }
+        })();
+    }
 
     // 提交作业 间隔
     let count = 5;
@@ -115,33 +201,6 @@ const SubmitHomeworkMain = (props) => {
             count = 5;
             clearTimeout(stopCount)
         }
-    }
-    // 发送留言
-    function submitMessage() {
-        const msg = {
-            api: 'subwork',
-            homework: { work_id: props.homeworkData.data.id, comments: message },
-            annex_files: [],
-        }
-        Send(msg, (msg) => {
-            if (msg.status)
-                console.log('submit finished');
-            else {
-                console.log(msg.errcode);
-            }
-        });
-    }
-    // 发送作业
-    function submitHomework() {
-        //提交留言
-        submitMessage();
-        //提交文件
-        handleUploadFiles();
-
-
-        //清空文件列表和留言
-        setFileList([])
-        setMessage("")
     }
 
     //输入框变化
@@ -198,6 +257,7 @@ const SubmitHomeworkMain = (props) => {
                 </div>
             </div>
         </div >
+        <Modal title={'提交失败'} msg={msg} />
     </>)
 }
 
@@ -212,4 +272,27 @@ export default function SubmitHomework(props) {
         <SubjectCheckNav action="提交作业" subData={subData} homeworkData={homeworkData} />
         <SubmitHomeworkMain />
     </>)
+}
+
+
+//弹窗模态
+function Modal(props) {
+    return (
+        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h1 className="modal-title fs-5" id="exampleModalLabel">{props.title}</h1>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div className="modal-body">
+                        {props.msg}
+                    </div>
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }

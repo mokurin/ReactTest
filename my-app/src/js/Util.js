@@ -29,7 +29,7 @@ export function formatTimestamp(timestamp) {
 
 //判断是否是老师
 export function isTeacher(status) {
-    if (status === "t" || status === "0")
+    if (status === "t")
         return true;
 
     return false;

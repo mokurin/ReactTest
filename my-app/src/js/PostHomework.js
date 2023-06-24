@@ -186,7 +186,6 @@ export default function PostHomework(props) {
         if (isOK) {
             (async () => {
                 await submitHomework();
-                // saveEdit();
             })();
         }
     }, [isOK]);
