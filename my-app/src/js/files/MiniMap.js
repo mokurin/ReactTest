@@ -15,11 +15,6 @@ export default function File(props) {
         })();
     }
 
-    //下载文件
-    // const downloadFile = () => {
-
-    // }
-
     //文件下载
     const handleDownloadFiles = () => {
         return new Promise((resolve, reject) => {
@@ -30,16 +25,11 @@ export default function File(props) {
             }
             Send(msg, res => {
                 if (res.status) {
-                    //获取文件块数
                     const chunks = res.trunk_counts;
-                    console.log('总块数：' + chunks);
 
-                    //创建一个空的文件对象
                     let file = new Blob([], { type: 'application/octet-stream' });
 
-                    //获取每一块文件并拼接
                     const getChunk = async (index) => {
-                        //请求文件块
                         const msg = {
                             api: 'downfile',
                             filepath: filePath,
@@ -47,7 +37,6 @@ export default function File(props) {
                         }
                         Send(msg, res => {
                             if (res.status) {
-                                //获取文件块数据
                                 const base64String = res.data;
                                 const binaryString = atob(base64String);
                                 const buffer = new Uint8Array(binaryString.length);
@@ -56,18 +45,13 @@ export default function File(props) {
                                 }
                                 const chunk = new Blob([buffer], { type: 'application/octet-stream' });
 
-                                //拼接文件对象
                                 file = new Blob([file, chunk], { type: 'application/octet-stream' });
 
                                 console.log('获取成功id:' + index);
+                                setProgressBar(index, chunks);
 
                                 if (index === chunks - 1) {
-                                    const msg = {
-                                        api: 'finishdownfile',
-                                        filepath: filePath
-                                    }
-                                    //结束文件下载
-                                    console.log('成功结束文件下载');
+                                    setProgressBar(1, 1);
                                     resolve(file);
                                 }
                             } else {
@@ -82,20 +66,28 @@ export default function File(props) {
                         //循环获取每一块文件
                         for (let i = 0; i < chunks; i++)
                             await getChunk(i);
-
                     })();
 
                 } else {
                     console.log('请求文件信息失败');
-                    reject();
                 }
             });
         })
     };
 
+    //设置进度条
     const setProgressBar = (i, all) => {
+        const inside = document.getElementById('progressBar-in-' + parentIndex + '-' + index);
+        const outside = document.getElementById('progressBar-out-' + parentIndex + '-' + index);
         if (i < all) {
-            
+            inside.style.width = `${i / all * outside.scrollWidth}px`;
+            inside.style.display = 'block';
+            outside.style.display = 'block';
+        } else {
+            window.setTimeout(() => {
+                inside.style.display = 'none';
+                outside.style.display = 'none';
+            }, 1000);
         }
     }
 
@@ -107,7 +99,7 @@ export default function File(props) {
                 {filename}
             </div>
             <div id={'progressBar-out-' + parentIndex + '-' + index} className={`${styles.progressBar}`}>
-                <div id={'progressBar-in-' + parentIndex + '-' + index} className={`${styles.progressBar}`}></div>
+                <div id={'progressBar-in-' + parentIndex + '-' + index} className={`${styles.progressBar} ${styles.progressBarIn}`}></div>
             </div>
         </div>
     )
