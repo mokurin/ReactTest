@@ -241,21 +241,21 @@ export default function PostHomework(props) {
     return (
         <div id='homeworkEditor' className={`${styles.postHomework} shadow`}>
             <div>
-                <input value={isEdit ? homeworkDetailsData.homeworkName : homeworkDetails.homeworkName} onChange={handleChange}
+                <input value={homeworkDetails.homeworkName} onChange={handleChange}
                     id='homeworkName' type="text" className={`form-control`} placeholder='作业名称' />
             </div>
             <div className={`mt-2`}>
-                <textarea value={isEdit ? homeworkDetailsData.homeworkIntroduce : homeworkDetails.homeworkIntroduce} onChange={handleChange}
+                <textarea value={homeworkDetails.homeworkIntroduce} onChange={handleChange}
                     id='homeworkIntroduce' className="form-control" placeholder='作业简介，作业格等要求'></textarea>
                 <div className={`${styles.homeworkSettings} mt-3`}>
                     <div>
                         <label htmlFor="deadline">截止日期:</label>
-                        <input value={formatTimestamp(isEdit ? homeworkDetailsData.deadline : homeworkDetails.deadline)} onChange={handleChange}
+                        <input value={formatTimestamp(homeworkDetails.deadline)} onChange={handleChange}
                             id='deadline' type="datetime-local" min={formatTimestamp(Date.now())} className='form-control' />
                     </div>
                     <div>
                         <label htmlFor="maxGrade">满分值: </label>
-                        <input value={isEdit ? homeworkDetailsData.maxGrade : homeworkDetails.maxGrade} onChange={handleChange}
+                        <input value={homeworkDetails.maxGrade} onChange={handleChange}
                             id="maxGrade" type="number" className='form-control' />
                     </div>
                 </div>

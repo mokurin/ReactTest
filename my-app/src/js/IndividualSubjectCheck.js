@@ -226,12 +226,6 @@ const TeacherManaged = (props) => {
     const { teaMembers } = props;
     const teaMemEmails = props.teaMails;
 
-
-    useEffect(() => {
-        console.log("--------------------------------------------------");
-        console.log(teaMembers);
-    }, [teaMembers])
-
     function returnTeaELes() {
         let list = []
         for (let i = 0; i < teaMembers.length; i++) {
@@ -249,11 +243,6 @@ const TeacherManaged = (props) => {
 
     return (<>
         <div className={`${styles.SubjectAllTeachers}`}>
-            {/* <div className={`${styles.SubjectMemberInfoTableNav}`}>
-                <button className={`btn btn-outline-secondary btn-sm ms-2`}>
-                    添加 助教/老师
-                </button>
-            </div> */}
             {returnTeaELes()}
         </div>
     </>)

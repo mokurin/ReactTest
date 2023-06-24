@@ -11,7 +11,7 @@ import icon_back from '../img/arrow-left.svg'
 import PostHomework from './PostHomework';
 import HomeworkItems from './homework/HomeworkItems'
 import InteractionTool from './homework/InteractionTool'
-import { Send } from './Connect'
+import { Send, afterOpen } from './Connect'
 
 //工具模块
 import * as Util from './Util'
@@ -30,9 +30,32 @@ export default function SubjectDetailedInfo(props) {
     useEffect(() => {
         if (user_Account !== null && user_Account !== undefined) {
             if (subData != null) {
-                RefreshHomeworks();
-            }
-            else {
+                afterOpen(() => {
+                    const msg = {
+                        api: 'login',
+                        email: user_Account.email,
+                        passwd: user_Account.passwd
+                    }
+                    Send(msg, (msg) => {
+                        if (msg.status) {//登录成功
+                            (async () => {
+                                try {
+                                    //刷新页面
+                                    RefreshHomeworks();
+                                } catch (error) {
+                                    //请求失败则加载到登录页面
+                                    navigate('/Login');
+                                }
+                            })();
+                        } else {//登录失败
+                            alert(msg.errcode);
+                        }
+                    })
+                }, () => {
+                    //连接超时则加载到登录页面
+                    navigate('/Login');
+                });
+            } else {
                 //返回主页
                 navigate('/Main');
             }
