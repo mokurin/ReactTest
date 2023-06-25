@@ -77,6 +77,7 @@ const SubmitHomeworkMain = (props) => {
                 const chunkSize = 1024 * 1024; // 1MB
                 const chunks = Math.ceil(file.size / chunkSize);
                 console.log('总块数：' + chunks);
+                let time = 0;
 
                 // 把每一块发给服务端
                 const sendChunk = async (index) => {
@@ -100,27 +101,27 @@ const SubmitHomeworkMain = (props) => {
                     }
                     //发送文件
                     Send(msg, (msg) => {
-                        if (msg.status)
+                        if (msg.status) {
                             console.log('发送成功id:' + index);
-                        else
+                            time++;
+                            if (time === chunks) {
+                                //结束文件上传
+                                const msg = {
+                                    api: 'finishupfile',
+                                    filepath: filepath[i]
+                                }
+                                Send(msg, res => {
+                                    if (res.status) {
+                                        console.log('成功结束文件上传');
+                                        resolve();
+                                    }
+                                })
+                            }
+                        } else
                             console.log('发送失败id:' + index);
                         //发送失败就重新发送
                         // sendChunk(index);
                     });
-
-                    if (index === chunks - 1) {
-                        //结束文件上传
-                        const msg = {
-                            api: 'finishupfile',
-                            filepath: filepath[i]
-                        }
-                        Send(msg, res => {
-                            if (res.status) {
-                                console.log('成功结束文件上传');
-                                resolve();
-                            }
-                        })
-                    }
                 };
 
                 //循环发送每一块文件

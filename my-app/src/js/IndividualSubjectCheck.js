@@ -294,6 +294,7 @@ export const SubjectMemberInfo = (props) => {
             }
         })
     }
+
     return (<>
         <div className={`${styles.SubjectMemberInfo} shadow-sm`}>
             <div>
@@ -317,8 +318,6 @@ export const SubjectMemberInfo = (props) => {
             </div>
             {(Util.isTeacher(user_Account.data.identity) &&
                 <button className={`btn btn-outline-secondary btn-sm ${styles.deleteThisMember}`}
-                    // data-bs-toggle="modal"
-                    // data-bs-target="#deleteSubject"
                     onClick={(e) => {
                         deleteSelf(e)
                     }}
@@ -333,15 +332,6 @@ export const SubjectTeacherInfo = (props) => {
     const state = (location.state == null || location.state === undefined) ? "" : location.state;
     const user_Account = JSON.parse(localStorage.getItem('user_Account'));
 
-    //删除按钮事件  
-    function deleteSelf(e) {
-        let deletedEle = e.target.parentNode
-        //删除存放和删除
-        deletedMember.push(deletedEle)
-        deletedEle.remove()
-        checkNumsOfChecked()
-        // 后端部分
-    }
     return (<>
         <div className={`${styles.teacherMemberInfo} shadow-sm`}>
             <div>
@@ -353,20 +343,9 @@ export const SubjectTeacherInfo = (props) => {
                     {props.email}
                 </div>
                 <div className={`text-truncate`}>
-                    {props.status == "c" ? "管理员" : "助教管理员"}
+                    {props.status === "c" ? "管理员" : "助教管理员"}
                 </div>
             </div>
-            {/* {Util.isTeacher(user_Account.data.identity) &&
-                <button className={`btn btn-outline-secondary btn-sm ${styles.deleteThisMember}`} id='techerDeleted'
-                    onClick={(e) => {
-                        if (document.getElementsByClassName(styles.teacherMemberInfo).length == 1)
-                            return
-
-
-                        deleteSelf(e)
-                    }}
-                >删除</button>
-            } */}
         </div>
     </>)
 }
@@ -444,13 +423,6 @@ export default function IndividualSubjectCheck(props) {
     useEffect(() => {
         getSubMem()
     }, [])
-
-    useEffect(() => {
-        // console.log("-------------------------");
-        // console.log(stuMems);
-        // console.log(teaMems);
-    }, [stuMems, teaMems])
-
 
     return (<>
         <div className={`${styles.subjectCheckPage}`}>

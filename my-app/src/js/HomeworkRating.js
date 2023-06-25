@@ -10,18 +10,12 @@ import bootstrap from 'bootstrap/dist/js/bootstrap'
 
 //工具模块
 import * as Util from './Util'
-import { Send } from './Connect'
+import { Send, afterOpen } from './Connect'
 
 // -------------------------------------------------------分割线-------------------------------------------------------
 
 //单个 作业人员
 const HomeworkMemberInfo = (props) => {
-    // console.log(props.work);
-    //             annexfilepaths: "",
-    //             annexfilepaths
-    //             comments: "",
-    //             graded: false,
-    //             score: ""
     const navigate = useNavigate()
 
     return (<>
@@ -34,7 +28,7 @@ const HomeworkMemberInfo = (props) => {
                     {props.info.name}
                 </div>
                 <div className={`text-truncate`} id="isSumitted">
-                    {(props.work == null || props.work.filepaths.length == 0) ? "未交" : (props.work.graded ? props.work.score : "未批")}
+                    {(props.work == null || props.work.filepaths.length == 0) ? "未交" : (props.work.graded ? props.work.score + "/" + props.maxGrade : "未批")}
                 </div>
             </div>
             <button className={`btn btn-outline-secondary btn-sm ${styles.checkThisHomework}`}
@@ -89,42 +83,9 @@ const HomeworkDetailed = (props) => {
         }
     }, [condition])
 
-    // 渲染前接收数据
-    useEffect(() => {
-        if (props.subData == null || props.subData == undefined) {
-            return
-        }
-        if (props.homeworkData == null || props.homeworkData == undefined) {
-            return
-        }
-
-        getHomeworkMembers();
-    }, [])
-
-    // 发送请求 接收数据
-    function getHomeworkMembers() {
-        const msg = {
-            api: 'reqworkinfo',
-            subName: props.subData.subName,                     //课程名称
-            name: props.homeworkData.homeworkName,              //作业名称
-            id: ""                                              //作业id
-        }
-        Send(msg, (msg) => {
-            if (msg.status)
-                console.log('success');
-            // 数据接收部分
-
-
-        });
-    }
-    // 处理页面刷新/关闭事件
-    function handleBeforeUnload(event) {
-        event.preventDefault(); // 阻止默认行为
-        // 执行你的逻辑，例如重新执行 getHomeworkMembers
-    }
 
     // 接受 已批 未批 未交 人数 数组
-    let nums = (props.homeworkData == null || props.homeworkData == undefined) ? [1, 1, 1] : props.homeworkData.interaction;
+    let nums = (props.homeworkData == null || props.homeworkData === undefined) ? [1, 1, 1] : props.homeworkData.interaction;
     // 筛选  ------------------------------------------------------------------------------------
     // 数组 存放每条成绩
     let listItems = [];
@@ -152,37 +113,13 @@ const HomeworkDetailed = (props) => {
             item.style.display = 'flex';
         });
     }
-    //静态数据  所有成员成绩--------------------------------------------------------------------------------
-    let allMemGrades = [{
-        stuNum: "11111111",
-        stuName: "许宏涛",
-        submittedHW: "work1.file",
-        isGraded: true,
-        grade: "90",
-        comment: ""
-    },
-    {
-        stuNum: "22222222",
-        stuName: "许宏",
-        submittedHW: "work2.file",
-        isGraded: false,
-        grade: "",
-        comment: ""
-    },
-    {
-        stuNum: "33333333",
-        stuName: "许",
-        submittedHW: "",
-        isGraded: false,
-        grade: "",
-        comment: ""
-    }];
+
     // 作业信息
     let hwInfo = {
         has_graded: nums[0],                                  //已交成员
         no_graded: nums[1],                                   //未批成员
         no_summitted: nums[2],                                //未交成员
-        max_score: (props.homeworkData == null || props.homeworkData == undefined) ? 100 : props.homeworkData.maxGrade                                         //满分值
+        max_score: (props.homeworkData == null || props.homeworkData === undefined) ? 100 : props.homeworkData.maxGrade                                              //满分值
     }
 
     //学生成员邮箱
@@ -204,9 +141,8 @@ const HomeworkDetailed = (props) => {
                     }
                     Send(msg, (msg) => {
                         if (msg.status) {
-                            console.log("请求成功");
                             temp.push(msg.userdata)
-                            if (i == stuMembers.length - 1)
+                            if (i === stuMembers.length - 1)
                                 resolve();
                         }
                         else {
@@ -240,7 +176,6 @@ const HomeworkDetailed = (props) => {
                     }
                     Send(msg, (msg) => {
                         if (msg.status) {
-                            console.log("所有作业请求成功");
                             temp.push(msg.workinfo)
                             if (i == stuMembers.length - 1)
                                 resolve();
@@ -265,12 +200,6 @@ const HomeworkDetailed = (props) => {
         getSubMem();
         getWorkData()
     }, [])
-
-    useEffect(() => {
-        console.log("----------------------------");
-        console.log(workData);
-    }, [workData])
-
 
     //分隔线---------------------------------------------------------
     // 渲染成员
@@ -350,17 +279,6 @@ const HomeworkDetailed = (props) => {
 
             <div className={`${styles.homeworkMembersTable} shadow`}>
                 <div className={``}>
-                    <button className={`btn btn-outline-secondary btn-lg`}
-                        onClick={(e) => {
-                            // renderMembers();
-
-                            //发送消息
-
-
-                        }}
-                    >
-                        一键催交
-                    </button>
                 </div>
                 {renderMembers()}
             </div>
@@ -374,6 +292,9 @@ export default function HomeworkRating(props) {
     const subData = (state == null || state === undefined) ? null : state.subData;//课程数据
     const homeworkData = (state == null || state === undefined) ? null : state.homeworkData;//作业数据
     const user_Account = JSON.parse(localStorage.getItem('user_Account'));//用户数据
+    const navigate = useNavigate();
+
+
 
     return (<>
         <SubjectCheckNav subData={subData} homeworkData={homeworkData} action="学生作业" />

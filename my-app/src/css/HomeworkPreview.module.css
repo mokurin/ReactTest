@@ -10,7 +10,7 @@
     align-items: center;
     width: 400px;
     box-sizing: border-box;
-    background-color: transparent;
+    background-color: white;
     left: 50%;
     top: 30px;
     transform: translate(-50%, 0);
@@ -71,7 +71,8 @@
 
 .filePath {
     position: absolute;
-    top: 30%;
+    z-index: -1;
+    top: 10%;
     left: 50%;
     transform: translate(-50%, 0);
     width: fit-content;
